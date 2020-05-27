@@ -1,0 +1,38 @@
+@require '../../vars'
+
+.z-sign-in
+  flex1()
+  overflow: auto
+  -webkit-overflow-scrolling: touch
+  background: getColor('$bgColorAlt1')
+
+  > .title
+    font-h4()
+    margin: 72px 0 32px
+    text-align: center
+
+  > .content
+    box()
+    // flex1()
+    padding: 32px
+    width: 100%
+    box-sizing: border-box
+    max-width: 578px
+    margin: 0 auto
+    display: block
+
+    > .input
+      max-width: 360px
+      margin: 16px auto 20px auto
+
+    > .terms
+      font-body2()
+      color: getColor('$secondaryMainText')
+      margin-top: 16px
+
+      a
+        color: getColor('$secondaryMainText')
+
+    > .actions
+      max-width: 360px
+      margin: 40px auto 0 auto

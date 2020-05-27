@@ -1,0 +1,32 @@
+@require '../../vars'
+
+.z-positioned-overlay
+  position: absolute
+  width: 100%
+  height: 100%
+  bottom: 0
+  left: 0
+  pointer-events: none
+
+  &.is-mounted
+    > .content
+      transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+
+    > .backdrop
+      opacity: 1
+
+  > .content
+    position: absolute
+    pointer-events: all
+
+  > .backdrop
+    position: fixed
+    pointer-events: all
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background: getColor('$bgBackdrop')
+    -webkit-tap-highlight-color: getColor('$transparent')
+    opacity: 0
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)

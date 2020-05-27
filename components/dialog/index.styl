@@ -1,0 +1,68 @@
+@require '../../vars'
+
+.z-dialog
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  display: flex
+  align-items: center
+  justify-content: center
+  z-index: 1000000
+  pointer-events: none
+
+  &.is-mounted
+    > .dialog
+      opacity: 1
+
+    > .backdrop
+      opacity: 1
+      pointer-events: all
+
+  &.is-wide
+    > .dialog
+      max-width: 320px
+
+  > .backdrop
+    position: fixed
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background: getColor('$bgBackdrop')
+    z-index: 1000000
+    opacity: 0
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)
+    pointer-events: none
+
+  > .dialog
+    shadow-2()
+    z-index: 1000003
+    position: relative
+    opacity: 0
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+    pointer-events: all
+    background: getColor('$bgColor')
+    border-radius: 12px
+    min-width: 280px
+    max-width: 800px
+    max-height: 600px
+    display: flex
+    flex-direction: column
+
+    > .title
+      font-h5()
+      padding: 24px
+      border-bottom: 1px solid getColor('$bgText12')
+
+    > .content
+      flex1()
+      padding: 20px 36px
+      overflow: auto
+      -webkit-overflow-scrolling: touch
+
+    > .actions
+      border-top: 1px solid getColor('$bgText12')
+      padding: 16px
+      display: flex

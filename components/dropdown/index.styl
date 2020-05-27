@@ -1,0 +1,70 @@
+@require '../../vars'
+
+.z-dropdown
+  // min-height: 48px
+  display: block
+  outline: none
+  text-align: inherit
+  position: relative
+  max-width: 360px
+  cursor: pointer
+
+  &.is-open
+    > .wrapper
+      display: block
+
+    > .options
+       display: block
+
+  > .wrapper
+    display: none
+    position: fixed
+    z-index: 2
+    left: 0
+    top: 0
+    width: 100%
+    height: 100%
+
+  > .current
+    font-subtitle2()
+    background: getColor('$secondaryMain')
+    color: getColor('$secondaryMainText')
+    height: 34px
+    border-radius: 17.5px
+    display: flex
+
+    > .text
+      flex1()
+      text-align: center
+      padding: 8px 24px
+      white-space: nowrap
+
+    > .arrow
+      margin-left: auto
+      border-left: 1px solid getColor('$secondary200')
+      padding: 0 8px
+
+
+.z-dropdown_options
+  shadow-1()
+  // position: absolute
+  margin-top: 8px
+  z-index: 2
+  background: getColor('$bgColor')
+  // width: 100%
+  box-sizing: border-box
+  cursor: pointer
+  // display: none
+  max-height: 200px
+  overflow: auto
+  -webkit-overflow-scrolling: touch
+
+  > .option
+    padding: 16px
+    display: flex
+    align-items: center
+    color: getColor('$bgText')
+    cursor: pointer
+
+    &.is-selected
+      background: getColor('$bgColorAlt1')

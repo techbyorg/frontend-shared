@@ -1,0 +1,46 @@
+@require '../../vars'
+
+.z-step-bar
+  shadow-upper-1()
+  width: 100%
+  box-sizing: border-box
+  background: getColor('$bgColor')
+  display: flex
+  align-items: center
+  justify-content: center
+  margin-top: auto
+  user-select: none
+  container()
+
+  > .previous, > .next
+    font-button()
+    text-transform: lowercase
+    color: getColor('$primaryMain')
+    -webkit-tap-highlight-color: transparent
+    width: 60px
+    padding: 16px
+    box-sizing: content-box
+    cursor: pointer
+
+  > .next
+    display: flex
+    align-items: center
+    color: getColor('$bgText60')
+
+    &.can-continue
+      color: getColor('$primaryMain')
+
+
+  > .step-counter
+    display: flex
+    margin: 0 auto
+
+    > .step-dot
+      width: 6px
+      height: 6px
+      border-radius: 50%
+      margin-right: 4px
+      background: getColor('$bgText26')
+
+      &.is-active
+        background: getColor('$primaryMain')

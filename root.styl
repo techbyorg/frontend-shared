@@ -1,0 +1,156 @@
+@require '../normalize-styl/normalize.styl'
+
+@require './vars'
+
+$breakPointSmall = 340px
+$breakPointMedium = 768px
+$breakPointLarge = 840px
+
+@keyframes z-overlay-fade-in
+  0%
+    // transform: translateY(25%)
+    opacity: 0.25
+  // 25%
+    // prevent transform from sticking around for good (pixelated/blurry)
+    // transform: translateY(0.001px)
+    // opacity: 0.4375
+  100%
+    // transform: none
+    // transform: translateY(0)
+    opacity: 1
+
+html, body
+  width: 100%
+  height: 100%
+
+body
+  font-body1()
+  -webkit-tap-highlight-color: transparent
+  background: getColor('$bgColor')
+  padding-top: constant(safe-area-inset-top)
+  padding-top: env(safe-area-inset-top)
+
+#zorium-root
+  // if this page is in a frame on iOS, iOS tries to auto-expand
+  // the frame to fit the page.
+  // position absolute here messes up some older android devices
+  &.is-ios
+    // absolute causes rubberbanding, specifically for conversations on iOS
+    // where it uses iScroll with preventDefault: false
+    // (for text-selection to work)
+    position: fixed
+    width: 100%
+    height: 100%
+    top: 0
+    left: 0
+    overflow: auto
+    // http://stackoverflow.com/questions/9807620/ipad-safari-scrolling-causes-html-elements-to-disappear-and-reappear-with-a-dela
+    // -webkit-overflow-scrolling: touch
+
+  &.has-overlay-page
+    .z-nav-drawer
+      display: none
+
+  > .z-root
+    display: flex
+
+    > .content
+      flex1()
+      min-width: 0
+      display: flex
+      flex-direction: column
+
+      > .page
+        flex1()
+        display: flex
+        flex-direction: column
+
+    > .overlay-page
+      position: fixed
+      z-index: 100
+      width: 100%
+      height: 100%
+      top: 0
+      left: 0
+      background: getColor('$bgColor')
+      display: flex
+      flex-direction: column
+
+      animation: z-overlay-fade-in 0.2s
+
+    > #server-loading
+      position: fixed
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      background: getColor('$black54')
+      z-index: 999999
+      opacity: 0
+      padding: 16px
+      box-sizing: border-box
+      display: flex
+      align-items: center
+      text-align: center
+
+      &.is-clicked
+        opacity: 1
+
+a
+  color: inherit
+  text-decoration: inherit
+
+canvas
+  outline: none
+
+input::placeholder
+  font-body1()
+  color: getColor('$bgText54')
+
+// hack for chrome yellow input for autocomplete
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active
+  transition: background-color 5000s ease-in-out 0s
+  -webkit-text-fill-color: getColor('$bgText87') !important
+
+@media (min-width: $breakPointMedium)
+  &::-webkit-scrollbar
+    width: 5px
+    height: 5px
+
+  &::-webkit-scrollbar-thumb
+    background: getColor('$bgText54')
+    // border: 1px solid
+    border-radius: 20px
+
+  &::-webkit-scrollbar-track
+    background: getColor('$bgText12')
+    border-radius: 20px
+
+@keyframes z-ripple-bottom-bar-animation-css-only
+  // w/ from/to instead of 0 50 100, sometimes a second ripple shows once animation is done (bottom bar)
+  0%
+    transform: scale(1) // 80% width
+    opacity: 0.12
+  60%
+    transform: scale(1.4) // 125% width
+    opacity: 0.12
+  // 70%
+  //   transform: scale(24) // 120% width
+  //   opacity: 0.12
+  100%
+    transform: scale(1.7) // 120% width
+    opacity: 0
+
+@keyframes z-ripple-animation-css-only
+  // w/ from/to instead of 0 50 100, sometimes a second ripple shows once animation is done (bottom bar)
+  0%
+    transform: scale(0.5)
+    opacity: 0.25
+  50%
+    transform: scale(1.4)
+    opacity: 0
+  100%
+    opacity: 0

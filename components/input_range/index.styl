@@ -1,0 +1,160 @@
+@require '../../vars'
+
+.z-input-range
+  $height = 30px // tappable area
+  $thumbHeight = 28px
+  $trackHeight = 3px
+  $upperColor = getColor('$bgColorAlt2')
+  $lowerColor = getColor('$secondary700')
+  $upperBackground = linear-gradient(to bottom, $upperColor, $upperColor) 100% 50% \/ 100% $trackHeight no-repeat transparent
+  $lowerBackground = linear-gradient(to bottom, $lowerColor, $lowerColor) 100% 50% \/ 100% $trackHeight no-repeat transparent
+
+  // this works, but generates huge css (60kb), so we use js instead
+  // Webkit cannot style progress so we fake it with a long shadow
+  // on the thumb element. src: https://codepen.io/dbushell/pen/awgLZK
+  // webkit-slider-thumb-shadow($i = 1)
+  //   $val = '' + $i + 'px 0 0 -' + ($thumbHeight - $trackHeight) / 2 + ' ' + $upperColor
+  //   if $i == 1
+  //     for $k in (2)..(1000)
+  //       $val = $val + ', ' + webkit-slider-thumb-shadow($k)
+  //   $val
+
+  &.has-value
+    > .label
+      > .info
+        > .unset
+          display: none
+
+  > .label
+    display: block
+    margin-bottom: 16px
+
+    > .text
+      font-body2(true, medium)
+      margin-bottom: 8px
+
+    > .range-container
+      position: relative
+      height: 28px
+
+      > .range
+        display: block
+        cursor: pointer
+        appearance: none
+        width: 100%
+        overflow: hidden
+        margin: 0
+        height: $height
+        -webkit-tap-highlight-color: rgba(255, 255, 255, 0)
+        outline: none
+        background: $lowerBackground
+
+        &::after
+          content: ''
+          position: absolute
+          top: 1px
+          right: 0
+          height: 100%
+          background: $upperBackground
+
+        &.percent-0::after
+          width: 100%
+
+        &.percent-10::after
+          width: 90%
+
+        &.percent-20::after
+          width: 80%
+
+        &.percent-25::after
+          width: 75%
+
+        &.percent-30::after
+          width: 70%
+
+        &.percent-40::after
+          width: 60%
+
+        &.percent-50::after
+          width: 50%
+
+        &.percent-60::after
+          width: 40%
+
+        &.percent-70::after
+          width: 30%
+
+        &.percent-75::after
+          width: 25%
+
+        &.percent-80::after
+          width: 20%
+
+        &.percent-90::after
+          width: 10%
+
+        &.percent-100::after
+          width: 0%
+
+        &::-webkit-slider-runnable-track
+          width: 100%
+          height: $height
+          background: $lowerBackground
+
+        &::-webkit-slider-thumb
+          position: relative
+          z-index: 1
+          cursor: pointer
+          appearance: none
+          width: $thumbHeight
+          height: $thumbHeight
+          border-radius: 50%
+          border: 0
+          top: 50%
+          margin-top: -($thumbHeight / 2)
+          background: getColor('$bgColor')
+          border: 2px solid $lowerColor
+          // box-shadow: webkit-slider-thumb-shadow()
+
+        &::-moz-range-track,
+        &::-moz-range-progress
+          width: 100%
+          height: $height
+          background: $upperBackground
+
+        &::-moz-range-thumb
+          appearance: none
+          margin: 0
+          height: $thumbHeight
+          width: $thumbHeight
+          background: $lowerColor
+          border-radius: 100%
+          border: 0
+
+    > .info
+      position: relative
+
+      > .unset
+        font-subtitle2()
+        position: absolute
+        display: block
+        top: 0
+        left: 0
+        width: 100%
+        height: 100%
+        pointer-events: none
+        text-align: center
+
+      > .numbers
+        display: flex
+        margin-top: 8px
+
+        > .number
+          text-align: center
+          margin: 0 auto
+
+          &:first-child
+            margin-left: 0
+
+          &:last-child
+            margin-right: 0

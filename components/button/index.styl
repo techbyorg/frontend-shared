@@ -1,0 +1,134 @@
+@require '../../vars'
+
+.z-button
+  min-height: 36px
+  min-width: 48px
+  max-width: 100%
+  box-sizing: border-box
+  display: inline-block
+  position: relative
+  background: transparent
+  text-align: center
+  outline: none
+  user-select: none
+  cursor: pointer
+  -webkit-tap-highlight-color: transparent
+
+  > .button
+    font-button()
+    line-height: 1em
+    display: flex
+    align-items: center
+    justify-content: center
+    position: relative
+    box-sizing: border-box
+    vertical-align: middle
+    padding: 10px 24px
+    min-height: 36px
+    min-width: 64px
+    max-width: 100%
+    // line-height: 36px
+    background: transparent
+    // so there's no jank when transitioning from outline button to normal
+    border: 1px solid transparent
+    text-align: center
+    outline: none
+    border-radius: 4px
+    user-select: none
+    cursor: pointer
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    -webkit-tap-highlight-color: transparent
+
+    > .icon
+      margin-right: 12px
+
+  &.is-primary
+    &.is-outline
+      > .button
+        border: 1px solid getColor('$primaryMain')
+        color: getColor('$primaryMain')
+
+    &.is-inverted
+      > .button
+        background: getColor('$primaryMainText')
+        color: getColor('$primaryMain')
+
+        &:hover
+          background: getColor('$primaryMainText')
+
+        &:active
+          background: getColor('$primaryMainText')
+
+        &:focus
+          background: getColor('$primaryMainText')
+
+
+    > .button
+      background: getColor('$primaryMain')
+      color: getColor('$primaryMainText')
+
+      &:hover
+        background: getColor('$primary400')
+
+      &:active
+        background: getColor('$primaryMain')
+
+      &:focus
+        background: getColor('$primaryMain')
+
+  &.is-secondary
+    &.is-outline
+      > .button
+        border: 1px solid getColor('$secondaryMain')
+        color: getColor('$secondaryMain')
+
+    > .button
+      background: getColor('$secondaryMain')
+      color: getColor('$secondaryMainText')
+
+      &:hover
+        background: getColor('$secondary400')
+
+      &:active
+        background: getColor('$secondaryMain')
+
+      &:focus
+        background: getColor('$secondaryMain')
+
+  &.is-fancy
+    > .button
+      background: linear-gradient(106deg, #eb01f5 -28%, #f75448 106%)
+      color: getColor('$primaryMainText')
+
+      &:hover
+        background: linear-gradient(126deg, #eb01f5 -28%, #f75448 106%)
+
+      &:active
+        background: linear-gradient(106deg, #eb01f5 -28%, #f75448 106%)
+
+      &:focus
+        background: linear-gradient(106deg, #eb01f5 -28%, #f75448 106%)
+
+  &.is-inverted
+    > .button
+      color: getColor('$bgColor')
+
+  &.is-outline
+    > .button
+      background: transparent
+      color: getColor('$bgText87')
+
+      &:hover, &:active, &:focus
+        background: transparent
+
+  &.is-disabled
+    opacity: 0.5
+    pointer-events: none
+
+  &.is-full-width
+    width: 100%
+
+    > .button
+      width: 100%

@@ -1,0 +1,71 @@
+@require '../../vars'
+
+.z-app-bar
+  // shadow-1()
+  // border-bottom: 1px solid getColor('$bgText12')
+  position: relative
+  z-index: $zIndexAppBar
+  height: 56px
+  user-select: none
+
+  &.is-flat
+    // box-shadow: none
+    border-bottom: none
+
+  &.has-logo
+    > .bar > .top > .title
+      font-h5()
+      font-weight: bold
+      display: flex
+      align-items: center
+
+
+  > .bar
+    width: 100%
+    height: 56px
+    box-sizing: border-box
+    display: flex
+    // flex-direction: column
+    background-size: 84px auto
+    padding: 0 16px
+
+    > .top
+      container()
+      width: 100%
+      height: 56px
+      display: flex
+      align-items: center
+
+      > .top-left-button
+        margin-right: 24px
+
+      > .top-right-button
+        margin-left: auto
+
+      > .title
+        font-h6()
+        white-space: nowrap
+        text-overflow: ellipsis
+        overflow: hidden
+        padding-right: 8px
+
+        > .logo-by
+          color: getColor('$bgText54')
+
+        > .icon
+          width: 30.5px
+          height: 48px
+          background: url($cdnUrl + '/techby/logo_light.svg')
+          background-size: 100%
+          background-repeat: no-repeat
+          margin-right: 24px
+
+
+  @media (min-width: $breakPointMedium)
+    height: 64px
+
+    > .bar
+      height: 64px
+
+      > .top
+        height: 64px

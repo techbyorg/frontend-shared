@@ -1,0 +1,89 @@
+@require '../../vars'
+
+.z-profile-dialog
+  opacity: 0
+  will-change: opacity
+  position: relative
+  z-index: 99999
+
+  &.is-visible
+    opacity: 1
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+
+.z-profile-dialog_dialog
+  background: getColor('$bgColor')
+  border-radius: 4px
+  display: flex
+  flex-direction: column
+
+  > .header
+    padding: 24px 16px 16px 16px
+    background: getColor('$bg')
+    border-top-left-radius: 2px
+    border-top-right-radius: 2px
+    position: relative
+    // text-align: center
+    display: flex
+
+    > .close
+      position: absolute
+      top: 8px
+      right: 8px
+
+    > .avatar
+      width: 72px
+      // margin: 0 auto
+
+    > .about
+      // margin-top: 8px
+      margin-left: 16px
+
+      > .name
+        font-subtitle1()
+        color: getColor('$bgText')
+        margin-bottom: 4px
+
+      > .roles
+        font-caption(true, disabled)
+        min-height: 20px
+
+      > .links
+        > .link
+          display: inline-block
+          margin-right: 4px
+
+  .menu
+    list-style-type: none
+    margin: 0
+    padding: 8px 0
+    flex1()
+    overflow-y: auto
+    -webkit-overflow-scrolling: touch
+
+    > .divider
+      background: getColor('$bgText12')
+      height: 1px
+      width: 100%
+      margin: 8px 0
+
+    > .menu-item
+      margin: 0
+
+      > .menu-item-link
+        cursor: pointer
+        display: flex
+        padding: 8px 16px
+        box-sizing: border-box
+
+        > .icon
+          margin-right: 16px
+
+        > .chevron
+          margin-left: auto
+
+        > .text
+          font-caption(true, disabled)
+
+      > .menu
+        margin-left: 16px
+        padding: 0

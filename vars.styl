@@ -1,0 +1,461 @@
+use('./stylus_get_color.js')
+use('./stylus_get_cdn_url.js')
+use('./stylus_get_value.js')
+
+// TODO: move to vars.json, allow js to use (cardList)
+$breakPointSmall = 340px
+$breakPointMedium = 768px
+$breakPointLarge = 1280px // drawer shows here
+
+$inputMaxWidth = 600px
+
+$cdnUrl = getCdnUrl()
+
+flex1()
+  flex: 1
+  min-height: 0
+  // TODO: figure out if can do min-width: 0 here too
+
+container()
+  max-width: 1280px
+  margin: 0 auto
+
+fix-overflow-shadows()
+  margin: -8px
+  padding: 8px
+
+shadow-1()
+  transition: box-shadow 0.25s
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.12)
+
+shadow-upper-1()
+  transition: box-shadow 0.25s
+  box-shadow: 0 -1px 4px 0 rgba(0, 0, 0, 0.12)
+
+shadow-2()
+  transition: box-shadow 0.25s
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.18), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14)
+
+shadow-3()
+  transition: box-shadow 0.25s
+  box-shadow: 0 11px 7px 0 rgba(0, 0, 0, 0.19), 0 13px 25px 0 rgba(0, 0, 0, 0.3)
+
+shadow-4()
+  transition: box-shadow 0.25s
+  box-shadow: 0 15.2px 12px 0 rgba(0, 0, 0, 0.17), 0 20px 40px 0 rgba(0, 0, 0, 0.3)
+
+shadow-5()
+  transition: box-shadow 0.25s
+  box-shadow: 0 17px 17px 0 rgba(0, 0, 0, 0.15), 0 27px 55px 0 rgba(0, 0, 0, 0.3)
+
+font-h4()
+  font-family: Nunito Sans
+  font-size: 36.9px
+  font-weight: normal
+  font-stretch: normal
+  font-style: normal
+  line-height: normal
+  letter-spacing: 0.25px
+  // text-align: center
+
+  // if scale is yes
+  //   @media (min-width: $breakPointLarge)
+  //     font-size: 28px
+
+font-h5(state = high)
+  font-family: Nunito Sans
+  color: getColor('$bgText87')
+  font-size: 26px
+  font-weight: 600
+  font-stretch: normal
+  font-style: normal
+  line-height: normal
+  letter-spacing: normal
+
+  if state is medium
+    color: getColor('$bgText60')
+
+  // if scale is yes
+  //   @media (min-width: $breakPointLarge)
+  //     font-size: 24px
+
+font-h6()
+  font-family: Nunito Sans
+  color: getColor('$bgText87')
+  font-size: 21.7px
+  font-weight: 600
+  font-stretch: normal
+  font-style: normal
+  line-height: normal
+  letter-spacing: 0.25px
+
+  // if scale is yes
+  //   @media (min-width: $breakPointLarge)
+  //     font-size: 20px
+
+font-button()
+  font-family: Nunito Sans
+  color: getColor('$bgText87')
+  font-size: 15.2px
+  font-weight: bold
+  font-stretch: normal
+  font-style: normal
+  line-height: 1.06
+  letter-spacing: 1.25px
+
+  if scale is yes
+    @media (min-width: $breakPointLarge)
+      font-size: 17.4px
+
+font-body1(state = high)
+  font-family: Nunito Sans
+  color: getColor('$bgText87')
+  font-size: 17.4px
+  font-weight: normal
+  font-stretch: normal
+  font-style: normal
+  line-height: 1.61
+  letter-spacing: 0.5px
+
+  if state is medium
+    color: getColor('$bgText60')
+  // if scale
+  //   @media (min-width: $breakPointLarge)
+  //     font-size: 17.4px
+
+font-body2(state = high)
+  font-family: Nunito Sans
+  color: getColor('$bgText87')
+  font-size: 15.2px
+  font-weight: normal
+  font-stretch: normal
+  font-style: normal
+  line-height: 1.32
+  letter-spacing: 0.25px
+
+  if state is medium
+    color: getColor('$bgText60')
+
+font-tbd-name() // FIXME name
+  font-family: Nunito Sans
+  color: getColor('$bgText87')
+  font-size: 13px
+  font-weight: 600
+  font-stretch: normal
+  font-style: normal
+  line-height: 1.23
+  letter-spacing: 0.4px
+  text-transform: uppercase
+
+font-caption(state = disabled) // primary, disabled, italic
+  font-family: Nunito Sans
+  color: getColor('$bgText60')
+  font-size: 13px
+  font-weight: normal
+  font-stretch: normal
+  font-style: normal
+  line-height: 1.23
+  letter-spacing: 0.4px
+
+  if state is italic
+    font-style: italic
+
+  if state is disabled
+    color: getColor('$bgText38')
+
+  if state is high
+    color: getColor('$bgText87')
+
+font-subtitle1(state = high)
+  font-family: Nunito Sans
+  color: getColor('$bgText87')
+  font-size: 17.4px
+  font-weight: 600
+  font-stretch: normal
+  font-style: normal
+  line-height: 1.39
+  letter-spacing: 0.15px
+
+  if state is medium
+    color: getColor('$bgText60')
+
+font-subtitle2()
+  font-family: Nunito Sans
+  color: getColor('$bgText87')
+  font-size: 15.2px
+  font-weight: 600
+  font-stretch: normal
+  font-style: normal
+  line-height: 1.32
+  letter-spacing: 0.1px
+
+font-overline()
+  font-family: Nunito Sans
+  color: getColor('$bgText87')
+  font-size: 13px
+  font-weight: bold
+  font-stretch: normal
+  font-style: normal
+  line-height: 1.23
+  letter-spacing: 2px
+
+font-micro()
+  font-family: Nunito Sans
+  color: getColor('$bgText87')
+  font-size: 11px
+  font-weight: normal
+  font-stretch: normal
+  font-style: normal
+  line-height: 1.45
+  letter-spacing: 0.34px
+
+cssVariableFallbacks(property, args)
+  string = join(' ', args)
+  variable = match('var\((.*?)\)', string)
+  if variable and variable[1]
+    {property}: convert(replace('var\(' + variable[1] + '\)', getValue(variable[1]), string)) // fallback chrome < 49
+  {property}: args
+
+background()
+  cssVariableFallbacks('background', arguments)
+
+background-color()
+  cssVariableFallbacks('background-color', arguments)
+
+color()
+  cssVariableFallbacks('color', arguments)
+
+box-shadow()
+  cssVariableFallbacks('box-shadow', arguments)
+
+border()
+  cssVariableFallbacks('border', arguments)
+
+ripple(color, type = default)
+  position: relative
+  outline: none
+  overflow: hidden
+
+  &:after // ripple
+    content: ''
+    position: absolute
+    border-radius: 50%
+    width: 70%
+    padding-bottom: 70%
+    left: 15%
+    top: 50%
+    margin-top: -35%
+    transform: scale(1)
+    transform-origin: 50%
+    // margin-top: -50%
+    background: color
+    opacity: 0
+    pointer-events: none
+
+  // hover seems to be the fastest way to get the animation to start in android.
+  // :focus has a couple hundred ms delay, i think active might too.
+  // ios and desktop look bad on hover
+  .is-android &:hover::after
+    will-change: transform
+    // anim defined in root
+    if type is 'bottomBar'
+      animation: z-ripple-bottom-bar-animation-css-only 0.25s ease-out
+    else
+      animation: z-ripple-animation-css-only 0.6s ease-out
+    opacity: 0
+
+  &:focus:not(:active)::after
+    will-change: transform
+    if type is bottomBar
+      animation: z-ripple-bottom-bar-animation-css-only 0.25s ease-out
+    else
+      animation: z-ripple-animation-css-only 0.6s ease-out
+    opacity: 0
+
+card()
+  shadow-1()
+  border-radius: 4px
+  display: block
+  background: getColor('$bgColor')
+
+tapTabs()
+  border: 1px solid getColor('$secondary50')
+  border-radius: 4px
+  display: flex
+
+  > .tap-tab
+    flex1()
+    font-body2()
+    padding: 8px 16px
+    border-radius: 4px
+    text-align: center
+    cursor: pointer
+
+    &.is-selected
+      background: getColor('$secondary50')
+
+imageFadeIn()
+  opacity: 0
+
+  &.is-image-loaded
+    opacity: 1
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+
+ul()
+  margin: 0
+  padding-left: 20px
+  text-align: left
+  max-width: 500px
+  margin: 0 auto
+
+  > li
+    margin-top: 8px
+    list-style-type: circle
+
+box()
+  shadow-1()
+  border-radius: 6px
+  background: getColor('$bgColor')
+  display: flex
+  flex-direction: column
+
+  > .header
+    padding: 24px
+    font-overline()
+    text-transform: uppercase
+    border-bottom: 1px solid getColor('$bgText6')
+
+  > .content
+    flex1()
+    display: flex
+    flex-direction: column
+    // padding: 24px
+    padding: 16px 0
+    overflow: hidden
+
+defaultPadding()
+  padding: 16px
+
+  @media (min-width: $breakPointMedium)
+    padding: 32px
+
+
+tooltip(isDark = false)
+  if isDark
+    bgColor = getColor('$primaryMain')
+    color = getColor('$primaryMainText')
+  else
+    bgColor = getColor('$bgColorAlt1')
+    color = getColor('$bgText')
+
+  shadow-1()
+  position: absolute
+  z-index: 99
+  opacity: 0
+  pointer-events: none
+  border-radius: 8px
+  max-width: 300px
+  min-height: 72px
+  will-change: transform
+  box-sizing: border-box
+  cursor: pointer
+  display: flex
+  align-items: center
+  background: bgColor
+
+  &::after
+    content: ''
+    position: absolute
+    border: 10px solid transparent
+
+  &.anchor-top-center
+    margin-top: 0
+    &::after
+      left: 50%
+      top: -10px
+      margin-left: -10px
+      border-top: none
+      // border-left: none
+      border-bottom-color: bgColor
+
+  &.anchor-top-left
+    margin-top: 0
+    &::after
+      left: 24px
+      top: -10px
+      margin-left: -10px
+      border-top: none
+      // border-left: none
+      border-bottom-color: bgColor
+
+  &.anchor-top-right
+    margin-top: 0
+    &::after
+      right: 24px
+      top: -10px
+      margin-left: -10px
+      border-top: none
+      // border-left: none
+      border-bottom-color: bgColor
+
+  &.anchor-bottom-center
+    margin-top: -20px
+    &::after
+      left: 50%
+      bottom: -10px
+      margin-left: -10px
+      border-bottom: none
+      border-top-color: bgColor
+
+  &.anchor-bottom-left
+    margin-top: -20px
+    &::after
+      left: 24px
+      bottom: -10px
+      margin-left: -10px
+      border-bottom: none
+      border-top-color: bgColor
+
+  &.anchor-center-left
+    margin-left: 10px
+    margin-top: -10px
+
+    &::after
+      top: 50%
+      left: -10px
+      margin-top: -10px
+      border-left: none
+      border-right-color: bgColor
+
+  &.anchor-center-right
+    margin-left: -10px
+    margin-top: -10px
+
+    &::after
+      top: 50%
+      right: -10px
+      margin-top: -10px
+      border-right: none
+      border-left-color: bgColor
+
+  &.is-visible
+    opacity: 1
+    transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+    pointer-events: all
+
+  > .close
+    position: absolute
+    top: 16px
+    right: 16px
+
+  > .content
+    flex1()
+    font-body2()
+    padding: 16px
+    color: color
+
+    > .title
+      font-subtitle2()
+      color: color
+      padding-right: 24px
+      margin-bottom: 8px

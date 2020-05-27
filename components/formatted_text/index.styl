@@ -1,0 +1,118 @@
+@require '../../vars'
+
+.z-formatted-text
+  // font-body2(medium)
+  max-width: 700px
+
+  &.is-full-width
+    max-width: none
+
+  &.is-truncated
+    max-height: 200px // FIXME
+    overflow: hidden
+    position: relative
+
+    &::after
+      content: ''
+      position: absolute
+      top: 0
+      left: 0
+      width: 100%
+      height: 100%
+      background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), getColor('$bgColorAlt1'))
+
+    > .read-more
+      display: block
+
+  > .read-more
+    position: absolute
+    bottom: 0
+    left: 0
+    z-index: 1
+    width: 100%
+    display: none
+
+  a
+    font-subtitle1()
+    color: getColor('$primaryMain')
+    text-decoration: underline
+
+    &.is-mention
+      font-subtitle1()
+      display: inline-block
+      text-decoration: none !important
+      padding: 2px 4px
+      background: getColor('$bgColorAlt1')
+      color: getColor('$primaryMain')
+      border-radius: 2px
+
+      &:hover
+        background: getColor('$bgColorAlt2')
+
+  ul
+    margin: 4px 0
+
+  p
+    margin: 4px 0 8px 0
+
+    &:first-child
+      margin-top: 0
+
+    &:last-child
+      margin-bottom: 0
+
+  .image-wrapper
+    display: block
+
+    img
+      padding: 8px
+      background: getColor('$bgColorAlt2')
+      box-sizing: content-box
+      border-radius: 2px
+      box-sizing: border-box
+
+  img
+    max-width: 100%
+    // easy fix for too tall of images in chat, etc...
+    max-height: 800px
+
+    &.is-sticker
+      display: inline-block
+      vertical-align: middle
+
+  h1
+    font-h5()
+    margin: 4px 0 8px 0
+
+  h2
+    font-h6()
+    margin: 4px 0 8px 0
+
+  h3
+    font-subtitle1()
+    margin: 4px 0 8px 0
+
+  h4
+    font-subtitle1()
+    margin: 4px 0 8px 0
+
+  blockquote
+    margin: 0
+    padding: 16px
+    background: getColor('$bgColorAlt2')
+
+  ul
+    padding: 0 0 0 16px
+
+    li
+      margin-bottom: 8px
+
+  hr
+    border: none
+    height: 1px
+    background: getColor('$bgText12')
+    margin: 16px 0
+
+
+  strong
+    font-subtitle1()

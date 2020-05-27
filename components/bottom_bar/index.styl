@@ -1,0 +1,65 @@
+@require '../../vars'
+
+.z-bottom-bar
+  display: flex
+  background: getColor('$bgColor')
+  // box-shadow: 0 -2px 4px getColor('$bgText12')
+  border-top: 1px solid getColor('$bgText12')
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+  overflow: hidden
+
+  // hard-coded in pages/entity_chat
+  @media (min-width: $breakPointLarge)
+    display: none
+
+  &.is-loaded
+    > .menu-item
+      transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+      opacity: 1
+
+  &.is-hidden
+    transform: translateY(64px)
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+
+  > .menu-item
+    ripple(getColor('$bgText87'), bottomBar)
+    flex1()
+    opacity: 0
+    text-align: center
+    padding: 8px 0
+    cursor: pointer
+    user-select: none
+    position: relative
+    overflow: visible
+
+    &.is-selected
+      > .text
+        color: getColor('$primaryMain')
+
+    &.has-notification
+      > .icon
+        position: relative
+        z-index: 1
+
+        &:after
+          content: ''
+          width: 4px
+          height: 4px
+          border-radius: 50%
+          position: absolute
+          z-index: 1
+          left: 50%
+          top: 50%
+          margin-top: -2px
+          margin-left: 16px
+          background: getColor('$primaryMain')
+
+    > .text
+      font-caption()
+      color: getColor('$bgText54')
+      margin-top: 2px
+      white-space: nowrap
+      text-overflow: ellipsis
+      overflow: hidden
+      position: relative
+      z-index: 1
