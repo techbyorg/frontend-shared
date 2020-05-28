@@ -1,6 +1,6 @@
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 require 'rxjs/add/operator/map'
-_forEach = require 'lodash/forEach'
+import _forEach from 'lodash/forEach'
 if window?
   uuid = require 'uuid'
 

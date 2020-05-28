@@ -1,14 +1,14 @@
-{z, classKebab, useMemo, useRef, useStream} = require 'zorium'
-_map = require 'lodash/map'
-_find = require 'lodash/find'
+import {z, classKebab, useMemo, useRef, useStream} from 'zorium'
+import _map from 'lodash/map'
+import _find from 'lodash/find'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 
-$icon = require '../icon'
-$positionedOverlay = require '../positioned_overlay'
-colors = require '../../colors'
+import $icon from '../icon'
+import $positionedOverlay from '../positioned_overlay'
+import colors from '../../colors'
 
 if window?
   require './index.styl'

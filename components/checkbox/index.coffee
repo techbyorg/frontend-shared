@@ -1,11 +1,11 @@
-{z, useRef, useMemo, useStream} = require 'zorium'
+import {z, useRef, useMemo, useStream} from 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
-_defaults = require 'lodash/defaults'
+import _defaults from 'lodash/defaults'
 
-$icon = require '../icon'
-allColors = require '../../colors'
+import $icon from '../icon'
+import allColors from '../../colors'
 
 if window?
   require './index.styl'

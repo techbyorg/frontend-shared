@@ -1,8 +1,8 @@
-{z} = require 'zorium'
-_map = require 'lodash/map'
-_range = require 'lodash/range'
+import {z} from 'zorium'
+import _map from 'lodash/map'
+import _range from 'lodash/range'
 
-colors = require '../../colors'
+import colors from '../../colors'
 
 if window?
   require './index.styl'

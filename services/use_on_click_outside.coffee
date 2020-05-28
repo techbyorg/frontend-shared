@@ -1,6 +1,6 @@
-{useEffect} = require 'zorium'
-_isArray = require 'lodash/isArray'
-_some = require 'lodash/some'
+import {useEffect} from 'zorium'
+import _isArray from 'lodash/isArray'
+import _some from 'lodash/some'
 
 module.exports = useOnClickOutside = ($$refs, handler) ->
   unless _isArray $$refs

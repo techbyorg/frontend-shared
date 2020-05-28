@@ -1,11 +1,11 @@
-{z, classKebab, useMemo, useRef} = require 'zorium'
-_defaults = require 'lodash/defaults'
-_map = require 'lodash/map'
-_sumBy = require 'lodash/sumBy'
+import {z, classKebab, useMemo, useRef} from 'zorium'
+import _defaults from 'lodash/defaults'
+import _map from 'lodash/map'
+import _sumBy from 'lodash/sumBy'
 
-$spinner = require '../spinner'
-Environment = require '../../services/environment'
-useRefSize = require '../../services/use_ref_size'
+import $spinner from '../spinner'
+import Environment from '../../services/environment'
+import useRefSize from '../../services/use_ref_size'
 
 if window?
   require './index.styl'

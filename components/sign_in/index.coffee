@@ -1,11 +1,11 @@
-{z, useContext, useMemo, useStream} = require 'zorium'
+import {z, useContext, useMemo, useStream} from 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
-$primaryInput = require '../primary_input'
-$button = require '../button'
-colors = require '../../colors'
-context = require '../../context'
-config = require '../../config'
+import $primaryInput from '../primary_input'
+import $button from '../button'
+import colors from '../../colors'
+import context from '../../context'
+import config from '../../config'
 
 if window?
   require './index.styl'

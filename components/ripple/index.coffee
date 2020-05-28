@@ -1,7 +1,7 @@
-{z, classKebab, useRef, useMemo} = require 'zorium'
-Environment = require '../../services/environment'
+import {z, classKebab, useRef, useMemo} from 'zorium'
+import Environment from '../../services/environment'
 
-colors = require '../../colors'
+import colors from '../../colors'
 
 if window?
   require './index.styl'

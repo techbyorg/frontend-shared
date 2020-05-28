@@ -1,6 +1,6 @@
-{z, useContext} = require 'zorium'
+import {z, useContext} from 'zorium'
 
-context = require '../../context'
+import context from '../../context'
 
 if window?
   require './index.styl'

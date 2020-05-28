@@ -1,8 +1,8 @@
-{z} = require 'zorium'
-_defaults = require 'lodash/defaults'
+import {z} from 'zorium'
+import _defaults from 'lodash/defaults'
 
-$textaea = require '../textarea'
-colors = require '../../colors'
+import $textaea from '../textarea'
+import colors from '../../colors'
 
 module.exports = $primaryTextarea = (opts) ->
   z '.z-primary-textarea',

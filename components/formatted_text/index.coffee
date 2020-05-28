@@ -1,24 +1,24 @@
-{z, classKebab, useMemo, useStream} = require 'zorium'
+import {z, classKebab, useMemo, useStream} from 'zorium'
 supportsWebP = window? and require 'supports-webp'
 # remark = require 'remark'
-unified = require 'unified'
-markdown = require 'remark-parse'
+import unified from 'unified'
+import markdown from 'remark-parse'
 # FIXME: need dyo equivalent of:
 # https://github.com/remarkjs/remark-react/blob/master/index.js
 # https://github.com/remarkjs/remark-vdom/blob/master/index.js
-vdom = require 'remark-vdom'
-_uniq = require 'lodash/uniq'
-_find = require 'lodash/find'
-_reduce = require 'lodash/reduce'
+import vdom from 'remark-vdom'
+import _uniq from 'lodash/uniq'
+import _find from 'lodash/find'
+import _reduce from 'lodash/reduce'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 
-$button = require '../button'
+import $button from '../button'
 # $imageViewOverlay = require '../image_view_overlay'
 # $embeddedVideo = require '../embedded_video'
-$profileDialog = require '../profile_dialog'
-config = require '../../config'
+import $profileDialog from '../profile_dialog'
+import config from '../../config'
 
 if window?
   require './index.styl'

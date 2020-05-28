@@ -1,9 +1,9 @@
-{z, useMemo} = require 'zorium'
-_defaults = require 'lodash/defaults'
+import {z, useMemo} from 'zorium'
+import _defaults from 'lodash/defaults'
 
-$icon = require '../icon'
-$ripple = require '../ripple'
-allColors = require '../../colors'
+import $icon from '../icon'
+import $ripple from '../ripple'
+import allColors from '../../colors'
 
 if window?
   require './index.styl'

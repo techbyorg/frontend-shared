@@ -1,9 +1,9 @@
-{z, classKebab, useContext, useStream} = require 'zorium'
-_defaults = require 'lodash/defaults'
-_map = require 'lodash/map'
-_range = require 'lodash/range'
+import {z, classKebab, useContext, useStream} from 'zorium'
+import _defaults from 'lodash/defaults'
+import _map from 'lodash/map'
+import _range from 'lodash/range'
 
-context = require '../../context'
+import context from '../../context'
 
 console.log 'why is this running'
 

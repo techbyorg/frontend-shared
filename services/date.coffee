@@ -1,5 +1,5 @@
-semverCompare = require 'semver-compare'
-_padStart = require 'lodash/padStart'
+import semverCompare from 'semver-compare'
+import _padStart from 'lodash/padStart'
 
 ONE_MINUTE_S = 60
 ONE_HOUR_S = 3600

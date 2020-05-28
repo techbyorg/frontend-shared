@@ -1,4 +1,4 @@
-{useState, useMemo, useCallback, useLayoutEffect, useStream} = require 'zorium'
+import {useState, useMemo, useCallback, useLayoutEffect, useStream} from 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 getSize = ($$el) ->

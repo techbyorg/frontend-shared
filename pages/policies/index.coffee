@@ -1,6 +1,6 @@
-{z} = require 'zorium'
+import {z} from 'zorium'
 
-$policies = require '../../components/policies'
+import $policies from '../../components/policies'
 
 if window?
   require './index.styl'

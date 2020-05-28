@@ -1,11 +1,11 @@
-{z, createPortal, useContext, useRef, useMemo, useEffect} = require 'zorium'
-_defaults = require 'lodash/defaults'
+import {z, createPortal, useContext, useRef, useMemo, useEffect} from 'zorium'
+import _defaults from 'lodash/defaults'
 
-$icon = require '../icon'
-$button = require '../button'
-colors = require '../../colors'
-context = require '../../context'
-config = require '../../config'
+import $icon from '../icon'
+import $button from '../button'
+import colors from '../../colors'
+import context from '../../context'
+import config from '../../config'
 
 CLOSE_DELAY_MS = 450 # 0.45s for animation
 

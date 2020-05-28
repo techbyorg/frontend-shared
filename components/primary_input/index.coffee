@@ -1,10 +1,10 @@
-{z, classKebab, useMemo, useStream} = require 'zorium'
-_defaults = require 'lodash/defaults'
+import {z, classKebab, useMemo, useStream} from 'zorium'
+import _defaults from 'lodash/defaults'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
-$icon = require '../icon'
-$input = require '../input'
-allColors = require '../../colors'
+import $icon from '../icon'
+import $input from '../input'
+import allColors from '../../colors'
 
 
 if window?

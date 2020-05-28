@@ -1,11 +1,11 @@
-_reduce = require 'lodash/reduce'
-_mapValues = require 'lodash/mapValues'
-_reduce = require 'lodash/reduce'
-_findKey = require 'lodash/findKey'
+import _reduce from 'lodash/reduce'
+import _mapValues from 'lodash/mapValues'
+import _reduce from 'lodash/reduce'
+import _findKey from 'lodash/findKey'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
-DateService = require '../services/date'
-config = require '../config'
+import DateService from '../services/date'
+import config from '../config'
 
 class Language
   constructor: ({language, @cookie, @files} = {}) ->

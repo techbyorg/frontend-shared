@@ -1,24 +1,24 @@
 require 'frontend-shared/polyfill'
 
-{z, render} = require 'zorium'
-cookieLib = require 'cookie'
-LocationRouter = require 'location-router'
-socketIO = require 'socket.io-client/dist/socket.io.slim.js'
+{import z, render} from 'zorium'
+import cookieLib from 'cookie'
+import LocationRouter from 'location-router'
+import socketIO from 'socket.io-client/dist/socket.io.slim.js'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 require 'rxjs/add/operator/do'
 
 require '../root.styl'
 
-Environment = require './environment'
-DateService = require './date'
-RouterService = require './router'
-PushService = require './push'
-ServiceWorkerService = require './service_worker'
-CookieService = require './cookie'
-LogService = require './log'
-LanguageService = require './language'
-PortalService = require './portal'
-WindowService = require './window'
+import Environment from './environment'
+import DateService from './date'
+import RouterService from './router'
+import PushService from './push'
+import ServiceWorkerService from './service_worker'
+import CookieService from './cookie'
+import LogService from './log'
+import LanguageService from './language'
+import PortalService from './portal'
+import WindowService from './window'
 
 export default setup = ({$app, Lang, Model, colors, config}) ->
   MAX_ERRORS_LOGGED = 5

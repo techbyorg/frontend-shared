@@ -1,6 +1,6 @@
-{z} = require 'zorium'
-_isEmpty = require 'lodash/isEmpty'
-_map = require 'lodash/map'
+import {z} from 'zorium'
+import _isEmpty from 'lodash/isEmpty'
+import _map from 'lodash/map'
 
 if window?
   require './index.styl'

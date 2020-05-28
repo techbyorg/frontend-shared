@@ -1,13 +1,13 @@
-{z, classKebab, createPortal, useEffect, useMemo, useRef} = require 'zorium'
+import {z, classKebab, createPortal, useEffect, useMemo, useRef} from 'zorium'
 # _isEmpty = require 'lodash/isEmpty'
-_map = require 'lodash/map'
+import _map from 'lodash/map'
 # _defaults = require 'lodash/defaults'
 
 if window?
   require './index.styl'
 
-$button = require '../button'
-colors = require '../../colors'
+import $button from '../button'
+import colors from '../../colors'
 
 CLOSE_DELAY_MS = 450 # 0.45s for animation
 

@@ -1,4 +1,4 @@
-{z} = require 'zorium'
+import {z} from 'zorium'
 
 if window?
   require './index.styl'

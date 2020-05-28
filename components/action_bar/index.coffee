@@ -1,10 +1,10 @@
-{z, useContext} = require 'zorium'
-_defaults = require 'lodash/defaults'
+import {z, useContext} from 'zorium'
+import _defaults from 'lodash/defaults'
 
-$appBar = require '../app_bar'
-$icon = require '../icon'
-colors = require '../../colors'
-context = require '../../context'
+import $appBar from '../app_bar'
+import $icon from '../icon'
+import colors from '../../colors'
+import context from '../../context'
 
 if window?
   require './index.styl'

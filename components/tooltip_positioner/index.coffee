@@ -1,9 +1,9 @@
-{z, useContext, useEffect, useRef, useMemo, useStream} = require 'zorium'
+import {z, useContext, useEffect, useRef, useMemo, useStream} from 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-_every = require 'lodash/every'
+import _every from 'lodash/every'
 
-$tooltip = require '../tooltip'
-context = require '../../context'
+import $tooltip from '../tooltip'
+import context from '../../context'
 
 if window?
   require './index.styl'

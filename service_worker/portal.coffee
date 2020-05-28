@@ -1,4 +1,4 @@
-PortalGun = require 'portal-gun'
+import PortalGun from 'portal-gun'
 
 module.exports = class Portal
   constructor: ({@cache}) ->

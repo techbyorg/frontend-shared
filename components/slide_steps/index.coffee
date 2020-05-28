@@ -1,12 +1,12 @@
-{z, classKebab, useContext, useMemo, useStream} = require 'zorium'
-_map = require 'lodash/map'
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
+import _map from 'lodash/map'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
-$tabs = require '../tabs'
-$icon = require '../icon'
-colors = require '../../colors'
-context = require '../../context'
-config = require '../../config'
+import $tabs from '../tabs'
+import $icon from '../icon'
+import colors from '../../colors'
+import context from '../../context'
+import config from '../../config'
 
 if window?
   require './index.styl'

@@ -1,6 +1,6 @@
-RouterService = require '../services/router'
-Language = require '../services/language'
-config = require '../config'
+import RouterService from '../services/router'
+import Language from '../services/language'
+import config from '../config'
 
 router = new RouterService {
   router: null

@@ -1,6 +1,6 @@
-{z, classKebab} = require 'zorium'
+import {z, classKebab} from 'zorium'
 
-colors = require '../../colors'
+import colors from '../../colors'
 
 if window?
   require './index.styl'

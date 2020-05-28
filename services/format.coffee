@@ -1,11 +1,11 @@
-z = require 'zorium'
-_capitalize = require 'lodash/capitalize'
-_map = require 'lodash/map'
-_filter = require 'lodash/filter'
-_reduce = require 'lodash/reduce'
-_last = require 'lodash/last'
+import z from 'zorium'
+import _capitalize from 'lodash/capitalize'
+import _map from 'lodash/map'
+import _filter from 'lodash/filter'
+import _reduce from 'lodash/reduce'
+import _last from 'lodash/last'
 
-config = require '../config'
+import config from '../config'
 
 class FormatService
   number: (number) ->

@@ -1,10 +1,10 @@
-{z, useContext} = require 'zorium'
+import {z, useContext} from 'zorium'
 
-$button = require '../button'
-$dialog = require '../dialog'
-colors = require '../../colors'
-context = require '../../context'
-config = require '../../config'
+import $button from '../button'
+import $dialog from '../dialog'
+import colors from '../../colors'
+import context from '../../context'
+import config from '../../config'
 
 if window?
   require './index.styl'

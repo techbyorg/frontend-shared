@@ -1,10 +1,10 @@
-{z, useContext, useStream} = require 'zorium'
-_map = require 'lodash/map'
-_flatten = require 'lodash/flatten'
-_range = require 'lodash/range'
-_filter = require 'lodash/filter'
+import {z, useContext, useStream} from 'zorium'
+import _map from 'lodash/map'
+import _flatten from 'lodash/flatten'
+import _range from 'lodash/range'
+import _filter from 'lodash/filter'
 
-context = require '../../context'
+import context from '../../context'
 
 if window?
   require './index.styl'

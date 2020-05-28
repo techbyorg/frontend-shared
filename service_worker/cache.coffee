@@ -1,9 +1,9 @@
-_map = require 'lodash/map'
-_find = require 'lodash/find'
-_sum = require 'lodash/sum'
+import _map from 'lodash/map'
+import _find from 'lodash/find'
+import _sum from 'lodash/sum'
 
-Environment = require '../services/environment'
-config = require '../config'
+import Environment from '../services/environment'
+import config from '../config'
 
 module.exports = class Cache
   constructor: ->

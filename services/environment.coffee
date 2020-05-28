@@ -1,6 +1,6 @@
-_includes = require 'lodash/includes'
+import _includes from 'lodash/includes'
 
-config = require '../config'
+import config from '../config'
 
 class Environment
   isMobile: ({userAgent} = {}) ->

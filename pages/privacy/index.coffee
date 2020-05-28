@@ -1,10 +1,10 @@
-{z, useContext} = require 'zorium'
+import {z, useContext} from 'zorium'
 
-$appBar = require '../../components/app_bar'
-$buttonBack = require '../../components/button_back'
-$privacy = require '../../components/privacy'
-colors = require '../../colors'
-context = require '../../context'
+import $appBar from '../../components/app_bar'
+import $buttonBack from '../../components/button_back'
+import $privacy from '../../components/privacy'
+import colors from '../../colors'
+import context from '../../context'
 
 if window?
   require './index.styl'

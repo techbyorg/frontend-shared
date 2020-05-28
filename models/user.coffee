@@ -1,4 +1,4 @@
-config = require '../config'
+import config from '../config'
 
 module.exports = class User
   namespace: 'users'

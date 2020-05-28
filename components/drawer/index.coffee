@@ -1,8 +1,8 @@
-{z, classKebab, useContext, useRef, useStream, useEffect, useMemo} = require 'zorium'
+import {z, classKebab, useContext, useRef, useStream, useEffect, useMemo} from 'zorium'
 
-colors = require '../../colors'
-context = require '../../context'
-config = require '../../config'
+import colors from '../../colors'
+import context from '../../context'
+import config from '../../config'
 
 if window?
   IScroll = require 'iscroll/build/iscroll-lite-snap-zoom.js'

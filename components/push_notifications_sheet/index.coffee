@@ -1,11 +1,11 @@
-{z, useContext} = require 'zorium'
+import {z, useContext} from 'zorium'
 
-$button = require '../button'
-$icon = require '../icon'
-$sheet = require '../sheet'
-PushService = require '../../services/push'
-colors = require '../../colors'
-context = require '../../context'
+import $button from '../button'
+import $icon from '../icon'
+import $sheet from '../sheet'
+import PushService from '../../services/push'
+import colors from '../../colors'
+import context from '../../context'
 
 module.exports = $pushNotificationSheet = ->
   {model, lang} = useContext context

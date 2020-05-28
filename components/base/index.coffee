@@ -1,5 +1,5 @@
-_map = require 'lodash/map'
-_forEach = require 'lodash/forEach'
+import _map from 'lodash/map'
+import _forEach from 'lodash/forEach'
 
 # FIXME: work with zorium 3
 

@@ -1,8 +1,8 @@
-{z, useContext} = require 'zorium'
+import {z, useContext} from 'zorium'
 
-$icon = require '../icon'
-colors = require '../../colors'
-context = require '../../context'
+import $icon from '../icon'
+import colors from '../../colors'
+import context from '../../context'
 
 module.exports = $buttonBack = (props) ->
   {color, onclick, fallbackPath, isAlignedLeft = true} = props

@@ -1,7 +1,7 @@
-{z, classKebab, useEffect, useRef, useStream} = require 'zorium'
-_map = require 'lodash/map'
+import {z, classKebab, useEffect, useRef, useStream} from 'zorium'
+import _map from 'lodash/map'
 
-colors = require '../../colors'
+import colors from '../../colors'
 
 if window?
   require './index.styl'

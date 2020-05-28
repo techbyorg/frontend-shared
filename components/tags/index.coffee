@@ -1,9 +1,9 @@
-{z, useMemo, useStream, useRef} = require 'zorium'
-_map = require 'lodash/map'
-_take = require 'lodash/take'
+import {z, useMemo, useStream, useRef} from 'zorium'
+import _map from 'lodash/map'
+import _take from 'lodash/take'
 
-$tag = require '../tag'
-useRefSize = require '../../services/use_ref_size'
+import $tag from '../tag'
+import useRefSize from '../../services/use_ref_size'
 
 if window?
   require './index.styl'

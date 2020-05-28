@@ -1,14 +1,14 @@
-{z, classKebab, useContext, useMemo, useStream} = require 'zorium'
-_map = require 'lodash/map'
-_filter = require 'lodash/filter'
-_some = require 'lodash/some'
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
+import _map from 'lodash/map'
+import _filter from 'lodash/filter'
+import _some from 'lodash/some'
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
 
-$icon = require '../icon'
-colors = require '../../colors'
-context = require '../../context'
-config = require '../../config'
+import $icon from '../icon'
+import colors from '../../colors'
+import context from '../../context'
+import config from '../../config'
 
 if window?
   require './index.styl'

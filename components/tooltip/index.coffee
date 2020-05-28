@@ -1,10 +1,10 @@
-{z, classKebab, useContext, useEffect, useStream} = require 'zorium'
-_uniq = require 'lodash/uniq'
+import {z, classKebab, useContext, useEffect, useStream} from 'zorium'
+import _uniq from 'lodash/uniq'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
-$icon = require '../icon'
-colors = require '../../colors'
-context = require '../../context'
+import $icon from '../icon'
+import colors from '../../colors'
+import context from '../../context'
 
 if window?
   require './index.styl'

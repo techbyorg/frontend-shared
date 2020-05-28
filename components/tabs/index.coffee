@@ -1,9 +1,9 @@
-{z, classKebab, useContext, useEffect, useMemo, useRef, useStream} = require 'zorium'
-_map = require 'lodash/map'
+import {z, classKebab, useContext, useEffect, useMemo, useRef, useStream} from 'zorium'
+import _map from 'lodash/map'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
-$tabsBar = require '../../components/tabs_bar'
-context = require '../../context'
+import $tabsBar from '../../components/tabs_bar'
+import context from '../../context'
 
 if window?
   IScroll = require 'iscroll/build/iscroll-lite-snap-zoom.js'

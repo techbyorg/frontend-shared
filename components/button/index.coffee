@@ -1,9 +1,9 @@
-{z, classKebab} = require 'zorium'
-_defaults = require 'lodash/defaults'
+import {z, classKebab} from 'zorium'
+import _defaults from 'lodash/defaults'
 
-$ripple = require '../ripple'
-$icon = require '../icon'
-colors = require '../../colors'
+import $ripple from '../ripple'
+import $icon from '../icon'
+import colors from '../../colors'
 
 if window?
   require './index.styl'

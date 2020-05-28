@@ -1,6 +1,6 @@
-{z, classKebab, useMemo, useStream} = require 'zorium'
+import {z, classKebab, useMemo, useStream} from 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-_map = require 'lodash/map'
+import _map from 'lodash/map'
 
 if window?
   require './index.styl'

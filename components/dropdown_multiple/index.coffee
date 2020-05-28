@@ -1,16 +1,16 @@
 # not currently used. previously used for cell carrier selection
 
-{z, classKebab, useStream} = require 'zorium'
-_map = require 'lodash/map'
-_filter = require 'lodash/filter'
-_kebabCase = require 'lodash/kebabCase'
+{import z, classKebab, useStream} from 'zorium'
+import _map from 'lodash/map'
+import _filter from 'lodash/filter'
+import _kebabCase from 'lodash/kebabCase'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
 require 'rxjs/add/observable/of'
 
-$checkbox = require '../checkbox'
+import $checkbox from '../checkbox'
 
 if window?
   require './index.styl'

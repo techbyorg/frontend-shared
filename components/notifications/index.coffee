@@ -1,13 +1,13 @@
-{z, classKebab, useContext, useStream} = require 'zorium'
-_map = require 'lodash/map'
-_isEmpty = require 'lodash/isEmpty'
+import {z, classKebab, useContext, useStream} from 'zorium'
+import _map from 'lodash/map'
+import _isEmpty from 'lodash/isEmpty'
 
-$icon = require '../icon'
-$spinner = require '../spinner'
-DateService = require '../../services/date'
-colors = require '../../colors'
-context = require '../../context'
-config = require '../../config'
+import $icon from '../icon'
+import $spinner from '../spinner'
+import DateService from '../../services/date'
+import colors from '../../colors'
+import context from '../../context'
+import config from '../../config'
 
 if window?
   require './index.styl'

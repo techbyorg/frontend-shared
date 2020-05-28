@@ -1,6 +1,6 @@
-Environment = require '../services/environment'
-SemverService = require '../services/semver'
-config = require '../config'
+import Environment from '../services/environment'
+import SemverService from '../services/semver'
+import config from '../config'
 
 ONE_DAY_MS = 3600 * 24 * 1000
 

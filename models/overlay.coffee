@@ -1,11 +1,11 @@
 
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-_filter = require 'lodash/filter'
-_findIndex = require 'lodash/findIndex'
-_isEmpty = require 'lodash/isEmpty'
-_map = require 'lodash/map'
+import _filter from 'lodash/filter'
+import _findIndex from 'lodash/findIndex'
+import _isEmpty from 'lodash/isEmpty'
+import _map from 'lodash/map'
 
-Environment = require '../services/environment'
+import Environment from '../services/environment'
 
 # NOTE: in general, don't use this. use portals.
 

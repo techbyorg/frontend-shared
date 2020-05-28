@@ -1,12 +1,12 @@
 # process.env.* is replaced at run-time with * environment variable
 # Note that simply env.* is not replaced, and thus suitible for private config
 
-_map = require 'lodash/map'
-_range = require 'lodash/range'
-_merge = require 'lodash/merge'
-assertNoneMissing = require 'assert-none-missing'
+import _map from 'lodash/map'
+import _range from 'lodash/range'
+import _merge from 'lodash/merge'
+import assertNoneMissing from 'assert-none-missing'
 
-colors = require './colors'
+import colors from './colors'
 
 # Don't let server environment variables leak into client code
 serverEnv = process.env

@@ -1,12 +1,12 @@
-{z, useContext, useEffect, useMemo, useStream} = require 'zorium'
+import {z, useContext, useEffect, useMemo, useStream} from 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/fromPromise'
 
-Spinner = require '../../components/spinner'
-Button = require '../../components/button'
-context = require '../../context'
-config = require '../../config'
+import Spinner from '../../components/spinner'
+import Button from '../../components/button'
+import context from '../../context'
+import config from '../../config'
 
 if window?
   require './index.styl'

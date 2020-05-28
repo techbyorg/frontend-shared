@@ -1,3 +1,3 @@
-{createContext} = require 'zorium'
+import {createContext} from 'zorium'
 
 module.exports = SharedContext = createContext()

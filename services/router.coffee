@@ -1,17 +1,17 @@
-qsStringify = require 'qs/lib/stringify'
-_forEach = require 'lodash/forEach'
-_isEmpty = require 'lodash/isEmpty'
-_defaults = require 'lodash/defaults'
-_forEach = require 'lodash/forEach'
-_reduce = require 'lodash/reduce'
-_kebabCase = require 'lodash/kebabCase'
-_last = require 'lodash/last'
+import qsStringify from 'qs/lib/stringify'
+import _forEach from 'lodash/forEach'
+import _isEmpty from 'lodash/isEmpty'
+import _defaults from 'lodash/defaults'
+import _forEach from 'lodash/forEach'
+import _reduce from 'lodash/reduce'
+import _kebabCase from 'lodash/kebabCase'
+import _last from 'lodash/last'
 RxObservable = require('rxjs/Observable').Observable
-Environment = require '../services/environment'
+import Environment from '../services/environment'
 
-SemverService = require '../services/semver'
-colors = require '../colors'
-config = require '../config'
+import SemverService from '../services/semver'
+import colors from '../colors'
+import config from '../config'
 
 ev = (fn) ->
   # coffeelint: disable=missing_fat_arrows

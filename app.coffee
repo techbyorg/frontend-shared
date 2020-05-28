@@ -1,8 +1,8 @@
-{z, classKebab, useMemo, useStream} = require 'zorium'
-HttpHash = require 'http-hash'
-_map = require 'lodash/map'
-_forEach = require 'lodash/forEach'
-_defaults = require 'lodash/defaults'
+import {z, classKebab, useMemo, useStream} from 'zorium'
+import HttpHash from 'http-hash'
+import _map from 'lodash/map'
+import _forEach from 'lodash/forEach'
+import _defaults from 'lodash/defaults'
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/operator/map'
 require 'rxjs/add/operator/filter'
@@ -11,11 +11,11 @@ require 'rxjs/add/observable/combineLatest'
 require 'rxjs/add/observable/of'
 require 'rxjs/add/operator/publishReplay'
 
-$head = require './components/head'
+import $head from './components/head'
 # $navDrawer = require './components/nav_drawer'
-$bottomBar = require './components/bottom_bar'
-Environment = require './services/environment'
-GlobalContext = require './context'
+import $bottomBar from './components/bottom_bar'
+import Environment from './services/environment'
+import GlobalContext from './context'
 
 # TODO: clean this up a bit
 module.exports = $app = (props) ->
@@ -121,8 +121,6 @@ module.exports = $app = (props) ->
     requestsStream: requestsStream.filter (request) ->
       request.$page is $page
   }
-
-  console.log 'page', $page, $backupPage
 
   $body =
     z '#zorium-root', {

@@ -1,4 +1,4 @@
-_pick = require 'lodash/pick'
+import _pick from 'lodash/pick'
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/defer'
 require 'rxjs/add/operator/toPromise'
@@ -7,8 +7,8 @@ require 'rxjs/add/operator/switchMap'
 require 'rxjs/add/operator/take'
 require 'rxjs/add/operator/publishReplay'
 
-Environment = require '../services/environment'
-config = require '../config'
+import Environment from '../services/environment'
+import config from '../config'
 
 module.exports = class Auth
   constructor: (options) ->

@@ -1,4 +1,4 @@
-request = require 'xhr-request'
+import request from 'xhr-request'
 
 module.exports = (url, options) ->
   new Promise (resolve, reject) ->

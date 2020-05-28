@@ -1,5 +1,5 @@
-_defaults = require 'lodash/defaults'
-_mapValues = require 'lodash/mapValues'
+import _defaults from 'lodash/defaults'
+import _mapValues from 'lodash/mapValues'
 
 $black12 = 'rgba(0, 0, 0, 0.12)'
 $black26 = 'rgba(0, 0, 0, 0.26)'

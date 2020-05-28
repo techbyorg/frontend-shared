@@ -1,9 +1,9 @@
+import config from '../config'
+import PushService from './push'
+import Environment from './environment'
+
 if window?
   PortalGun = require 'portal-gun'
-
-config = require '../config'
-PushService = require './push'
-Environment = require './environment'
 
 class ServiceWorkerService
   register: ({model}) =>

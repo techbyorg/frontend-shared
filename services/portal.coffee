@@ -1,11 +1,11 @@
-Fingerprint = require 'fingerprintjs'
-getUuidByString = require 'uuid-by-string'
-_reduce = require 'lodash/reduce'
+import Fingerprint from 'fingerprintjs'
+import getUuidByString from 'uuid-by-string'
+import _reduce from 'lodash/reduce'
 
-Environment = require '../services/environment'
-PushService = require '../services/push'
-GetAppDialog = require '../components/get_app_dialog'
-config = require '../config'
+import Environment from '../services/environment'
+import PushService from '../services/push'
+import GetAppDialog from '../components/get_app_dialog'
+import config from '../config'
 
 if window?
   PortalGun = require 'portal-gun'

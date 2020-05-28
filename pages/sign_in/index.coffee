@@ -1,10 +1,10 @@
-{z} = require 'zorium'
+import {z} from 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-_map = require 'lodash/map'
+import _map from 'lodash/map'
 
-$appBar = require '../../components/app_bar'
-$signIn = require '../../components/sign_in'
-config = require '../../config'
+import $appBar from '../../components/app_bar'
+import $signIn from '../../components/sign_in'
+import config from '../../config'
 
 if window?
   require './index.styl'

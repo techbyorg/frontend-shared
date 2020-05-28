@@ -1,7 +1,7 @@
-Cache = require './cache'
-Portal = require './portal'
-Push = require './push'
-config = require '../config'
+import Cache from './cache'
+import Portal from './portal'
+import Push from './push'
+import config from '../config'
 
 push = new Push()
 push.listen()

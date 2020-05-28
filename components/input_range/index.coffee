@@ -1,11 +1,11 @@
-{z, classKebab, useContext, useEffect, useMemo, useStream} = require 'zorium'
+import {z, classKebab, useContext, useEffect, useMemo, useStream} from 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
-_map = require 'lodash/map'
-_range = require 'lodash/range'
+import _map from 'lodash/map'
+import _range from 'lodash/range'
 
-context = require '../../context'
+import context from '../../context'
 
 if window?
   require './index.styl'
