@@ -1,6 +1,6 @@
 # not currently used. previously used for cell carrier selection
 
-{import z, classKebab, useStream} from 'zorium'
+import {z, classKebab, useStream} from 'zorium'
 import _map from 'lodash/map'
 import _filter from 'lodash/filter'
 import _kebabCase from 'lodash/kebabCase'

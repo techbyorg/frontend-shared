@@ -1,6 +1,6 @@
 require 'frontend-shared/polyfill'
 
-{import z, render} from 'zorium'
+import {z, render} from 'zorium'
 import cookieLib from 'cookie'
 import LocationRouter from 'location-router'
 import socketIO from 'socket.io-client/dist/socket.io.slim.js'

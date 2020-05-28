@@ -1,6 +1,5 @@
 import _reduce from 'lodash/reduce'
 import _mapValues from 'lodash/mapValues'
-import _reduce from 'lodash/reduce'
 import _findKey from 'lodash/findKey'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
