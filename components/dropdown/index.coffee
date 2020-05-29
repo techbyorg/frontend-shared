@@ -14,7 +14,7 @@ if window?
 export default $dropdown = (props) ->
   {valueStreams, valueStream, errorStream, options, $$parentRef,
     anchor = 'top-left', isDisabled = false} = props
-  colors = useContext context
+  {colors} = useContext context
 
   $$ref = useRef()
 
