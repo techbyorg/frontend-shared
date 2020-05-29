@@ -3,7 +3,7 @@ import {z} from 'zorium'
 if window?
   require './index.styl'
 
-module.exports = $tag = ({tag}) ->
+export default $tag = ({tag}) ->
   z '.z-tag', {
     style:
       background: "#{tag.color}10"

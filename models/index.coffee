@@ -1,10 +1,7 @@
 import Exoid from 'exoid'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/combineLatest'
-require 'rxjs/add/observable/of'
-require 'rxjs/add/operator/take'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import Auth from './auth'
 import Drawer from './drawer'
@@ -15,12 +12,11 @@ import Overlay from './overlay'
 import Time from './time'
 import Tooltip from './tooltip'
 import User from './user'
-import request from '../services/request'
 
 SERIALIZATION_KEY = 'MODEL'
 # SERIALIZATION_EXPIRE_TIME_MS = 1000 * 10 # 10 seconds
 
-module.exports = class Model
+export default class Model
   constructor: (options) ->
     {serverHeaders, io, @cookie, @portal, lang, userAgent} = options
     serverHeaders ?= {}
@@ -51,9 +47,10 @@ module.exports = class Model
         'accept-language'
         'x-forwarded-for'
       ]
-      request url, _.merge {
+      if accessToken
+        url += "?accessToken=#{accessToken}"
+      response = await window.fetch url, _.merge {
         responseType: 'json'
-        query: if accessToken? then {accessToken} else {}
         headers: if _.isPlainObject opts?.body
           _.merge {
             # Avoid CORS preflight
@@ -62,6 +59,7 @@ module.exports = class Model
         else
           proxyHeaders
       }, opts
+      response.json()
 
     if navigator?.onLine
       offlineCache = null
@@ -79,7 +77,7 @@ module.exports = class Model
       cache: @initialCache
       isServerSide: not window?
 
-    @token = new RxBehaviorSubject null
+    @token = new Rx.BehaviorSubject null
 
     @overlay = new Overlay()
 
@@ -109,7 +107,7 @@ module.exports = class Model
       req = try
         JSON.parse key
       catch
-        RxObservable.of null
+        Rx.of null
 
       if req.path
         @auth.stream req.path, req.body, {ignoreCache: true} #, options
@@ -120,10 +118,10 @@ module.exports = class Model
     # so need to handle the case where the cookie changes between server-side
     # cache and the actual get (when user doesn't exist from exoid, but cookie gets user)
 
-    RxObservable.combineLatest(
+    Rx.combineLatest(
       requestsStream, (vals...) -> vals
     )
-    .take(1).subscribe (responses) =>
+    .pipe(rx.take(1)).subscribe (responses) =>
       responses = _.zipWith responses, _.keys(cache), (response, req) ->
         {req, response}
       cacheArray = _.map cache, (response, req) ->
@@ -153,7 +151,7 @@ module.exports = class Model
 
   getSerializationStream: =>
     @exoid.getCacheStream()
-    .map (exoidCache) ->
+    .pipe rx.map (exoidCache) ->
       string = JSON.stringify({
         exoid: exoidCache
         # problem with this is clock skew

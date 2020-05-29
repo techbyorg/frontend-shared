@@ -1,16 +1,14 @@
 import {z, classKebab, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/of'
-require 'rxjs/add/operator/switch'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import allColors from '../../colors'
 
 if window?
   require './index.styl'
 
-module.exports = $input = (props) ->
+export default $input = (props) ->
   {valueStream, valueStreams, errorStream, isFocusedStream
     colors, hintText = '', type = 'text', isFloating = false,
     isDisabled = false, isFullWidth,  autoCapitalize = true
@@ -18,14 +16,14 @@ module.exports = $input = (props) ->
 
   {valueStream, errorStream, isFocusedStream} = useMemo ->
     {
-      valueStream: valueStream or new RxBehaviorSubject ''
-      errorStream: errorStream or new RxBehaviorSubject null
-      isFocusedStream: isFocusedStream or new RxBehaviorSubject false
+      valueStream: valueStream or new Rx.BehaviorSubject ''
+      errorStream: errorStream or new Rx.BehaviorSubject null
+      isFocusedStream: isFocusedStream or new Rx.BehaviorSubject false
     }
   , []
 
   {value, error, isFocused} = useStream ->
-    value: valueStreams?.switch() or valueStream
+    value: valueStreams?.pipe(rx.switchAll()) or valueStream
     error: errorStream
     isFocused: isFocusedStream
 
@@ -71,7 +69,7 @@ module.exports = $input = (props) ->
       value: "#{value}" or ''
       oninput: (e) ->
         if valueStreams
-          valueStreams.next RxObservable.of e.target.value
+          valueStreams.next Rx.of e.target.value
         else
           valueStream.next e.target.value
       onfocus: (e) ->

@@ -1,26 +1,27 @@
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import Environment from '../services/environment'
 
 # NOTE: in general, don't use this. use portals.
 
-module.exports = class Overlay
+export default class Overlay
   constructor: ->
-    @overlays = new RxBehaviorSubject null
-    @_.data = new RxBehaviorSubject null
+    @overlays = new Rx.BehaviorSubject null
+    @_data = new Rx.BehaviorSubject null
 
   getData: =>
-    @_.data
+    @_data
 
   setData: (data) =>
-    @_.data.next data
+    @_data.next data
 
   get: =>
     @overlays.getValue()
 
   get$: =>
-    @overlays.map (overlays) -> _.map overlays, '$'
+    @overlays.pipe rx.map (overlays) -> _.map overlays, '$'
 
   open: ($, {data, onComplete, onCancel, id} = {}) =>
     if Environment.isIos()

@@ -1,7 +1,6 @@
 import {z, useContext, useEffect, useMemo, useStream} from 'zorium'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/fromPromise'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import Spinner from '../../components/spinner'
 import Button from '../../components/button'
@@ -11,24 +10,25 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-module.exports = $verifyEmailPage = ({model, requestsStream, router}) ->
+export default $verifyEmailPage = ({model, requestsStream, router}) ->
   {model, browser, lang, router} = useContext context
 
   useEffect ->
     if window?
-      disposable = requestsStream.switchMap ({req, route}) ->
-        RxObservable.fromPromise model.user.verifyEmail({
-          userId: route.params.userId
-          tokenStr: route.params.tokenStr
-        }).then ->
-          isVerifiedStream.next true
-        .catch (err) ->
-          console.log err
-          errorStream.next 'There was an error verifying your email!'
-          RxObservable.of null
+      disposable = requestsStream.pipe(
+        rx.switchMap ({req, route}) ->
+          Rx.fromPromise model.user.verifyEmail({
+            userId: route.params.userId
+            tokenStr: route.params.tokenStr
+          }).then ->
+            isVerifiedStream.next true
+          .catchError (err) ->
+            console.log err
+            errorStream.next 'There was an error verifying your email!'
+            Rx.of null
 
-      .take(1)
-      .subscribe()
+        rx.take(1)
+      ).subscribe()
 
     return ->
       disposable?.unsubscribe()
@@ -36,8 +36,8 @@ module.exports = $verifyEmailPage = ({model, requestsStream, router}) ->
 
   {isVerifiedStream, errorStream} = useMemo ->
     {
-      isVerifiedStream: new RxBehaviorSubject false
-      errorStream: new RxBehaviorSubject null
+      isVerifiedStream: new Rx.BehaviorSubject false
+      errorStream: new Rx.BehaviorSubject null
     }
   , []
 

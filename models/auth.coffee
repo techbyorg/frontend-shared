@@ -1,20 +1,15 @@
 import * as _ from 'lodash-es'
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/defer'
-require 'rxjs/add/operator/toPromise'
-require 'rxjs/add/observable/fromPromise'
-require 'rxjs/add/operator/switchMap'
-require 'rxjs/add/operator/take'
-require 'rxjs/add/operator/publishReplay'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import Environment from '../services/environment'
 import config from '../config'
 
-module.exports = class Auth
+export default class Auth
   constructor: (options) ->
     {@exoid, @pushToken, @lang, @cookie, @userAgent, @portal} = options
 
-    @waitValidAuthCookie = RxObservable.defer =>
+    @waitValidAuthCookie = Rx.defer =>
       accessToken = @cookie.get config.AUTH_COOKIE
       language = @lang.getLanguageStr()
       (if accessToken
@@ -55,7 +50,7 @@ module.exports = class Auth
         accessToken = data?.userLoginAnon.accessToken
         if accessToken and accessToken isnt 'undefined'
           @setAccessToken data?.userLoginAnon.accessToken
-    .publishReplay(1).refCount()
+    .pipe rx.publishReplay(1), rx.refCount()
 
   setAccessToken: (accessToken) =>
     @cookie.set config.AUTH_COOKIE, accessToken
@@ -129,10 +124,10 @@ module.exports = class Auth
       'isStreamed', 'limit'
     ]
     @waitValidAuthCookie
-    .switchMap =>
+    .pipe rx.switchMap =>
       stream = @exoid.stream 'graphql', {query, variables}, options
       if pull
-        stream.map ({data}) -> data[pull]
+        stream.pipe rx.map ({data}) -> data[pull]
       else
         stream
 
@@ -142,7 +137,7 @@ module.exports = class Auth
     unless query
       console.warn 'missing', arguments[0]
 
-    @waitValidAuthCookie.take(1).toPromise()
+    @waitValidAuthCookie.pipe(rx.take(1)).toPromise()
     .then =>
       @exoid.call 'graphql', {query, variables}, {additionalDataStream}
     .then (response) =>

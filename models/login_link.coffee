@@ -1,4 +1,4 @@
-module.exports = class LoginLink
+export default class LoginLink
   namespace: 'loginLinks'
 
   constructor: ({@auth}) -> null

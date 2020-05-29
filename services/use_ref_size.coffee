@@ -1,13 +1,13 @@
 import {useState, useMemo, useCallback, useLayoutEffect, useStream} from 'zorium'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
+import * as Rx from 'rxjs'
 
 getSize = ($$el) ->
   {width: $$el?.clientWidth or 0, height: $$el?.clientHeight or 0}
 
-module.exports = useRefSize = ($$ref) ->
+export default useRefSize = ($$ref) ->
   {sizeStream} = useMemo ->
     {
-      sizeStream: new RxBehaviorSubject null
+      sizeStream: new Rx.BehaviorSubject null
     }
   , []
 

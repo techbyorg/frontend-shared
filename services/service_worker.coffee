@@ -73,4 +73,4 @@ class ServiceWorkerService
       awaitStateChange()
     reg.addEventListener 'updatefound', awaitStateChange
 
-module.exports = new ServiceWorkerService()
+export default new ServiceWorkerService()

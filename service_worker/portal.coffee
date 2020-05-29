@@ -1,6 +1,6 @@
 import PortalGun from 'portal-gun'
 
-module.exports = class Portal
+export default class Portal
   constructor: ({@cache}) ->
     @portal = new PortalGun()
 

@@ -8,9 +8,8 @@ import markdown from 'remark-parse'
 # https://github.com/remarkjs/remark-react/blob/master/index.js
 # https://github.com/remarkjs/remark-vdom/blob/master/index.js
 import vdom from 'remark-vdom'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/of'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import $button from '../button'
 # $imageViewOverlay = require '../image_view_overlay'
@@ -21,22 +20,22 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-module.exports = $formattedText = (props) ->
+export default $formattedText = (props) ->
   {textStreamy, imageWidth, model, router, skipImages, mentionedUsers,
     isFullWidth, embedVideos, truncate
     useThumbnails} = options
 
   # FIXME: usememo
 
-  if textStreamy?.map
-    $elStreamy = textStreamy.map((text) -> get$ {text, model})
+  if textStreamy?.pipe
+    $elStreamy = textStreamy.pipe rx.map (text) -> get$ {text, model})
   else
     text = textStreamy
     $elStreamy = get$ {text, model} # use right away
     $elStreamy = null
 
   {isExpandedStream} = useMemo ->
-    {isExpandedStream: new RxBehaviorSubject false}
+    {isExpandedStream: new Rx.BehaviorSubject false}
   , []
 
   {text, isExpanded, $el} = useStream ->

@@ -1,3 +1,3 @@
 import {createContext} from 'zorium'
 
-module.exports = SharedContext = createContext()
+export default SharedContext = createContext()

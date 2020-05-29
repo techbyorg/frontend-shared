@@ -1,8 +1,8 @@
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
+import * as Rx from 'rxjs'
 
-module.exports = class Drawer
+export default class Drawer
   constructor: ->
-    @_isOpen = new RxBehaviorSubject false
+    @_isOpen = new Rx.BehaviorSubject false
 
   isOpen: =>
     @_isOpen

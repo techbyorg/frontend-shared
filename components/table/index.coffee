@@ -11,7 +11,7 @@ if window?
 # if it's lightweight enough, for long tables we could use
 # https://github.com/mckervinc/react-fluid-table
 # so i'm using same api to make for easy replacement
-module.exports = $table = (props) ->
+export default $table = (props) ->
   {data, columns, onRowClick, mobileRowRenderer} = props
   getStyle = ({width, isFlex}) ->
     if isFlex

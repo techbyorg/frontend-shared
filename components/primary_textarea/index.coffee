@@ -4,7 +4,7 @@ import * as _ from 'lodash-es'
 import $textaea from '../textarea'
 import colors from '../../colors'
 
-module.exports = $primaryTextarea = (opts) ->
+export default $primaryTextarea = (opts) ->
   z '.z-primary-textarea',
     z $textarea, _.defaults opts, {
       isFullWidth: true

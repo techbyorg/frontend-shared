@@ -9,7 +9,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $tosPage = ->
+export default $tosPage = ->
   {lang} = useContext context
 
   z '.p-tos',

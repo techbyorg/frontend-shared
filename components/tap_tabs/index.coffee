@@ -1,14 +1,14 @@
 import {z, classKebab, useMemo, useStream} from 'zorium'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-import _map from 'lodash/map'
+import * as _ from 'lodash-es'
+import * as Rx from 'rxjs'
 
 if window?
   require './index.styl'
 
-module.exports = $tapTabs = ({selectedIndexStream, tabs, tabProps}) ->
+export default $tapTabs = ({selectedIndexStream, tabs, tabProps}) ->
   {selectedIndexStream} = useMemo ->
     {
-      selectedIndexStream: selectedIndexStream or new RxBehaviorSubject 0
+      selectedIndexStream: selectedIndexStream or new Rx.BehaviorSubject 0
     }
   , []
 
@@ -17,7 +17,7 @@ module.exports = $tapTabs = ({selectedIndexStream, tabs, tabProps}) ->
 
   z '.z-tap-tabs',
     z '.menu',
-      _map tabs, ({name}, i) ->
+      _.map tabs, ({name}, i) ->
         isSelected = selectedIndex is i
         z '.tap-tab', {
           className: classKebab {isSelected}

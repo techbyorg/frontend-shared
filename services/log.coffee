@@ -31,4 +31,4 @@ class Log
       if oldOnError
         return oldOnError arguments...
 
-module.exports = new Log()
+export default new Log()

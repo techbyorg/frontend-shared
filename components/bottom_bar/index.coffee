@@ -1,7 +1,7 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/combineLatest'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import $icon from '../icon'
 import colors from '../../colors'
@@ -11,24 +11,24 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-module.exports = $bottomBar = ({requestsStream, isAbsolute}) ->
+export default $bottomBar = ({requestsStream, isAbsolute}) ->
   {model, router, browser, lang} = useContext context
 
   # don't need to slow down server-side rendering for this
   {hasUnreadMessagesStream} = useMemo ->
     {
       hasUnreadMessagesStream: if window?
-        model.conversation.getAll().map (conversations) ->
+        model.conversation.getAll().pipe rx.map (conversations) ->
            _.some conversations, {isRead: false}
       else
-        RxObservable.of null
+        Rx.of null
     }
   , []
 
   {me, hasUnreadMessagesStream, currentPath} = useStream ->
     me: model.user.getMe()
     hasUnreadMessages: hasUnreadMessagesStream
-    currentPath: requestsStream.map ({req}) ->
+    currentPath: requestsStream.pipe rx.map ({req}) ->
       req.path
 
   userAgent = browser.getUserAgent()

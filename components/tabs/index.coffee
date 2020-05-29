@@ -1,6 +1,6 @@
 import {z, classKebab, useContext, useEffect, useMemo, useRef, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
+import * as Rx from 'rxjs'
 
 import $tabsBar from '../../components/tabs_bar'
 import context from '../../context'
@@ -12,7 +12,7 @@ if window?
 TRANSITION_TIME_MS = 500 # 0.5s
 
 # FIXME: i don't think this will actually unsub mountDisposable?
-module.exports = $tabs = (props) ->
+export default $tabs = (props) ->
   {selectedIndexStream, hideTabBarStream,
     disableDeceleration, deferTabLoads, tabs, barColor, barBgColor,
     barInactiveColor, isBarFixed, isBarFlat, isBarArrow, barTabWidth,
@@ -23,8 +23,8 @@ module.exports = $tabs = (props) ->
 
   {selectedIndexStream, isPausedStream} = useMemo ->
     {
-      selectedIndexStream: selectedIndexStream or new RxBehaviorSubject 0
-      isPausedStream: new RxBehaviorSubject false
+      selectedIndexStream: selectedIndexStream or new Rx.BehaviorSubject 0
+      isPausedStream: new Rx.BehaviorSubject false
     }
   , []
 

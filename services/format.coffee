@@ -95,4 +95,4 @@ class FormatService
 
     str.slice 0, -2
 
-module.exports = new FormatService()
+export default new FormatService()

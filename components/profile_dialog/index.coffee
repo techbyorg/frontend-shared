@@ -1,9 +1,7 @@
 import {z, classKebab, useContext, useEffect, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/of'
-require 'rxjs/add/observable/combineLatest'
-require 'rxjs/add/operator/switchMap'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import $avatar from '../avatar'
 import $dialog from '../dialog'
@@ -16,7 +14,7 @@ if window?
   require './index.styl'
 
 # TODO: if using this with entity/groupStream, get it from context
-module.exports = $profileDialog = (props) ->
+export default $profileDialog = (props) ->
   {userStreamy, entityUserStream, entityStream} = props
   {model, router, browser, lang} = useContext context
 
@@ -24,20 +22,20 @@ module.exports = $profileDialog = (props) ->
     entityAndUserStream, expandedItemsStream} = useMemo ->
 
     meStream = model.user.getMe()
-    userStream = if userStreamy?.map then userStreamy else RxObservable.of user
+    userStream = if userStreamy?.pipe then userStreamy else Rx.of user
     {
-      isVisibleStream: new RxBehaviorSubject false
-      loadingItemsStream: new RxBehaviorSubject []
-      expandedItemsStream: new RxBehaviorSubject []
+      isVisibleStream: new Rx.BehaviorSubject false
+      loadingItemsStream: new Rx.BehaviorSubject []
+      expandedItemsStream: new Rx.BehaviorSubject []
       meStream
       userStream
-      entityAndMeStream: RxObservable.combineLatest(
-        entityStream or RxObservable.of null
+      entityAndMeStream: Rx.combineLatest(
+        entityStream or Rx.of null
         meStream
         (vals...) -> vals
       )
-      entityAndUserStream: RxObservable.combineLatest(
-        entityStream or RxObservable.of null
+      entityAndUserStream: Rx.combineLatest(
+        entityStream or Rx.of null
         userStream
         (vals...) -> vals
       )
@@ -54,18 +52,18 @@ module.exports = $profileDialog = (props) ->
     loadingItems, windowSize} = useStream ->
 
     me: meStream
-    $links: userStream.map (user) ->
+    $links: userStream.pipe rx.map (user) ->
       _.filter _.map user?.links, (link, type) ->
         if link
           {
             type: type
             link: link
           }
-    meEntityUser: entityAndMeStream.switchMap ([entity, me]) ->
+    meEntityUser: entityAndMeStream.pipe rx.switchMap ([entity, me]) ->
       if entity and me
         model.entityUser.getByEntityIdAndUserId entity.id, me.id
       else
-        RxObservable.of null
+        Rx.of null
     user: userStream
     entityUser: entityUserStream
     isVisible: isVisibleStream

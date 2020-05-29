@@ -7,7 +7,7 @@ router = new RouterService {
   lang: new Language()
 }
 
-module.exports = class Push
+export default class Push
   listen: =>
     self.addEventListener 'push', @onPush
 

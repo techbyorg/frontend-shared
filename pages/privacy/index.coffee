@@ -9,7 +9,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $privacyPage = ->
+export default $privacyPage = ->
   {lang} = useContext context
 
   z '.p-privacy',

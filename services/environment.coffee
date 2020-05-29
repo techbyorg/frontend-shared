@@ -69,4 +69,4 @@ class Environment
     else if isApp and @isAndroid({userAgent}) then 'android'
     else 'web'
 
-module.exports = new Environment()
+export default new Environment()

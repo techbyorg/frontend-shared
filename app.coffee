@@ -1,13 +1,8 @@
 import {z, classKebab, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
 import HttpHash from 'http-hash'
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/operator/map'
-require 'rxjs/add/operator/filter'
-require 'rxjs/add/operator/switchMap'
-require 'rxjs/add/observable/combineLatest'
-require 'rxjs/add/observable/of'
-require 'rxjs/add/operator/publishReplay'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import $head from './components/head'
 # $navDrawer = require './components/nav_drawer'
@@ -16,7 +11,7 @@ import Environment from './services/environment'
 import GlobalContext from './context'
 
 # TODO: clean this up a bit
-module.exports = $app = (props) ->
+export default $app = (props) ->
   {routes, requestsStream, serverData, model, router, portal,
     lang, cookie, browser, isCrawler} = props
 
@@ -27,31 +22,35 @@ module.exports = $app = (props) ->
       _.forEach lang.getAllPathsByRouteKey(key), (path) ->
         hash.set path, -> $page
 
-    requestsStream = requestsStream.map (req) ->
-      if window? and isFirstRequest and req.query.referrer
-        model.user.setReferrer req.query.referrer
+    requestsStream = requestsStream.pipe(
+      rx.map (req) ->
+        if window? and isFirstRequest and req.query.referrer
+          model.user.setReferrer req.query.referrer
 
-      if isFirstRequest and isNativeApp
-        path = cookie.get('routerLastPath') or req.path
-        if window?
-          req.path = path # doesn't work server-side
-        else
-          req = _.defaults {path}, req
+        if isFirstRequest and isNativeApp
+          path = cookie.get('routerLastPath') or req.path
+          if window?
+            req.path = path # doesn't work server-side
+          else
+            req = _.defaults {path}, req
 
-      # subdomain = router.getSubdomain()
-      #
-      # if subdomain # equiv to /entitySlug/route
-      #   route = routes.get "/#{subdomain}#{req.path}"
-      #   if route.handler?() is routes.fourOhFour
-      #     route = routes.get req.path
-      # else
-      console.log 'hash get', req.path
-      route = hash.get req.path
+        # subdomain = router.getSubdomain()
+        #
+        # if subdomain # equiv to /entitySlug/route
+        #   route = routes.get "/#{subdomain}#{req.path}"
+        #   if route.handler?() is routes.fourOhFour
+        #     route = routes.get req.path
+        # else
+        console.log 'hash get', req.path
+        route = hash.get req.path
 
-      $page = route.handler()
-      isFirstRequest = false
-      {req, route, $page: $page}
-    .publishReplay(1).refCount()
+        $page = route.handler()
+        isFirstRequest = false
+        {req, route, $page: $page}
+
+      rx.publishReplay(1)
+      rx.refCount()
+    )
 
     {
       hash
@@ -86,7 +85,7 @@ module.exports = $app = (props) ->
     $overlays: model.overlay.get$()
     $tooltip: model.tooltip.get$()
     windowSize: browser.getSize()
-    request: requestsStream.do (request) ->
+    request: requestsStream.pipe rx.tap (request) ->
       if request.$page is routes.fourOhFour
         serverData?.res?.status? 404
 
@@ -116,7 +115,7 @@ module.exports = $app = (props) ->
     # $bottomBar: if $page.hasBottomBar then z $bottomBar, {
     #   model, router, requestsStream, serverData
     # }
-    requestsStream: requestsStream.filter (request) ->
+    requestsStream: requestsStream.pipe rx.filter (request) ->
       request.$page is $page
   }
 

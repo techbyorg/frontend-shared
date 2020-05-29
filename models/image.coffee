@@ -8,7 +8,7 @@ hashFn = (s) ->
     a & a
   ), 0
 
-module.exports = class ImageModel
+export default class ImageModel
   constructor: ->
     @loadedImages = {}
     # TODO: clear this out every once in a while (otherwise it's technically a memory leak)

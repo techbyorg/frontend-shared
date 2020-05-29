@@ -1,5 +1,6 @@
 import {z, classKebab, useContext, useStream} from 'zorium'
 import * as _ from 'lodash-es'
+import * as rx from 'rxjs/operators'
 
 import $icon from '../icon'
 import $spinner from '../spinner'
@@ -11,7 +12,7 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-module.exports = $notifications = ->
+export default $notifications = ->
   {model, router} = useContext context
 
   useEffect ->
@@ -19,7 +20,7 @@ module.exports = $notifications = ->
   , []
 
   {notifications} = useStream ->
-    notifications: model.notification.getAll().map (notifications) ->
+    notifications: model.notification.getAll().pipe rx.map (notifications) ->
       _.map notifications, (notification) ->
         {
           notification: notification

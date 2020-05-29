@@ -5,7 +5,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $tos = ->
+export default $tos = ->
   {router} = useContext context
 
   z '.z-tos',

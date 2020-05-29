@@ -1,5 +1,5 @@
 import {z, classKebab, createPortal, useContext, useLayoutEffect, useMemo, useRef, useStream} from 'zorium'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
+import * as Rx from 'rxjs'
 
 import useOnClickOutside from '../../services/use_on_click_outside'
 import context from '../../context'
@@ -7,7 +7,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $positionedOverlay = (props) ->
+export default $positionedOverlay = (props) ->
   {$$targetRef, hasBackdrop, onClose, anchor, offset, fillTargetWidth,
     zIndex, $content, $$ref, $$parentRef, repositionOnChangeStr} = props
   {browser} = useContext context
@@ -20,9 +20,9 @@ module.exports = $positionedOverlay = (props) ->
   {$$overlays, anchorStream, transformStream, sizeStream} = useMemo ->
     {
       $$overlays: $$parentRef?.current or document?.getElementById 'overlays-portal'
-      anchorStream: new RxBehaviorSubject anchor
-      transformStream: new RxBehaviorSubject null
-      sizeStream: new RxBehaviorSubject null
+      anchorStream: new Rx.BehaviorSubject anchor
+      transformStream: new Rx.BehaviorSubject null
+      sizeStream: new Rx.BehaviorSubject null
     }
   , [$$parentRef]
 

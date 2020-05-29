@@ -9,7 +9,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $actionBar = (props) ->
+export default $actionBar = (props) ->
   {title, cancel, save, isSaving, isPrimary, isSecondary} = props
   {lang} = useContext context
 

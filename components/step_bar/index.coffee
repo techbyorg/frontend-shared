@@ -8,7 +8,7 @@ console.log 'why is this running'
 if window?
   require './index.styl'
 
-module.exports = $stepBar = (props) ->
+export default $stepBar = (props) ->
   {stepStream, cancel, save, steps, isStepCompleted, isLoading} = props
   {lang} = useContext context
 

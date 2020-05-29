@@ -1,5 +1,4 @@
-import _defaults from 'lodash/defaults'
-import _mapValues from 'lodash/mapValues'
+import * as _ from 'lodash-es'
 
 $black12 = 'rgba(0, 0, 0, 0.12)'
 $black26 = 'rgba(0, 0, 0, 0.26)'
@@ -9,7 +8,7 @@ $black87 = 'rgba(0, 0, 0, 0.87)'
 $white = '#ffffff'
 $white54 = 'rgba(255, 255, 255, 0.54)'
 
-colors = _defaults {
+colors = _.defaults {
   default:
     '--header-500': '#ffffff' # t100
     '--header-500-text': $black87
@@ -195,7 +194,8 @@ if window?
     window.CSS?.supports?('--fake-var', 0) or
     getComputedStyle($$el, null)?.backgroundColor is 'rgb(0, 0, 0)'
   unless isCssVariableSupported
-    colors = _mapValues colors, (color, key) ->
+    colors = _.mapValues colors, (color, key) ->
       colors.getRawColor color
 
+# keep as commonjs for now
 module.exports = colors

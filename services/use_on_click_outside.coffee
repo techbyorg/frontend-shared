@@ -1,7 +1,7 @@
 import {useEffect} from 'zorium'
 import * as _ from 'lodash-es'
 
-module.exports = useOnClickOutside = ($$refs, handler) ->
+export default useOnClickOutside = ($$refs, handler) ->
   unless _.isArray $$refs
     $$refs = [$$refs]
 

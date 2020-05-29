@@ -3,7 +3,7 @@ import {z} from 'zorium'
 if window?
   require './index.styl'
 
-module.exports = $privacy = ->
+export default $privacy = ->
   # coffeelint: disable=max_line_length
   z '.z-privacy',
     z 'h5', 'App Visitors'

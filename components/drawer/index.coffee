@@ -1,4 +1,5 @@
 import {z, classKebab, useContext, useRef, useStream, useEffect, useMemo} from 'zorium'
+import * as rx from 'rxjs/operators'
 
 import colors from '../../colors'
 import context from '../../context'
@@ -12,7 +13,7 @@ MAX_OVERLAY_OPACITY = 0.5
 
 # FIXME: store iScrollContainer in state??
 
-module.exports = $drawer = (props) ->
+export default $drawer = (props) ->
   {isOpenStream, onOpen, onClose, side = 'left', key = 'nav', isStaticStream,
     $content, hasAppBar} = props
   {model, browser} = useContext context
@@ -23,9 +24,12 @@ module.exports = $drawer = (props) ->
   {transformProperty, isStaticStream} = useMemo ->
     {
       transformProperty: browser.getTransformProperty()
-      isStaticStream: isStatic or (browser.getBreakpoint().map (breakpoint) ->
-        breakpoint in ['desktop']
-      .publishReplay(1).refCount())
+      isStaticStream: isStatic or (browser.getBreakpoint().pipe(
+        rx.map (breakpoint) ->
+          breakpoint in ['desktop']
+        rx.publishReplay(1)
+        rx.refCount()
+      )
     }
   , []
 

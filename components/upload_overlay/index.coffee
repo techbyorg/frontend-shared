@@ -4,7 +4,7 @@ import * as _ from 'lodash-es'
 if window?
   require './index.styl'
 
-module.exports = $uploadOverlay = ({isMulti, onSelect}) ->
+export default $uploadOverlay = ({isMulti, onSelect}) ->
   readFile = (file) ->
     new Promise (resolve, reject) ->
       reader = new FileReader()

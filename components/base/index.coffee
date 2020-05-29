@@ -22,7 +22,7 @@ isBefore = (el1, el2) ->
       cur = cur.previousSibling
   false
 
-module.exports = class Base
+export default class Base
   getImageLoadHashByUrl: (url) ->
     unless window?
       return 'is-image-loaded'

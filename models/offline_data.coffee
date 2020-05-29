@@ -1,4 +1,4 @@
-module.exports = class OfflineDataModel
+export default class OfflineDataModel
   constructor: ({@exoid, @portal, @lang, @statusBar}) ->
     @isRecording = false
 

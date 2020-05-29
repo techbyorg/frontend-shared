@@ -1,5 +1,5 @@
 import {z, useContext, useMemo, useStream} from 'zorium'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
+Rx.BehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 import $button from '../button'
 import $dialog from '../dialog'
@@ -10,12 +10,12 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-module.exports = $requestRatingDialog = ({onClose}) ->
+export default $requestRatingDialog = ({onClose}) ->
   {model, portal, lang} = useContext context
 
   {isLoadingStream} = useMemo ->
     {
-      isLoadingStream: new RxBehaviorSubject false
+      isLoadingStream: new Rx.BehaviorSubject false
     }
   ,[]
 

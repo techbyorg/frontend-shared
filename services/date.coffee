@@ -115,4 +115,4 @@ class DateService
     else
       null
 
-module.exports = new DateService()
+export default new DateService()

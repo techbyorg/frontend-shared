@@ -1,7 +1,6 @@
 import {z, useContext, useEffect, useMemo, useStream} from 'zorium'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/fromPromise'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import Spinner from '../../components/spinner'
 import Button from '../../components/button'
@@ -11,24 +10,25 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-module.exports = $unsubscribeEmailPage = ({requestsStream}) ->
+export default $unsubscribeEmailPage = ({requestsStream}) ->
   {model, browser, lang, router} = useContext
 
   useEffect ->
     if window?
-      disposable = requestsStream.switchMap ({req, route}) ->
-        RxObservable.fromPromise model.user.unsubscribeEmail({
-          userId: route.params.userId
-          tokenStr: route.params.tokenStr
-        }).then ->
-          isUnsubscribedStream.next true
-        .catch (err) ->
-          console.log err
-          errorStream.next 'This email isn\'t subscribed'
-          RxObservable.of null
+      disposable = requestsStream.pipe(
+        rx.switchMap ({req, route}) ->
+          Rx.fromPromise model.user.unsubscribeEmail({
+            userId: route.params.userId
+            tokenStr: route.params.tokenStr
+          }).then ->
+            isUnsubscribedStream.next true
+          .catchError (err) ->
+            console.log err
+            errorStream.next 'This email isn\'t subscribed'
+            Rx.of null
 
-      .take(1)
-      .subscribe()
+        rx.take(1)
+      ).subscribe()
 
     return ->
       disposable?.unsubscribe()
@@ -36,8 +36,8 @@ module.exports = $unsubscribeEmailPage = ({requestsStream}) ->
 
   {isUnsubscribedStream, errorStream} = useMemo ->
     {
-      isUnsubscribedStream: new RxBehaviorSubject false
-      errorStream: new RxBehaviorSubject null
+      isUnsubscribedStream: new Rx.BehaviorSubject false
+      errorStream: new Rx.BehaviorSubject null
     }
   , []
 

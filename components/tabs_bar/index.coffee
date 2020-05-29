@@ -1,12 +1,12 @@
 import {z, classKebab, useEffect, useRef, useStream} from 'zorium'
-import _map from 'lodash/map'
+import * as _ from 'lodash-es'
 
 import colors from '../../colors'
 
 if window?
   require './index.styl'
 
-module.exports = $tabsBar = (props) ->
+export default $tabsBar = (props) ->
   {selectedIndexStream, items, bgColor, color, isPrimary, inactiveColor,
     underlineColor, isFixed, isFlat, isArrow, tabWidth, tabHeight} = props
 
@@ -57,7 +57,7 @@ module.exports = $tabsBar = (props) ->
           style:
             background: underlineColor
             width: "#{100 / items.length}%"
-        _map items, (item, i) ->
+        _.map items, (item, i) ->
           hasIcon = Boolean item.$menuIcon
           hasText = Boolean item.$menuText
           hasNotification = item.hasNotification

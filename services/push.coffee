@@ -91,4 +91,4 @@ class PushService
   #     console.log 'caught', err
 
 
-module.exports = new PushService()
+export default new PushService()

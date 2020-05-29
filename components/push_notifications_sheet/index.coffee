@@ -7,7 +7,7 @@ import PushService from '../../services/push'
 import colors from '../../colors'
 import context from '../../context'
 
-module.exports = $pushNotificationSheet = ->
+export default $pushNotificationSheet = ->
   {model, lang} = useContext context
 
   z '.z-push-notifications-sheet',

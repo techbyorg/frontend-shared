@@ -6,7 +6,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $masonryGrid = ({$elements, columnCounts}) ->
+export default $masonryGrid = ({$elements, columnCounts}) ->
   {browser} = useContext context
 
   {breakpoint} = useStream ->

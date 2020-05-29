@@ -1,9 +1,7 @@
 import {z, classKebab, useMemo, useRef, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/of'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import $icon from '../icon'
 import $positionedOverlay from '../positioned_overlay'
@@ -12,7 +10,7 @@ import colors from '../../colors'
 if window?
   require './index.styl'
 
-module.exports = $dropdown = (props) ->
+export default $dropdown = (props) ->
   {valueStreams, valueStream, errorStream, options, $$parentRef,
     anchor = 'top-left', isDisabled = false} = props
 
@@ -20,16 +18,16 @@ module.exports = $dropdown = (props) ->
 
   {valueStream, selectedOptionStream, isOpenStream} = useMemo ->
     {
-      valueStream: valueStream or new RxReplaySubject 1
+      valueStream: valueStream or new Rx.ReplaySubject 1
       selectedOptionStream: valueStream
-      isOpenStream: new RxBehaviorSubject false
+      isOpenStream: new Rx.BehaviorSubject false
     }
   , []
 
   {value, selectedOption, isOpen, options} = useStream ->
-    _.valueStream = valueStreams?.switch() or valueStream
+    _.valueStream = valueStreams?.pipe(switchAll()) or valueStream
     value: _.valueStream
-    selectedOption: _.valueStream.map (value) ->
+    selectedOption: _.valueStream.pipe rx.map (value) ->
       _.find options, {value: "#{value}"}
     error: errorStream
     isOpen: isOpenStream
@@ -39,7 +37,7 @@ module.exports = $dropdown = (props) ->
 
   setValue = (value) ->
     if valueStreams
-      valueStreams.next RxObservable.of value
+      valueStreams.next Rx.of value
     else
       valueStream.next value
 

@@ -9,7 +9,7 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-module.exports = $getAppDialog = ({onClose}) ->
+export default $getAppDialog = ({onClose}) ->
   {lang, portal} = useContext context
 
   iosAppUrl = config.IOS_APP_URL

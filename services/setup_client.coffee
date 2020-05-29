@@ -4,8 +4,8 @@ import {z, render} from 'zorium'
 import cookieLib from 'cookie'
 import LocationRouter from 'location-router'
 import socketIO from 'socket.io-client/dist/socket.io.slim.js'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-require 'rxjs/add/operator/do'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 require '../root.styl'
 
@@ -31,8 +31,8 @@ export default setup = ({$app, Lang, Model, colors, config}) ->
 
   initialCookies = cookieLib.parse(document.cookie)
 
-  isBackendUnavailable = new RxBehaviorSubject false
-  currentNotification = new RxBehaviorSubject false
+  isBackendUnavailable = new Rx.BehaviorSubject false
+  currentNotification = new Rx.BehaviorSubject false
 
   io = socketIO config.API_HOST, {
     path: (config.API_PATH or '') + '/socket.io'
@@ -82,8 +82,8 @@ export default setup = ({$app, Lang, Model, colors, config}) ->
     }
 
   # TODO: show status bar for translating
-  # @isTranslateCardVisibleStreams = new RxReplaySubject 1
-  lang.getLanguage().take(1).subscribe (lang) ->
+  # @isTranslateCardVisibleStreams = new Rx.ReplaySubject 1
+  lang.getLanguage().pipe(rx.take(1)).subscribe (lang) ->
     console.log 'lang', lang
     needTranslations = ['fr', 'es']
     isNeededLanguage = lang in needTranslations
@@ -143,7 +143,9 @@ export default setup = ({$app, Lang, Model, colors, config}) ->
     # (flash with whatever obs data is on page going empty for 1 frame), then
     # render after a few ms
     # root = document.getElementById('zorium-root').cloneNode(true)
-    requestsStream = router.getStream().publishReplay(1).refCount()
+    requestsStream = router.getStream().pipe(
+      rx.publishReplay(1), rx.refCount()
+    )
     console.log 'HMR RENDER'
     render (z $app, {
       key: Math.random() # for hmr to work properly
@@ -258,7 +260,7 @@ export default setup = ({$app, Lang, Model, colors, config}) ->
       else
         null
     .then ->
-      requestsStream.do(({path}) ->
+      requestsStream.pipe(rx.tap ({path}) ->
         if window?
           ga? 'send', 'pageview', path
       ).subscribe()

@@ -1,6 +1,6 @@
 import {z, classKebab, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
+import * as Rx from 'rxjs'
 
 import $icon from '../icon'
 import $input from '../input'
@@ -10,10 +10,10 @@ import allColors from '../../colors'
 if window?
   require './index.styl'
 
-module.exports = $primaryInput = (props) ->
+export default $primaryInput = (props) ->
   {isPasswordVisibleStream} = useMemo ->
     {
-      isPasswordVisibleStream: new RxBehaviorSubject false
+      isPasswordVisibleStream: new Rx.BehaviorSubject false
     }
   , []
 

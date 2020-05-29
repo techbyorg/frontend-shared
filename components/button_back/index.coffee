@@ -4,7 +4,7 @@ import $icon from '../icon'
 import colors from '../../colors'
 import context from '../../context'
 
-module.exports = $buttonBack = (props) ->
+export default $buttonBack = (props) ->
   {color, onclick, fallbackPath, isAlignedLeft = true} = props
   {router} = useContext context
 

@@ -1,6 +1,6 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
+import * as Rx from 'rxjs'
 
 import $tabs from '../tabs'
 import $icon from '../icon'
@@ -11,12 +11,12 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-module.exports = $slideSteps = ({onSkip, onDone, steps, doneText}) ->
+export default $slideSteps = ({onSkip, onDone, steps, doneText}) ->
   {lang} = useContext context
 
   {selectedIndexStream} = useMemo ->
     {
-      selectedIndexStream: new RxBehaviorSubject 0
+      selectedIndexStream: new Rx.BehaviorSubject 0
     }
   , []
 

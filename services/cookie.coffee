@@ -1,4 +1,4 @@
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
+import * as Rx from 'rxjs'
 import config from '../config'
 
 COOKIE_DURATION_MS = 365 * 24 * 3600 * 1000 # 1 year
@@ -6,7 +6,7 @@ COOKIE_DURATION_MS = 365 * 24 * 3600 * 1000 # 1 year
 class Cookie
   constructor: ({initialCookies, @setCookie, @host}) ->
     @cookies = initialCookies or {}
-    @stream = new RxBehaviorSubject @cookies
+    @stream = new Rx.BehaviorSubject @cookies
 
   getCookieOpts: (key, ttlMs) =>
     host = @host
@@ -36,4 +36,4 @@ class Cookie
     @stream
 
 
-module.exports = Cookie
+export default Cookie

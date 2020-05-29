@@ -1,8 +1,7 @@
 import {z, useRef, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/of'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import $icon from '../icon'
 import allColors from '../../colors'
@@ -10,20 +9,20 @@ import allColors from '../../colors'
 if window?
   require './index.styl'
 
-module.exports = $checkbox = (props) ->
+export default $checkbox = (props) ->
   {valueStream, valueStreams, isDisabled, colors, onChange} = props
 
   {valueStream, errorStream} = useMemo ->
     {
-      valueStream: valueStream or new RxBehaviorSubject null
-      errorStream: new RxBehaviorSubject null
+      valueStream: valueStream or new Rx.BehaviorSubject null
+      errorStream: new Rx.BehaviorSubject null
     }
 
   # $$ref = useRef (props) ->
   #   props.ref.current = {isChecked: -> ref.current.checked}
 
   {value} = useStream ->
-    value: valueStreams?.switch() or valueStream
+    value: valueStreams?.pipe(rx.switchAll()) or valueStream
 
   colors = _.defaults colors or {}, {
     checked: allColors.$primaryMain
@@ -46,7 +45,7 @@ module.exports = $checkbox = (props) ->
       checked: if value then true else undefined
       onchange: (e) ->
         if valueStreams
-          valueStreams.next RxObservable.of e.target.checked
+          valueStreams.next Rx.of e.target.checked
         else
           valueStream.next e.target.checked
         onChange?()

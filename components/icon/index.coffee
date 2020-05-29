@@ -6,7 +6,7 @@ import colors from '../../colors'
 if window?
   require './index.styl'
 
-module.exports = $icon = (props) ->
+export default $icon = (props) ->
   {icon, size, isAlignedTop, isAlignedLeft, isAlignedRight,
     isAlignedBottom, isTouchTarget, color, onclick, onmousedown,
     viewBox, heightRatio, hasRipple,

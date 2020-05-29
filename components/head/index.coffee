@@ -1,14 +1,9 @@
 import {z, useContext, useStream} from 'zorium'
-import Environment from '../../services/environment'
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/combineLatest'
-require 'rxjs/add/operator/do'
-import _merge from 'lodash/merge'
-import _map from 'lodash/map'
-import _mapValues from 'lodash/mapValues'
-import _defaults from 'lodash/defaults'
-import _kebabCase from 'lodash/kebabCase'
+import * as _ from 'lodash-es'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
+import Environment from '../../services/environment'
 import fontsCss from './fonts'
 import colors from '../../colors'
 import context from '../../context'
@@ -16,7 +11,7 @@ import config from '../../config'
 
 DEFAULT_IMAGE = 'https://fdn.uno/d/images/web_icon_256.png'
 
-module.exports = $head = (props) ->
+export default $head = (props) ->
   {meta, requestsStream, serverData, entity} = props
   {router, lang, model, browser, cookie} = useContext context
 
@@ -27,24 +22,24 @@ module.exports = $head = (props) ->
     cssColors = colors.default
     cssColors['--drawer-header-500'] ?= cssColors['--primary-500']
     cssColors['--drawer-header-500-text'] ?= cssColors['--primary-500-text']
-    cssVariables = _map(cssColors, (value, key) ->
+    cssVariables = _.map(cssColors, (value, key) ->
       "#{key}:#{value}"
     ).join ';'
     cssVariables
 
-  route = requestsStream.map ({route}) ->
+  route = requestsStream.pipe rx.map ({route}) ->
     route
-  path = requestsStream.map ({req}) ->
+  path = requestsStream.pipe rx.map ({req}) ->
     req.path
-  requestsStreamAndLanguage = RxObservable.combineLatest(
+  requestsStreamAndLanguage = Rx.combineLatest(
     requestsStream, lang.getLanguage(), (vals...) -> vals
   )
-  meta = requestsStreamAndLanguage.switchMap ([{$page}, language]) ->
+  meta = requestsStreamAndLanguage.pipe rx.switchMap ([{$page}, language]) ->
     meta = $page?.getMeta?()
     if meta?.map
       meta
     else
-      RxObservable.of meta
+      Rx.of meta
 
   lastEntitySlug = null
   bundlePath = serverData?.bundlePath or
@@ -59,7 +54,7 @@ module.exports = $head = (props) ->
     route: route
     path: path
     # entity: entity
-    routeKey: route.map (route) ->
+    routeKey: route.pipe rx.map (route) ->
       if route?.src
         routeKey = lang.getRouteKeyByValue route.src
     modelSerialization: unless window?
@@ -69,15 +64,15 @@ module.exports = $head = (props) ->
   gaId = 'UA-27992080-36'
   gaSampleRate = 100
 
-  paths = _mapValues lang.getAllPathsByRouteKey(routeKey), (path) ->
+  paths = _.mapValues lang.getAllPathsByRouteKey(routeKey), (path) ->
     pathVars = path.match /:([a-zA-Z0-9-]+)/g
-    _map pathVars, (pathVar) ->
+    _.map pathVars, (pathVar) ->
       path = path.replace pathVar, route.params[pathVar.substring(1)]
     path
 
   userAgent = browser.getUserAgent()
 
-  meta = _merge {
+  meta = _.merge {
     title: lang.get 'meta.defaultTitle'
     icon256: "#{config.CDN_URL}/web_icon_256.png"
     twitter:
@@ -110,7 +105,7 @@ module.exports = $head = (props) ->
 
   meta.title = "#{meta.title} | TechBy"
 
-  meta = _merge {
+  meta = _.merge {
     # twitter:
     #   title: meta.title
     #   description: meta.description
@@ -242,8 +237,8 @@ module.exports = $head = (props) ->
       null
 
     # z 'link'
-    _map additionalCss, (href) ->
-      z "link##{_kebabCase(href)}",
+    _.map additionalCss, (href) ->
+      z "link##{_.kebabCase(href)}",
         key: href
         rel: 'stylesheet'
         href: href

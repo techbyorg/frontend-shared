@@ -1,4 +1,4 @@
-module.exports = class Time
+export default class Time
   constructor: ({@auth}) ->
     @serverTime = Date.now()
     @timeInterval = setInterval =>

@@ -1,38 +1,37 @@
 import {z, classKebab, useContext, useEffect, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/of'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import context from '../../context'
 
 if window?
   require './index.styl'
 
-module.exports = $inputRange = (props) ->
+export default $inputRange = (props) ->
   {valueStream, valueStreams, minValue, maxValue, onChange,
     hideInfo, step} = props
   {lang} = useContext context
 
   useEffect ->
     if onChange
-      disposable = (valueStreams?.switch() or value).subscribe onChange
+      disposable = (valueStreams?.pipe(rx.switchAll()) or value).subscribe onChange
 
     return -> disposable?.unsubscribe()
   , []
 
   {valueStream} = useMemo ->
     {
-      valueStream: valueStream or new RxBehaviorSubject null
+      valueStream: valueStream or new Rx.BehaviorSubject null
     }
   , []
 
   {value} = useStream ->
-    value: valueStreams?.switch() or valueStream
+    value: valueStreams?.pipe(rx.switchAll()) or valueStream
 
   setValue = (value) ->
     if valueStreams
-      valueStreams.next RxObservable.of value
+      valueStreams.next Rx.of value
     else
       valueStream.next value
 

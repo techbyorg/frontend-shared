@@ -7,7 +7,7 @@ import context from '../../context'
 if window?
   require './index.styl'
 
-module.exports = $buttonMenu = ({color, onclick, isAlignedLeft = true}) ->
+export default $buttonMenu = ({color, onclick, isAlignedLeft = true}) ->
   {model} = useContext context
 
   z '.z-button-menu',

@@ -5,7 +5,7 @@ import colors from '../../colors'
 if window?
   require './index.styl'
 
-module.exports = $appBar = (props) ->
+export default $appBar = (props) ->
   {$topLeftButton, $topRightButton, title, bgColor, color, isFlat, isPrimary
     isSecondary, isFullWidth, hasLogo} = props
 

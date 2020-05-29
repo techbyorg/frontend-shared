@@ -1,6 +1,5 @@
 import * as _ from 'lodash-es'
-import qsStringify from 'qs/lib/stringify'
-RxObservable = require('rxjs/Observable').Observable
+import qs from 'qs-lite'
 
 import Environment from '../services/environment'
 import SemverService from '../services/semver'
@@ -80,7 +79,7 @@ class RouterService
       route = route.replace ":#{key}", value
 
     if options?.qs
-      route = "#{route}?#{qsStringify options.qs}"
+      route = "#{route}?#{qs.stringify options.qs}"
     route
 
   removeOverlay: =>
@@ -224,4 +223,4 @@ class RouterService
     return node
 
 
-module.exports = RouterService
+export default RouterService

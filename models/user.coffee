@@ -1,6 +1,6 @@
 import config from '../config'
 
-module.exports = class User
+export default class User
   namespace: 'users'
 
   constructor: ({@auth, @proxy, @exoid, @cookie, @lang, @overlay, @portal}) -> null
@@ -53,7 +53,7 @@ module.exports = class User
       formData.append 'file', file, file.name
 
       @proxy config.API_URL + '/upload', {
-        method: 'post'
+        method: 'POST'
         query:
           path: 'graphql'
           body: JSON.stringify {
@@ -68,7 +68,7 @@ module.exports = class User
                 }
               }
             '''
-            variables: {input: diff}
+            variables: JSON.stringify {input: diff}
           }
         body: formData
       }

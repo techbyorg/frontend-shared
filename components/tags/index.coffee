@@ -9,7 +9,7 @@ if window?
 
 TAG_WIDTH = 150
 
-module.exports = $tags = ({size, tags, maxVisibleCount}) ->
+export default $tags = ({size, tags, maxVisibleCount}) ->
   $$ref = useRef()
 
   size ?= useRefSize $$ref

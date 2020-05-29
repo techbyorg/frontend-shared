@@ -7,7 +7,7 @@ import GetAppDialog from '../components/get_app_dialog'
 import config from '../config'
 
 if window?
-  PortalGun = require 'portal-gun'
+  PortalGun = require('portal-gun').default
 
 urlBase64ToUint8Array = (base64String) ->
   padding = '='.repeat((4 - (base64String.length % 4)) % 4)
@@ -20,7 +20,7 @@ urlBase64ToUint8Array = (base64String) ->
     i += 1
   outputArray
 
-module.exports = class Portal
+export default class Portal
   constructor: ({@lang}) ->
     if window?
       @portal = new PortalGun() # TODO: check isParentValid

@@ -1,5 +1,6 @@
 import {z, renderToString} from 'zorium'
 import * as _ from 'lodash-es'
+import * as Rx from 'rxjs'
 import express from 'express'
 import compress from 'compression'
 import helmet from 'helmet'
@@ -7,13 +8,14 @@ import Promise from 'bluebird'
 import cookieParser from 'cookie-parser'
 import fs from 'fs'
 import socketIO from 'socket.io-client'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
+import request from 'xhr-request'
 
 import RouterService from './router'
 import LanguageService from './language'
 import CookieService from './cookie'
 import WindowService from './window'
-import request from './request'
+
+requestPromise = Promise.promisify request
 
 MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS = 10886400000 # 18 weeks
 HEALTHCHECK_TIMEOUT = 200
@@ -39,7 +41,7 @@ export default setup = ({$app, Lang, Model, gulpPaths, config}) ->
 
   app.use '/healthcheck', (req, res, next) ->
     Promise.all [
-      Promise.cast(request(config.API_URL + '/ping'))
+      Promise.cast(requestPromise(config.API_URL + '/ping'))
         .timeout HEALTHCHECK_TIMEOUT
         .reflect()
     ]
@@ -55,7 +57,7 @@ export default setup = ({$app, Lang, Model, gulpPaths, config}) ->
     .catch next
 
   app.use '/sitemap.txt', (req, res, next) ->
-    request(config.API_URL + '/sitemap', {json: true})
+    requestPromise(config.API_URL + '/sitemap', {json: true})
     .then (paths) ->
       res.setHeader 'Content-Type', 'text/plain'
       res.send (_.map paths, (path) -> "https://#{config.HOST}#{path}").join "\n"
@@ -112,7 +114,7 @@ export default setup = ({$app, Lang, Model, gulpPaths, config}) ->
       model, cookie, lang, host
       router: null
     }
-    requestsStream = new RxBehaviorSubject(req)
+    requestsStream = new Rx.BehaviorSubject(req)
 
     # for client to access
     cookie.set(

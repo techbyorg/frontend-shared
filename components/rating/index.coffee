@@ -1,8 +1,7 @@
 import {z, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/of'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import Icon from '../icon'
 import colors from '../../colors'
@@ -11,21 +10,21 @@ if window?
   require './index.styl'
 
 # set isInteractive to true if tapping on a star should fill up to that star
-module.exports = $rating = (props) ->
+export default $rating = (props) ->
   {valueStream, valueStreams, isInteractive, onRate,
     size = '20px', color = colors.$amber500} = props
 
   {valueStream, ratingStream} = useMemo ->
-    valueStream ?= new RxBehaviorSubject 0
+    valueStream ?= new Rx.BehaviorSubject 0
     {
       valueStream
-      ratingStream: valueStreams?.switch() or valueStream
+      ratingStream: valueStreams?.pipe(rx.switchAll()) or valueStream
     }
   , []
 
   {rating, starIcons} = useStream ->
     rating: ratingStream
-    starIcons: ratingStream.map (rating) ->
+    starIcons: ratingStream.pipe rx.map (rating) ->
       rating ?= 0
       halfStars = Math.round(rating * 2)
       fullStars = Math.floor(halfStars / 2)
@@ -37,7 +36,7 @@ module.exports = $rating = (props) ->
 
   setRating = (value) ->
     if valueStreams
-      valueStreams.next RxObservable.of value
+      valueStreams.next Rx.of value
     else
       valueStream.next value
     onRate? value

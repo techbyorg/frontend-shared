@@ -1,6 +1,6 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
+import * as Rx from 'rxjs'
 
 import Icon from '../icon'
 import Button from '../button'
@@ -14,7 +14,7 @@ import config from '../../config'
 if window?
   require './index.styl'
 
-module.exports = $policies = ({isIabStream, $dropdowns}) ->
+export default $policies = ({isIabStream, $dropdowns}) ->
   {lang, router} = useContext context
 
   $dropdowns = [
@@ -32,7 +32,7 @@ module.exports = $policies = ({isIabStream, $dropdowns}) ->
 
   {visibleDropdownsStream} = useMemo ->
     {
-      visibleDropdownsStream: new RxBehaviorSubject []
+      visibleDropdownsStream: new Rx.BehaviorSubject []
     }
   , []
 

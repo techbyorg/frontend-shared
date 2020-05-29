@@ -1,6 +1,7 @@
 import {z, useContext, useEffect, useRef, useMemo, useStream} from 'zorium'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 import * as _ from 'lodash-es'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import $tooltip from '../tooltip'
 import context from '../../context'
@@ -27,7 +28,7 @@ TOOLTIPS =
   itemGuides:
     prereqs: null
 
-module.exports = $tooltipPositioner = (props) ->
+export default $tooltipPositioner = (props) ->
   unless window? # could also return right away if cookie exists for perf
     return
   {model, isVisibleStream, offset, key, anchor, $title, $content,
@@ -38,14 +39,17 @@ module.exports = $tooltipPositioner = (props) ->
 
   {isVisibleStream, shouldBeShownStream} = useMemo ->
     {
-      isVisibleStream: isVisibleStream or new RxBehaviorSubject false
-      shouldBeShownStream: cookie.getStream().map (cookies) ->
-        completed = cookies.completedTooltips?.split(',') or []
-        isCompleted = completed.indexOf(key) isnt -1
-        prereqs = TOOLTIPS[key]?.prereqs
-        not isCompleted and _.every prereqs, (prereq) ->
-          completed.indexOf(prereq) isnt -1
-      .publishReplay(1).refCount()
+      isVisibleStream: isVisibleStream or new Rx.BehaviorSubject false
+      shouldBeShownStream: cookie.getStream().pipe(
+        rx.map (cookies) ->
+          completed = cookies.completedTooltips?.split(',') or []
+          isCompleted = completed.indexOf(key) isnt -1
+          prereqs = TOOLTIPS[key]?.prereqs
+          not isCompleted and _.every prereqs, (prereq) ->
+            completed.indexOf(prereq) isnt -1
+        rx.publishReplay(1)
+        rx.refCount()
+      )
     }
 
   useEffect ->

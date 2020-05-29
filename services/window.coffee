@@ -1,6 +1,6 @@
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-require 'rxjs/add/operator/map'
+import * as Rx from 'rxjs'
+
 if window?
   uuid = require 'uuid'
 
@@ -9,14 +9,14 @@ DRAWER_RIGHT_PADDING = 56
 DRAWER_MAX_WIDTH = 72
 GRID_WIDTH = 1280
 
-module.exports = class Window
+export default class Window
   constructor: ({@cookie, @userAgent}) ->
     @isPaused = false
 
-    @size = new RxBehaviorSubject @getSizeVal()
-    @breakpoint = new RxBehaviorSubject @getBreakpointVal()
-    @drawerWidth = new RxBehaviorSubject @getDrawerWidthVal()
-    @appBarHeight = new RxBehaviorSubject @getAppBarHeightVal()
+    @size = new Rx.BehaviorSubject @getSizeVal()
+    @breakpoint = new Rx.BehaviorSubject @getBreakpointVal()
+    @drawerWidth = new Rx.BehaviorSubject @getDrawerWidthVal()
+    @appBarHeight = new Rx.BehaviorSubject @getAppBarHeightVal()
     @resumeFns = {}
     window?.addEventListener 'resize', @updateSize
 

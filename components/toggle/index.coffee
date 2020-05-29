@@ -1,21 +1,20 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
-RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/of'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import context from '../../context'
 
 if window?
   require './index.styl'
 
-module.exports = $togle = (props) ->
+export default $togle = (props) ->
   {isSelectedStreams, isSelectedStreams, onToggle, withText} = props
   {lang} = useContext context
 
   {isSelectedStreams} = useMemo ->
     unless isSelectedStreams
-      isSelectedStreams = new RxReplaySubject 1
-      isSelectedStreams ?= RxObservable.of ''
+      isSelectedStreams = new Rx.ReplaySubject 1
+      isSelectedStreams ?= Rx.of ''
       isSelectedStreams.next isSelectedStream
     {
       isSelectedStreams
@@ -23,13 +22,13 @@ module.exports = $togle = (props) ->
   , []
 
   {isSelected} = useStream ->
-    isSelected: isSelectedStreams.switch()
+    isSelected: isSelectedStreams.pipe rx.switchAll()
 
   toggle = ({onToggle} = {}) ->
     if isSelected
       isSelected.next not isSelected
     else
-      isSelectedStreams.next RxObservable.of not isSelected
+      isSelectedStreams.next Rx.of not isSelected
     onToggle? not isSelected
 
 

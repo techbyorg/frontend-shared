@@ -3,7 +3,7 @@ import * as _ from 'lodash-es'
 import Environment from '../services/environment'
 import config from '../config'
 
-module.exports = class Cache
+export default class Cache
   constructor: ->
     @isRecording = false
     @cachesFiles =

@@ -1,8 +1,8 @@
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
+import * as Rx from 'rxjs'
 
-module.exports = class Tooltip
+export default class Tooltip
   constructor: ->
-    @$tooltip = new RxBehaviorSubject null
+    @$tooltip = new Rx.BehaviorSubject null
 
   get$: =>
     @$tooltip

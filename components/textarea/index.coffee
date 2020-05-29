@@ -1,8 +1,7 @@
 import {z, classKebab, useRef, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-RxObservable = require('rxjs/Observable').Observable
-require 'rxjs/add/observable/of'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import allColors from '../../colors'
 
@@ -11,7 +10,7 @@ if window?
 
 DEFAULT_TEXTAREA_HEIGHT = 59
 
-module.exports = $textarea = (props) ->
+export default $textarea = (props) ->
   {valueStream, valueStreams, errorStream, isFocusedStream, defaultHeight,
     colors, hintText = '', type = 'text', isFloating, isDisabled, isFull,
     isDark, isCentered} = props
@@ -20,10 +19,10 @@ module.exports = $textarea = (props) ->
 
   {valueStream, errorStream, isFocusedStream, textareaHeightStream} = useMemo ->
     {
-      valueStream: valueStream or new RxBehaviorSubject ''
-      errorStream: errorStream or new RxBehaviorSubject null
-      isFocusedStream: isFocusedStream or new RxBehaviorSubject false
-      textareaHeightStream: new RxBehaviorSubject(
+      valueStream: valueStream or new Rx.BehaviorSubject ''
+      errorStream: errorStream or new Rx.BehaviorSubject null
+      isFocusedStream: isFocusedStream or new Rx.BehaviorSubject false
+      textareaHeightStream: new Rx.BehaviorSubject(
         defaultHeight or DEFAULT_TEXTAREA_HEIGHT
       )
     }
@@ -31,12 +30,12 @@ module.exports = $textarea = (props) ->
   {isFocused, textareaHeight, value, error} = useStream ->
     isFocused: isFocusedStream
     textareaHeight: textareaHeightStream
-    value: valueStreams?.switch() or valueStream
+    value: valueStreams?.pipe(rx.switchAll()) or valueStream
     error: errorStream
 
   useEffect ->
     $$textarea = $$ref.current.querySelector('#textarea')
-    valueStreams.take(1).subscribe ->
+    valueStreams.pipe(rx.take(1)).subscribe ->
       setTimeout ->
         resizeTextarea {target: $$textarea}
       , 0
@@ -50,7 +49,7 @@ module.exports = $textarea = (props) ->
 
   setValue = (value, {updateDom} = {}) ->
     if valueStreams
-      valueStreams.next RxObservable.of value
+      valueStreams.next Rx.of value
     else
       value.next value
 
@@ -107,7 +106,7 @@ module.exports = $textarea = (props) ->
       oninput: z.ev (e, $$ref) ->
         resizeTextarea e
         if valueStreams
-          valueStreams.next RxObservable.of $$ref.current.value
+          valueStreams.next Rx.of $$ref.current.value
         else
           value.next $$ref.current.value
       onfocus: z.ev (e, $$ref) ->

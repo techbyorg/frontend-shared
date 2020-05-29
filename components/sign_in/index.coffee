@@ -1,5 +1,5 @@
 import {z, useContext, useMemo, useStream} from 'zorium'
-RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
+import * as Rx from 'rxjs'
 
 import $primaryInput from '../primary_input'
 import $button from '../button'
@@ -13,20 +13,20 @@ if window?
 # FIXME: passing stream to child component causes 2 renders of child
 # since state updates in 2 places
 
-module.exports = $signIn = ({modeStream}) ->
+export default $signIn = ({modeStream}) ->
   {model, router, portal, lang} = useContext context
 
   {nameValueStream, nameErrorStream, passwordValueStream, passwordErrorStream,
     emailValueStream, emailErrorStream, modeStream,
     isLoadingStream, hasErrorStream} = useMemo ->
     {
-      nameValueStream: new RxBehaviorSubject ''
-      nameErrorStream: new RxBehaviorSubject null
-      passwordValueStream: new RxBehaviorSubject ''
-      passwordErrorStream: new RxBehaviorSubject null
-      emailValueStream: new RxBehaviorSubject ''
-      emailErrorStream: new RxBehaviorSubject null
-      modeStream: modeStream or new RxBehaviorSubject 'signIn'
+      nameValueStream: new Rx.BehaviorSubject ''
+      nameErrorStream: new Rx.BehaviorSubject null
+      passwordValueStream: new Rx.BehaviorSubject ''
+      passwordErrorStream: new Rx.BehaviorSubject null
+      emailValueStream: new Rx.BehaviorSubject ''
+      emailErrorStream: new Rx.BehaviorSubject null
+      modeStream: modeStream or new Rx.BehaviorSubject 'signIn'
     }
   , []
 

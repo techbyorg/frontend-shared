@@ -11,7 +11,7 @@ CLOSE_DELAY_MS = 450 # 0.45s for animation
 if window?
   require './index.styl'
 
-module.exports = $sheet = (props) ->
+export default $sheet = (props) ->
   {onClose, $content, $actions} = props
   {lang} = useContext context
 
