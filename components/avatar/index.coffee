@@ -1,10 +1,8 @@
 import {z, classKebab} from 'zorium'
-import _find from 'lodash/find'
 
 if window?
   require './index.styl'
 
-import Icon from '../icon'
 import config from '../../config'
 import colors from '../../colors'
 

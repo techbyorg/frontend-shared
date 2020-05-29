@@ -1,6 +1,5 @@
 import Fingerprint from 'fingerprintjs'
 import getUuidByString from 'uuid-by-string'
-import _reduce from 'lodash/reduce'
 
 import Environment from '../services/environment'
 import PushService from '../services/push'
@@ -185,7 +184,7 @@ module.exports = class Portal
 
   permissionsCheck: ({permissions}) ->
     console.log 'webcheck'
-    Promise.resolve _reduce permissions, (obj, permission) ->
+    Promise.resolve _.reduce permissions, (obj, permission) ->
       obj[permission] = true
       obj
     , {}

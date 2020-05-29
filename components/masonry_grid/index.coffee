@@ -1,8 +1,5 @@
 import {z, useContext, useStream} from 'zorium'
-import _map from 'lodash/map'
-import _flatten from 'lodash/flatten'
-import _range from 'lodash/range'
-import _filter from 'lodash/filter'
+import * as _ from 'lodash-es'
 
 import context from '../../context'
 
@@ -19,8 +16,8 @@ module.exports = $masonryGrid = ({$elements, columnCounts}) ->
   if columnCount is 1
     $columns = [$elements]
   else
-    $columns = _map _range(columnCount), (columnIndex) ->
-      _filter $elements, (element, i) ->
+    $columns = _.map _.range(columnCount), (columnIndex) ->
+      _.filter $elements, (element, i) ->
         i % columnCount is columnIndex
 
   z '.z-masonry-grid', {
@@ -28,11 +25,11 @@ module.exports = $masonryGrid = ({$elements, columnCounts}) ->
       columnCount: columnCount
       webkitColumnCount: columnCount
   },
-    _map $columns, ($els) ->
+    _.map $columns, ($els) ->
       z '.column', {
         style:
           width: "#{100 / columnCount}%"
       },
-        _map $els, ($el) ->
+        _.map $els, ($el) ->
           z '.row',
             $el

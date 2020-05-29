@@ -1,6 +1,5 @@
 import {z, classKebab, useContext, useStream} from 'zorium'
-import _map from 'lodash/map'
-import _isEmpty from 'lodash/isEmpty'
+import * as _ from 'lodash-es'
 
 import $icon from '../icon'
 import $spinner from '../spinner'
@@ -21,7 +20,7 @@ module.exports = $notifications = ->
 
   {notifications} = useStream ->
     notifications: model.notification.getAll().map (notifications) ->
-      _map notifications, (notification) ->
+      _.map notifications, (notification) ->
         {
           notification: notification
         }
@@ -31,7 +30,7 @@ module.exports = $notifications = ->
     model.exoid.invalidate 'notifications.getUnreadCount', {}
 
   z '.z-notifications',
-    if notifications and _isEmpty notifications
+    if notifications and _.isEmpty notifications
       z '.no-notifications',
         z $notificationsIcon,
           icon: 'notifications-none'
@@ -41,7 +40,7 @@ module.exports = $notifications = ->
         z '.message',
           'You\'re all caught up!'
     else if notifications
-      _map notifications, ({notification}) ->
+      _.map notifications, ({notification}) ->
         isUnread = not notification.isRead
 
         z '.notification', {

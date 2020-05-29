@@ -1,5 +1,5 @@
 import semverCompare from 'semver-compare'
-import _padStart from 'lodash/padStart'
+import * as _ from 'lodash-es'
 
 ONE_MINUTE_S = 60
 ONE_HOUR_S = 3600
@@ -27,7 +27,7 @@ class DateService
       h = hours % 12
       if h is 0
         h = 12
-      mm = _padStart date.getMinutes(), 2, '0'
+      mm = _.padStart date.getMinutes(), 2, '0'
       a = if hours > 12 then 'pm' else 'am'
       "#{MMM} #{D}, #{h}:#{mm} #{a}"
     else if format is 'MMMM yyyy'
@@ -54,9 +54,9 @@ class DateService
     match = match.slice(1).map((x) ->
       return x?.replace(/\D/, '')
     )
-    hours = _padStart parseInt(match[0]) or 0, 2, '0'
-    minutes = _padStart parseInt(match[1]) or 0, 2, '0'
-    seconds = _padStart parseInt(match[2]) or 0, 2, '0'
+    hours = _.padStart parseInt(match[0]) or 0, 2, '0'
+    minutes = _.padStart parseInt(match[1]) or 0, 2, '0'
+    seconds = _.padStart parseInt(match[2]) or 0, 2, '0'
     if hours isnt '00'
       "#{hours}:#{minutes}:#{seconds}"
     else if minutes isnt '00'

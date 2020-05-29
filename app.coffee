@@ -1,8 +1,6 @@
 import {z, classKebab, useMemo, useStream} from 'zorium'
+import * as _ from 'lodash-es'
 import HttpHash from 'http-hash'
-import _map from 'lodash/map'
-import _forEach from 'lodash/forEach'
-import _defaults from 'lodash/defaults'
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/operator/map'
 require 'rxjs/add/operator/filter'
@@ -24,9 +22,9 @@ module.exports = $app = (props) ->
 
   {hash, requestsStream} = useMemo ->
     hash = new HttpHash()
-    _forEach routes, ($page, key) ->
+    _.forEach routes, ($page, key) ->
       # there can be multiple paths per route, 1 per language
-      _forEach lang.getAllPathsByRouteKey(key), (path) ->
+      _.forEach lang.getAllPathsByRouteKey(key), (path) ->
         hash.set path, -> $page
 
     requestsStream = requestsStream.map (req) ->
@@ -38,7 +36,7 @@ module.exports = $app = (props) ->
         if window?
           req.path = path # doesn't work server-side
         else
-          req = _defaults {path}, req
+          req = _.defaults {path}, req
 
       # subdomain = router.getSubdomain()
       #
@@ -155,7 +153,7 @@ module.exports = $app = (props) ->
 
         z '#overlays-portal',
           # legacy overlays
-          _map $overlays, ($overlay) ->
+          _.map $overlays, ($overlay) ->
             $overlay
 
         # z $tooltip

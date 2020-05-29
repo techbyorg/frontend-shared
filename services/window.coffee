@@ -1,6 +1,6 @@
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 require 'rxjs/add/operator/map'
-import _forEach from 'lodash/forEach'
 if window?
   uuid = require 'uuid'
 
@@ -133,7 +133,7 @@ module.exports = class Window
     @updateSize()
 
   resume: =>
-    _forEach @resumeFns, (fn) ->
+    _.forEach @resumeFns, (fn) ->
       fn()
 
   onResume: (fn) =>

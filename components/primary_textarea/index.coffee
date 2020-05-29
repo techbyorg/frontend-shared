@@ -1,12 +1,12 @@
 import {z} from 'zorium'
-import _defaults from 'lodash/defaults'
+import * as _ from 'lodash-es'
 
 import $textaea from '../textarea'
 import colors from '../../colors'
 
 module.exports = $primaryTextarea = (opts) ->
   z '.z-primary-textarea',
-    z $textarea, _defaults opts, {
+    z $textarea, _.defaults opts, {
       isFullWidth: true
       isRaised: true
       isFloating: true

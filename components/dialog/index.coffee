@@ -1,7 +1,4 @@
 import {z, classKebab, createPortal, useEffect, useMemo, useRef} from 'zorium'
-# _isEmpty = require 'lodash/isEmpty'
-import _map from 'lodash/map'
-# _defaults = require 'lodash/defaults'
 
 if window?
   require './index.styl'

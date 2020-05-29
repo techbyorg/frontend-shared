@@ -1,13 +1,8 @@
+import * as _ from 'lodash-es'
 import qsStringify from 'qs/lib/stringify'
-import _forEach from 'lodash/forEach'
-import _isEmpty from 'lodash/isEmpty'
-import _defaults from 'lodash/defaults'
-import _reduce from 'lodash/reduce'
-import _kebabCase from 'lodash/kebabCase'
-import _last from 'lodash/last'
 RxObservable = require('rxjs/Observable').Observable
-import Environment from '../services/environment'
 
+import Environment from '../services/environment'
 import SemverService from '../services/semver'
 import colors from '../colors'
 import config from '../config'
@@ -55,12 +50,12 @@ class RouterService
     @goPath path, options
 
   getFund: (fund) =>
-    @get 'fundByEin', {slug: _kebabCase(fund?.name), ein: fund?.ein}
+    @get 'fundByEin', {slug: _.kebabCase(fund?.name), ein: fund?.ein}
   goFund: (fund) =>
     @goPath @getFund fund
 
   getOrg: (org) =>
-    @get 'orgByEin', {slug: _kebabCase(org?.name), ein: org?.ein}
+    @get 'orgByEin', {slug: _.kebabCase(org?.name), ein: org?.ein}
   goOrg: (org) =>
     @goPath @getOrg org
 
@@ -81,7 +76,7 @@ class RouterService
     if subdomain and subdomain is entitySlug
       route = route.replace "/#{entitySlug}", ''
 
-    _forEach replacements, (value, key) ->
+    _.forEach replacements, (value, key) ->
       route = route.replace ":#{key}", value
 
     if options?.qs
@@ -102,7 +97,7 @@ class RouterService
 
     @requestsStream.take(1).subscribe (request) =>
       @preservedRequest = request
-      @go routeKey, replacements, _defaults(
+      @go routeKey, replacements, _.defaults(
         {keepPreserved: true}, options
       )
 
@@ -129,7 +124,7 @@ class RouterService
       @removeOverlay()
     else
       overlays = @model.overlay.get()
-      unless _isEmpty overlays
+      unless _.isEmpty overlays
         @model.overlay.close()
 
     if @onBackFn
@@ -138,7 +133,7 @@ class RouterService
       return fn
     if @model.drawer.isOpen().getValue()
       return @model.drawer.close()
-    if fromNative and _last(@history) is @get 'home'
+    if fromNative and _.last(@history) is @get 'home'
       @portal.call 'app.exit'
     else if @history.length > 1 and window.history.length > 0
       window.history.back()
@@ -151,7 +146,7 @@ class RouterService
   onBack: (@onBackFn) => null
 
   openInAppBrowser: (addon, {replacements} = {}) =>
-    if _isEmpty(addon.data?.translatedLanguages) or
+    if _.isEmpty(addon.data?.translatedLanguages) or
           addon.data?.translatedLanguages.indexOf(
             @lang.getLanguageStr()
           ) isnt -1
@@ -160,9 +155,9 @@ class RouterService
       language = 'en'
 
     replacements ?= {}
-    replacements = _defaults replacements, {lang: language}
+    replacements = _.defaults replacements, {lang: language}
     vars = addon.url.match /\{[a-zA-Z0-9]+\}/g
-    url = _reduce vars, (str, variable) ->
+    url = _.reduce vars, (str, variable) ->
       key = variable.replace /\{|\}/g, ''
       str.replace variable, replacements[key] or ''
     , addon.url
@@ -204,7 +199,7 @@ class RouterService
       @openInAppBrowser addon, {replacements}
     else
       @go 'toolByKey', {
-        key: _kebabCase(addon.key)
+        key: _.kebabCase(addon.key)
       }, {
         query:
           replacements: JSON.stringify replacements

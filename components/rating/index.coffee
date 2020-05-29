@@ -1,9 +1,8 @@
 import {z, useMemo, useStream} from 'zorium'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
-import _map from 'lodash/map'
-import _range from 'lodash/range'
 
 import Icon from '../icon'
 import colors from '../../colors'
@@ -32,9 +31,9 @@ module.exports = $rating = (props) ->
       fullStars = Math.floor(halfStars / 2)
       halfStars -= fullStars * 2
       emptyStars = 5 - (fullStars + halfStars)
-      _map _range(fullStars), -> 'star'
-      .concat _map _range(halfStars), -> 'star-half'
-      .concat _map _range(emptyStars), -> 'star-outline'
+      _.map _.range(fullStars), -> 'star'
+      .concat _.map _.range(halfStars), -> 'star-half'
+      .concat _.map _.range(emptyStars), -> 'star-outline'
 
   setRating = (value) ->
     if valueStreams
@@ -47,7 +46,7 @@ module.exports = $rating = (props) ->
     style:
       height: size
   },
-    _map starIcons, (icon, i) ->
+    _.map starIcons, (icon, i) ->
       z '.star',
         z $icon,
           icon: icon

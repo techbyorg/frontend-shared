@@ -1,5 +1,5 @@
 import {z, classKebab, useRef, useMemo, useStream} from 'zorium'
-import _defaults from 'lodash/defaults'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
@@ -72,7 +72,7 @@ module.exports = $textarea = (props) ->
     textareaHeightStream.map (height) ->
       Math.min height, 150 # max height in css
 
-  colors = _defaults colors, {
+  colors = _.defaults colors, {
     c500: allColors.$bgText54
     background: allColors.$bgText12
     underline: allColors.$primaryMain

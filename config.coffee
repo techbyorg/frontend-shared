@@ -1,9 +1,7 @@
 # process.env.* is replaced at run-time with * environment variable
 # Note that simply env.* is not replaced, and thus suitible for private config
 
-import _map from 'lodash/map'
-import _range from 'lodash/range'
-import _merge from 'lodash/merge'
+import * as _ from 'lodash-es'
 import assertNoneMissing from 'assert-none-missing'
 
 import colors from './colors'
@@ -175,4 +173,4 @@ if window?
   module.exports = isomorphic
 else
   assertNoneMissing server
-  module.exports = _merge isomorphic, server
+  module.exports = _.merge isomorphic, server

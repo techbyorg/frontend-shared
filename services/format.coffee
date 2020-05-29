@@ -1,9 +1,5 @@
 import z from 'zorium'
-import _capitalize from 'lodash/capitalize'
-import _map from 'lodash/map'
-import _filter from 'lodash/filter'
-import _reduce from 'lodash/reduce'
-import _last from 'lodash/last'
+import * as _ from 'lodash-es'
 
 import config from '../config'
 

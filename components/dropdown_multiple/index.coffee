@@ -1,9 +1,7 @@
 # not currently used. previously used for cell carrier selection
 
 import {z, classKebab, useStream} from 'zorium'
-import _map from 'lodash/map'
-import _filter from 'lodash/filter'
-import _kebabCase from 'lodash/kebabCase'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
@@ -30,7 +28,7 @@ module.exports = $dropdownMultiple = (props) ->
       valueStreams
       isOpenStream: new RxBehaviorSubject false
       optionsStream: options.map (options) ->
-        options = _map options, (option) ->
+        options = _.map options, (option) ->
           if option.isCheckedStreams
             isCheckedStreams = option.isCheckedStreams
           else
@@ -43,13 +41,13 @@ module.exports = $dropdownMultiple = (props) ->
 
       valueStream: options.switchMap (options) ->
         RxObservable.combineLatest(
-          _map options, ({isCheckedStreams}) ->
+          _.map options, ({isCheckedStreams}) ->
             isCheckedStreams.switch()
           (vals...) ->
             vals
         )
         .map (values) ->
-          _filter _map options, ({option}, i) ->
+          _.filter _.map options, ({option}, i) ->
             if values[i]
               option
             else
@@ -69,7 +67,7 @@ module.exports = $dropdownMultiple = (props) ->
 
   z '.z-dropdown-multiple', {
     # vdom doesn't key defaultValue correctly if elements are switched
-    # key: _kebabCase hintText
+    # key: _.kebabCase hintText
     className: classKebab {
       hasValue: value isnt ''
       isDisabled
@@ -88,7 +86,7 @@ module.exports = $dropdownMultiple = (props) ->
       currentText
       z '.arrow'
     z '.options',
-      _map options, ({option}) ->
+      _.map options, ({option}) ->
         z 'label.option',
           z '.text',
             option?.text

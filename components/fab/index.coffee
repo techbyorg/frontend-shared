@@ -1,5 +1,5 @@
 import {z, useMemo} from 'zorium'
-import _defaults from 'lodash/defaults'
+import * as _ from 'lodash-es'
 
 import $icon from '../icon'
 import $ripple from '../ripple'
@@ -14,7 +14,7 @@ module.exports = $fab = (props) ->
 
   {colorsMemo} = useMemo (colors) ->
     {
-      colorsMemo: _defaults colors, {
+      colorsMemo: _.defaults colors, {
         c500: if isPrimary then allColors.$primaryMain \
               else if isSecondary then allColors.$secondaryMain \
               else allColors.$white

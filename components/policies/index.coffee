@@ -1,6 +1,5 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
-import _map from 'lodash/map'
-import _uniq from 'lodash/uniq'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 import Icon from '../icon'
@@ -46,7 +45,7 @@ module.exports = $policies = ({isIabStream, $dropdowns}) ->
     z '.description',
       lang.get 'policies.description'
 
-    _map $dropdowns, ($dropdown, i) ->
+    _.map $dropdowns, ($dropdown, i) ->
       {$content, $title} = $dropdown
       isVisible = visibleDropdowns.indexOf(i) isnt -1
       [
@@ -55,10 +54,10 @@ module.exports = $policies = ({isIabStream, $dropdowns}) ->
           z '.block', {
             onclick: ->
               if isVisible
-                visibleDropdownsStream.next _filter visibleDropdowns, (index) ->
+                visibleDropdownsStream.next _.filter visibleDropdowns, (index) ->
                   index isnt i
               else
-                visibleDropdownsStream.next _uniq visibleDropdowns.concat i
+                visibleDropdownsStream.next _.uniq visibleDropdowns.concat i
           },
             z '.title', $title
             z '.icon',

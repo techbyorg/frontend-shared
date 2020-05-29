@@ -1,6 +1,5 @@
 import {z, useMemo, useStream, useRef} from 'zorium'
-import _map from 'lodash/map'
-import _take from 'lodash/take'
+import * as _ from 'lodash-es'
 
 import $tag from '../tag'
 import useRefSize from '../../services/use_ref_size'
@@ -20,7 +19,7 @@ module.exports = $tags = ({size, tags, maxVisibleCount}) ->
 
   # TODO: get width, show +X if it goes past width
   z '.z-tags', {ref: $$ref}, [
-    _map _take(tags, maxVisibleCount), (tag) ->
+    _.map _.take(tags, maxVisibleCount), (tag) ->
       z $tag, {tag}
     if more > 0
       z '.more', "+#{more}"

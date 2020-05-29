@@ -1,5 +1,4 @@
-import _map from 'lodash/map'
-import _forEach from 'lodash/forEach'
+import * as _ from 'lodash-es'
 
 # FIXME: work with zorium 3
 
@@ -37,7 +36,7 @@ module.exports = class Base
       .then ->
         # don't want to re-render entire state every time a pic loads in
         all = document.querySelectorAll(".image-loading-#{hash}")
-        _forEach all, (el) -> el.classList.add 'is-image-loaded'
+        _.forEach all, (el) -> el.classList.add 'is-image-loaded'
       return "image-loading-#{hash}"
 
   onDragOver: (e) ->
@@ -49,7 +48,7 @@ module.exports = class Base
 
   onDragEnd: ->
     $$dragEl = null
-    order = _map $$el.current.querySelectorAll('.draggable'), ({dataset}) ->
+    order = _.map $$el.current.querySelectorAll('.draggable'), ({dataset}) ->
       dataset.id
     onReorder order
 

@@ -1,8 +1,8 @@
 import {z, useRef, useMemo, useStream} from 'zorium'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
-import _defaults from 'lodash/defaults'
 
 import $icon from '../icon'
 import allColors from '../../colors'
@@ -25,7 +25,7 @@ module.exports = $checkbox = (props) ->
   {value} = useStream ->
     value: valueStreams?.switch() or valueStream
 
-  colors = _defaults colors or {}, {
+  colors = _.defaults colors or {}, {
     checked: allColors.$primaryMain
     checkedBorder: allColors.$primary900
     border: allColors.$bgText26

@@ -1,7 +1,5 @@
 import {z, classKebab, useMemo, useRef} from 'zorium'
-import _defaults from 'lodash/defaults'
-import _map from 'lodash/map'
-import _sumBy from 'lodash/sumBy'
+import * as _ from 'lodash-es'
 
 import $spinner from '../spinner'
 import Environment from '../../services/environment'
@@ -24,13 +22,13 @@ module.exports = $table = (props) ->
   isMobile = Environment.isMobile()
 
   columnsWithRefAndSize = useMemo ->
-    _map columns, (column) ->
+    _.map columns, (column) ->
       # so we don't have to calculate size on every td
       # for components that need size (eg tags)
       if column.passThroughSize
         $$ref = useRef()
         size = useRefSize $$ref
-        column = _defaults {$$ref, size}, column
+        column = _.defaults {$$ref, size}, column
       column
   , [columns]
 
@@ -40,9 +38,9 @@ module.exports = $table = (props) ->
     if not isMobile or not mobileRowRenderer
       z '.thead', {
         style:
-          minWidth: "#{_sumBy(columns, 'width')}px"
+          minWidth: "#{_.sumBy(columns, 'width')}px"
       },
-        _map columnsWithRefAndSize, ({name, width, isFlex, $$ref}) ->
+        _.map columnsWithRefAndSize, ({name, width, isFlex, $$ref}) ->
           z '.th', {
             style: getStyle {width, isFlex}
           },
@@ -52,7 +50,7 @@ module.exports = $table = (props) ->
     z '.tbody',
       unless data?
         z $spinner
-      _map data, (row, i) ->
+      _.map data, (row, i) ->
         if isMobile and mobileRowRenderer
           z '.tr-mobile', {
             onclick: (e) ->
@@ -64,7 +62,7 @@ module.exports = $table = (props) ->
             onclick: (e) ->
               onRowClick e, i
           },
-            _map columnsWithRefAndSize, (column) ->
+            _.map columnsWithRefAndSize, (column) ->
               {key, name, width, size, isFlex, content} = column
               z '.td', {
                 style: getStyle {width, isFlex}

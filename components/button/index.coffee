@@ -1,5 +1,4 @@
 import {z, classKebab} from 'zorium'
-import _defaults from 'lodash/defaults'
 
 import $ripple from '../ripple'
 import $icon from '../icon'

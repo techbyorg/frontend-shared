@@ -1,6 +1,4 @@
-import _map from 'lodash/map'
-import _find from 'lodash/find'
-import _sum from 'lodash/sum'
+import * as _ from 'lodash-es'
 
 import Environment from '../services/environment'
 import config from '../config'
@@ -61,7 +59,7 @@ module.exports = class Cache
 
   onInstall: (event) =>
     event.waitUntil(
-      Promise.all _map @cachesFiles, @updateCache
+      Promise.all _.map @cachesFiles, @updateCache
       # .then notifyClients
       .then ->
         console.log 'caches installed'
@@ -75,21 +73,21 @@ module.exports = class Cache
     caches.open cacheName
     .then (cache) ->
       cache.keys().then (keys) ->
-        Promise.all _map keys, (key) ->
+        Promise.all _.map keys, (key) ->
           cache.match(key).then (response) ->
             response.clone().blob().then (blob) -> blob.size
         .then (sizes) ->
-          _sum sizes
+          _.sum sizes
 
   # grab from normal stores (can't use caches.match, because we want to avoid
   # the recorded cache)
   getCacheMatch: (request) =>
-    Promise.all _map @cachesFiles, ({version}, cacheName) ->
+    Promise.all _.map @cachesFiles, ({version}, cacheName) ->
       caches.open("#{cacheName}:#{version}")
       .then (cache) ->
         cache.match request
     .then (matches) ->
-      _find matches, (match) -> Boolean match
+      _.find matches, (match) -> Boolean match
 
   onFetch: (event) =>
     # xhr upload progress listener doesn't work w/o this
@@ -127,11 +125,11 @@ module.exports = class Cache
     )
 
   onActivate: (event) =>
-    cacheKeys = _map @cachesFiles, ({version}, cacheName) ->
+    cacheKeys = _.map @cachesFiles, ({version}, cacheName) ->
       "#{cacheName}:#{version}"
     caches.keys().then (keys) ->
       Promise.all(
-        _map keys, (key) ->
+        _.map keys, (key) ->
           if cacheKeys.indexOf(key) is -1
             caches.delete key
       )

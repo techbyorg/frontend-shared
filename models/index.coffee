@@ -1,14 +1,5 @@
 import Exoid from 'exoid'
-import _isEmpty from 'lodash/isEmpty'
-import _isPlainObject from 'lodash/isPlainObject'
-import _defaults from 'lodash/defaults'
-import _merge from 'lodash/merge'
-import _pick from 'lodash/pick'
-import _map from 'lodash/map'
-import _zipWith from 'lodash/zipWith'
-import _differenceWith from 'lodash/differenceWith'
-import _isEqual from 'lodash/isEqual'
-import _keys from 'lodash/keys'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
@@ -46,25 +37,25 @@ module.exports = class Model
     # else
     #   true
     # cache = if isExpired then {} else serialization
-    @isFromCache = not _isEmpty cache
+    @isFromCache = not _.isEmpty cache
 
     ioEmit = (event, opts) =>
       accessToken = @cookie.get 'accessToken'
-      io.emit event, _defaults {accessToken, userAgent}, opts
+      io.emit event, _.defaults {accessToken, userAgent}, opts
 
     proxy = (url, opts) =>
       accessToken = @cookie.get 'accessToken'
-      proxyHeaders =  _pick serverHeaders, [
+      proxyHeaders =  _.pick serverHeaders, [
         'cookie'
         'user-agent'
         'accept-language'
         'x-forwarded-for'
       ]
-      request url, _merge {
+      request url, _.merge {
         responseType: 'json'
         query: if accessToken? then {accessToken} else {}
-        headers: if _isPlainObject opts?.body
-          _merge {
+        headers: if _.isPlainObject opts?.body
+          _.merge {
             # Avoid CORS preflight
             'Content-Type': 'text/plain'
           }, proxyHeaders
@@ -80,7 +71,7 @@ module.exports = class Model
       catch
         {}
 
-    @initialCache = _defaults offlineCache, cache.exoid
+    @initialCache = _.defaults offlineCache, cache.exoid
 
     @exoid = new Exoid
       ioEmit: ioEmit
@@ -114,7 +105,7 @@ module.exports = class Model
 
     # could listen for postMessage from service worker to see if this is from
     # cache, then validate data
-    requestsStream = _map cache, (result, key) =>
+    requestsStream = _.map cache, (result, key) =>
       req = try
         JSON.parse key
       catch
@@ -133,14 +124,14 @@ module.exports = class Model
       requestsStream, (vals...) -> vals
     )
     .take(1).subscribe (responses) =>
-      responses = _zipWith responses, _keys(cache), (response, req) ->
+      responses = _.zipWith responses, _.keys(cache), (response, req) ->
         {req, response}
-      cacheArray = _map cache, (response, req) ->
+      cacheArray = _.map cache, (response, req) ->
         {req, response}
       # see if our updated responses differ from the cached data.
-      changedReqs = _differenceWith(responses, cacheArray, _isEqual)
+      changedReqs = _.differenceWith(responses, cacheArray, _.isEqual)
       # update with new values
-      _map changedReqs, ({req, response}) =>
+      _.map changedReqs, ({req, response}) =>
         console.log 'OUTDATED EXOID:', req, 'replacing...', response
         @exoid.setDataCache req, response
 
@@ -148,7 +139,7 @@ module.exports = class Model
       # eg. if we add some sort of timer / visitCount to user.getMe
       # i'm not sure if that's a bad thing or not. some people always
       # load from cache then update, and this would basically be the same
-      unless _isEmpty changedReqs
+      unless _.isEmpty changedReqs
         console.log 'invalidating html cache...'
         @portal.call 'cache.deleteHtmlCache'
         # FIXME TODO invalidate in service worker

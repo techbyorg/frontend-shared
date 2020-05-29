@@ -1,6 +1,5 @@
 import {z} from 'zorium'
-import _map from 'lodash/map'
-import _range from 'lodash/range'
+import * as _ from 'lodash-es'
 
 import colors from '../../colors'
 
@@ -15,7 +14,7 @@ module.exports = $spinner = ({size = DEFAULT_SIZE}) ->
       width: "#{size}px"
       height: "#{size * 0.6}px"
   },
-    _map _range(3), ->
+    _.map _.range(3), ->
       z 'li',
         style:
           border: "#{Math.round(size * 0.06)}px solid #{colors.$primary500}"

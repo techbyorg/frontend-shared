@@ -1,5 +1,5 @@
 import {z, classKebab, useContext, useEffect, useMemo, useRef, useStream} from 'zorium'
-import _map from 'lodash/map'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 import $tabsBar from '../../components/tabs_bar'
@@ -171,7 +171,7 @@ module.exports = $tabs = (props) ->
             "#{transformProperty}": "translate(#{x}px, 0px) translateZ(0px)"
             # webkitTransform: "translate(#{x}px, 0px) translateZ(0px)"
         },
-          _map tabs, ({$el}, i) ->
+          _.map tabs, ({$el}, i) ->
             z '.iscroll-tab', {
               style:
                 width: "#{(100 / tabs.length)}%"

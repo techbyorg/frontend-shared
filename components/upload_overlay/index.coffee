@@ -1,6 +1,5 @@
 import {z} from 'zorium'
-import _isEmpty from 'lodash/isEmpty'
-import _map from 'lodash/map'
+import * as _ from 'lodash-es'
 
 if window?
   require './index.styl'
@@ -27,8 +26,8 @@ module.exports = $uploadOverlay = ({isMulti, onSelect}) ->
         $$imageInput = document.getElementById('image')
         files = $$imageInput?.files
 
-        unless _isEmpty files
-          Promise.all _map(files, readFile)
+        unless _.isEmpty files
+          Promise.all _.map(files, readFile)
           .then (dataUrls) ->
             if isMulti
               onSelect {files, dataUrls}

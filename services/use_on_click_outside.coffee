@@ -1,14 +1,13 @@
 import {useEffect} from 'zorium'
-import _isArray from 'lodash/isArray'
-import _some from 'lodash/some'
+import * as _ from 'lodash-es'
 
 module.exports = useOnClickOutside = ($$refs, handler) ->
-  unless _isArray $$refs
+  unless _.isArray $$refs
     $$refs = [$$refs]
 
   useEffect ->
     listener = (e) ->
-      unless _some $$refs, ($$ref) -> $$ref.current?.contains e.target
+      unless _.some $$refs, ($$ref) -> $$ref.current?.contains e.target
         handler e
 
     document.addEventListener 'mousedown', listener

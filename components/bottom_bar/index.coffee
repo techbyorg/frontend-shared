@@ -1,7 +1,5 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
-import _map from 'lodash/map'
-import _filter from 'lodash/filter'
-import _some from 'lodash/some'
+import * as _ from 'lodash-es'
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/combineLatest'
 
@@ -21,7 +19,7 @@ module.exports = $bottomBar = ({requestsStream, isAbsolute}) ->
     {
       hasUnreadMessagesStream: if window?
         model.conversation.getAll().map (conversations) ->
-           _some conversations, {isRead: false}
+           _.some conversations, {isRead: false}
       else
         RxObservable.of null
     }
@@ -59,7 +57,7 @@ module.exports = $bottomBar = ({requestsStream, isAbsolute}) ->
     key: 'bottom-bar'
     className: classKebab {isAbsolute}
   },
-    _map menuItems, ({icon, route, text, isDefault, hasNotification}, i) ->
+    _.map menuItems, ({icon, route, text, isDefault, hasNotification}, i) ->
       if isDefault
         isSelected = currentPath is router.get('home') or
           (currentPath and currentPath.indexOf(route) isnt -1)

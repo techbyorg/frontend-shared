@@ -1,8 +1,5 @@
 import {z, classKebab, useContext, useEffect, useMemo, useStream} from 'zorium'
-import _map from 'lodash/map'
-import _filter from 'lodash/filter'
-import _clone from 'lodash/clone'
-import _isEmpty from 'lodash/isEmpty'
+import * as _ from 'lodash-es'
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
 require 'rxjs/add/observable/combineLatest'
@@ -58,7 +55,7 @@ module.exports = $profileDialog = (props) ->
 
     me: meStream
     $links: userStream.map (user) ->
-      _filter _map user?.links, (link, type) ->
+      _.filter _.map user?.links, (link, type) ->
         if link
           {
             type: type
@@ -84,7 +81,7 @@ module.exports = $profileDialog = (props) ->
     loadingItemsStream.next loadingItems.concat [text]
 
   unsetLoadingByText = (text) ->
-    loadingItems = _clone loadingItems
+    loadingItems = _.clone loadingItems
     loadingItems.splice loadingItems.indexOf(text), 1
     loadingItemsStream.next loadingItems
 
@@ -93,7 +90,7 @@ module.exports = $profileDialog = (props) ->
 
     isMe = user?.id is me?.id
 
-    _filter [
+    _.filter [
       {
         icon: 'profile'
         text: lang.get 'general.profile'
@@ -113,13 +110,13 @@ module.exports = $profileDialog = (props) ->
     unless isVisible
       return
 
-    hasChildren = not _isEmpty children
+    hasChildren = not _.isEmpty children
     isExpanded = expandedItems.indexOf(text) isnt -1
 
     z 'li.menu-item', {
       onclick: ->
         if hasChildren and isExpanded
-          expandedItems = _clone expandedItems
+          expandedItems = _.clone expandedItems
           expandedItems.splice expandedItems.indexOf(text), 1
           expandedItemsStream.next expandedItems
         else if hasChildren
@@ -135,7 +132,7 @@ module.exports = $profileDialog = (props) ->
             isTouchTarget: false
           }
         z '.text', text
-        if not _isEmpty children
+        if not _.isEmpty children
           z '.chevron',
             z $icon,
               icon: if isExpanded \
@@ -145,7 +142,7 @@ module.exports = $profileDialog = (props) ->
               isTouchTarget: false
       if isExpanded
         z 'ul.menu',
-        _map children, renderItem
+        _.map children, renderItem
 
 
 
@@ -169,10 +166,10 @@ module.exports = $profileDialog = (props) ->
               z $avatar, {user, bgColor: colors.$bgText12, size: '72px'}
             z '.about',
               z '.name', model.user.getDisplayName user
-              if not _isEmpty entityUser?.roleNames
+              if not _.isEmpty entityUser?.roleNames
                 z '.roles', entityUser?.roleNames.join ', '
               z '.links',
-                _map $links, ({link, type}) ->
+                _.map $links, ({link, type}) ->
                   router.link z 'a.link', {
                     href: link
                     target: '_system'
@@ -195,4 +192,4 @@ module.exports = $profileDialog = (props) ->
                     null # TODO: close
 
           z 'ul.menu',
-            _map userOptions, renderItem
+            _.map userOptions, renderItem

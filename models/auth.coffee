@@ -1,4 +1,4 @@
-import _pick from 'lodash/pick'
+import * as _ from 'lodash-es'
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/defer'
 require 'rxjs/add/operator/toPromise'
@@ -124,7 +124,7 @@ module.exports = class Auth
     .then @afterLogin
 
   stream: ({query, variables, pull}, options = {}) =>
-    options = _pick options, [
+    options = _.pick options, [
       'isErrorable', 'clientChangesStream', 'ignoreCache', 'initialSortFn'
       'isStreamed', 'limit'
     ]

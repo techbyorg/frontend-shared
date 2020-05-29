@@ -1,9 +1,8 @@
 import {z, classKebab, useContext, useEffect, useMemo, useStream} from 'zorium'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
-import _map from 'lodash/map'
-import _range from 'lodash/range'
 
 import context from '../../context'
 
@@ -64,7 +63,7 @@ module.exports = $inputRange = (props) ->
         z '.info',
           z '.unset', lang.get 'inputRange.default'
           z '.numbers',
-            _map _range(minValue, maxValue + 1), (number) ->
+            _.map _.range(minValue, maxValue + 1), (number) ->
               z '.number', {
                 onclick: ->
                   setValue parseInt(number)

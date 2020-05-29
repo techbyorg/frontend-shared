@@ -1,5 +1,5 @@
 import {z, useContext} from 'zorium'
-import _defaults from 'lodash/defaults'
+import * as _ from 'lodash-es'
 
 import $appBar from '../app_bar'
 import $icon from '../icon'
@@ -13,12 +13,12 @@ module.exports = $actionBar = (props) ->
   {title, cancel, save, isSaving, isPrimary, isSecondary} = props
   {lang} = useContext context
 
-  cancel = _defaults cancel, {
+  cancel = _.defaults cancel, {
     icon: 'close'
     text: lang.get 'general.cancel'
     onclick: -> null
   }
-  save = _defaults save, {
+  save = _.defaults save, {
     icon: 'check'
     text: lang.get 'general.save'
     # onclick: -> null

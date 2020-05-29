@@ -1,9 +1,5 @@
-
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-import _filter from 'lodash/filter'
-import _findIndex from 'lodash/findIndex'
-import _isEmpty from 'lodash/isEmpty'
-import _map from 'lodash/map'
 
 import Environment from '../services/environment'
 
@@ -12,19 +8,19 @@ import Environment from '../services/environment'
 module.exports = class Overlay
   constructor: ->
     @overlays = new RxBehaviorSubject null
-    @_data = new RxBehaviorSubject null
+    @_.data = new RxBehaviorSubject null
 
   getData: =>
-    @_data
+    @_.data
 
   setData: (data) =>
-    @_data.next data
+    @_.data.next data
 
   get: =>
     @overlays.getValue()
 
   get$: =>
-    @overlays.map (overlays) -> _map overlays, '$'
+    @overlays.map (overlays) -> _.map overlays, '$'
 
   open: ($, {data, onComplete, onCancel, id} = {}) =>
     if Environment.isIos()
@@ -33,7 +29,7 @@ module.exports = class Overlay
       #   document.activeElement.blur()
       # , 0
 
-    newOverlays = _filter (@overlays.getValue() or []).concat(
+    newOverlays = _.filter (@overlays.getValue() or []).concat(
       {$, onComplete, onCancel, id}
     )
     @overlays.next newOverlays
@@ -51,20 +47,20 @@ module.exports = class Overlay
 
   close: ({action, response, isFromBackButton, id} = {}) =>
     overlays = @overlays.getValue()
-    if _isEmpty overlays
+    if _.isEmpty overlays
       return
 
     window.removeEventListener 'backbutton', @closeFromBackButton
 
     if id
-      index = _findIndex overlays, {id}
+      index = _.findIndex overlays, {id}
       if index isnt -1
         {onComplete, onCancel} = overlays[index]
         overlays.splice index, 1
     else
       {onComplete, onCancel} = overlays.pop()
 
-    if _isEmpty overlays
+    if _.isEmpty overlays
       overlays = null
     @overlays.next overlays
 

@@ -1,5 +1,5 @@
 import {z, classKebab, useMemo, useStream} from 'zorium'
-import _defaults from 'lodash/defaults'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
@@ -30,7 +30,7 @@ module.exports = $input = (props) ->
     isFocused: isFocusedStream
 
 
-  colors = _defaults colors, {
+  colors = _.defaults colors, {
     c500: allColors.$bgColor
     background: allColors.$bgColor
     underline: allColors.$primaryMain

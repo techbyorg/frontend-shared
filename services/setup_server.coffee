@@ -1,9 +1,6 @@
 import {z, renderToString} from 'zorium'
+import * as _ from 'lodash-es'
 import express from 'express'
-import _every from 'lodash/every'
-import _values from 'lodash/values'
-import _defaults from 'lodash/defaults'
-import _map from 'lodash/map'
 import compress from 'compression'
 import helmet from 'helmet'
 import Promise from 'bluebird'
@@ -50,18 +47,18 @@ export default setup = ({$app, Lang, Model, gulpPaths, config}) ->
       result =
         api: api.isFulfilled()
 
-      isHealthy = _every _values result
+      isHealthy = _.every _.values result
       if isHealthy
         res.json {healthy: isHealthy}
       else
-        res.status(500).json _defaults {healthy: isHealthy}, result
+        res.status(500).json _.defaults {healthy: isHealthy}, result
     .catch next
 
   app.use '/sitemap.txt', (req, res, next) ->
     request(config.API_URL + '/sitemap', {json: true})
     .then (paths) ->
       res.setHeader 'Content-Type', 'text/plain'
-      res.send (_map paths, (path) -> "https://#{config.HOST}#{path}").join "\n"
+      res.send (_.map paths, (path) -> "https://#{config.HOST}#{path}").join "\n"
 
   app.use '/ping', (req, res) ->
     res.send 'pong'

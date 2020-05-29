@@ -1,5 +1,5 @@
 import {z, classKebab, useMemo, useStream} from 'zorium'
-import _defaults from 'lodash/defaults'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 import $icon from '../icon'
@@ -37,7 +37,7 @@ module.exports = $primaryInput = (props) ->
   z '.z-primary-input', {
     className: classKebab {isFullWidth}
   },
-    z $input, _defaults props, {
+    z $input, _.defaults props, {
       isRaised: true
       isFloating: true
       isDark: true

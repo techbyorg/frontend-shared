@@ -1,4 +1,5 @@
 import {z, classKebab, useMemo, useStream} from 'zorium'
+import * as _ from 'lodash-es'
 supportsWebP = window? and require 'supports-webp'
 # remark = require 'remark'
 import unified from 'unified'
@@ -7,9 +8,6 @@ import markdown from 'remark-parse'
 # https://github.com/remarkjs/remark-react/blob/master/index.js
 # https://github.com/remarkjs/remark-vdom/blob/master/index.js
 import vdom from 'remark-vdom'
-import _uniq from 'lodash/uniq'
-import _find from 'lodash/find'
-import _reduce from 'lodash/reduce'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxObservable = require('rxjs/Observable').Observable
 require 'rxjs/add/observable/of'
@@ -49,7 +47,7 @@ module.exports = $formattedText = (props) ->
 
 get$ = ({text, model, state}) ->
   mentions = text?.match config.MENTION_REGEX
-  text = _reduce mentions, (newText, find) ->
+  text = _.reduce mentions, (newText, find) ->
     username = find.replace('', '').toLowerCase()
     newText.replace(
       find
@@ -120,7 +118,7 @@ get$ = ({text, model, state}) ->
         isMention = props.title and props.title.indexOf('user:') isnt -1
         if isMention
           username = props.title.replace 'user:', ''
-          mentionedUser = _find mentionedUsers, {username}
+          mentionedUser = _.find mentionedUsers, {username}
         youtubeId = props.href?.match(config.YOUTUBE_ID_REGEX)?[1]
         imgurId = props.href?.match(config.IMGUR_ID_REGEX)?[1]
 

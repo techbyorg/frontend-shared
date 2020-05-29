@@ -1,6 +1,4 @@
-import _reduce from 'lodash/reduce'
-import _mapValues from 'lodash/mapValues'
-import _findKey from 'lodash/findKey'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 import DateService from '../services/date'
@@ -45,13 +43,13 @@ class Language
 
   getRouteKeyByValue: (routeValue) =>
     language = @getLanguageStr()
-    _findKey(@files['paths'][language], (route) ->
-      route is routeValue) or _findKey(@files['paths']['en'], (route) ->
+    _.findKey(@files['paths'][language], (route) ->
+      route is routeValue) or _.findKey(@files['paths']['en'], (route) ->
         route is routeValue)
 
   getAllPathsByRouteKey: (routeKey) =>
     languages = @getAllUrlLanguages()
-    _reduce languages, (paths, language) =>
+    _.reduce languages, (paths, language) =>
       path = @files['paths'][language]?[routeKey]
       if path
         paths[language] = path
@@ -73,7 +71,7 @@ class Language
       baseResponse = baseResponse.plurality[pluralityCount] or
                       baseResponse.plurality.other or ''
 
-    _reduce replacements, (str, replace, key) ->
+    _.reduce replacements, (str, replace, key) ->
       find = ///{#{key}}///g
       str.replace find, replace
     , baseResponse

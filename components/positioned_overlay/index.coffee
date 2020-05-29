@@ -1,5 +1,4 @@
 import {z, classKebab, createPortal, useContext, useLayoutEffect, useMemo, useRef, useStream} from 'zorium'
-import _uniq from 'lodash/uniq'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 import useOnClickOutside from '../../services/use_on_click_outside'

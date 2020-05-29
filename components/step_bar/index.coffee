@@ -1,7 +1,5 @@
 import {z, classKebab, useContext, useStream} from 'zorium'
-import _defaults from 'lodash/defaults'
-import _map from 'lodash/map'
-import _range from 'lodash/range'
+import * as _ from 'lodash-es'
 
 import context from '../../context'
 
@@ -17,7 +15,7 @@ module.exports = $stepBar = (props) ->
   {step} = useStream ->
     step: stepStream
 
-  cancel = _defaults cancel, {
+  cancel = _.defaults cancel, {
     text: if step is 0 and cancel?.onclick \
           then lang.get 'general.cancel'
           else if step > 0
@@ -25,7 +23,7 @@ module.exports = $stepBar = (props) ->
           else ''
     onclick: -> null
   }
-  save = _defaults save, {
+  save = _.defaults save, {
     text: if step is steps - 1 \
           then lang.get 'general.save'
           else lang.get 'general.next'
@@ -43,7 +41,7 @@ module.exports = $stepBar = (props) ->
       cancel.text
 
     z '.step-counter',
-      _map _range(steps), (i) ->
+      _.map _.range(steps), (i) ->
         z '.step-dot',
           className: classKebab {isActive: step is i}
 

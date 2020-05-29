@@ -1,6 +1,6 @@
 import {z, useContext, useEffect, useRef, useMemo, useStream} from 'zorium'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
-import _every from 'lodash/every'
+import * as _ from 'lodash-es'
 
 import $tooltip from '../tooltip'
 import context from '../../context'
@@ -43,7 +43,7 @@ module.exports = $tooltipPositioner = (props) ->
         completed = cookies.completedTooltips?.split(',') or []
         isCompleted = completed.indexOf(key) isnt -1
         prereqs = TOOLTIPS[key]?.prereqs
-        not isCompleted and _every prereqs, (prereq) ->
+        not isCompleted and _.every prereqs, (prereq) ->
           completed.indexOf(prereq) isnt -1
       .publishReplay(1).refCount()
     }
@@ -60,7 +60,7 @@ module.exports = $tooltipPositioner = (props) ->
         setTimeout ->
           checkIsReady = ->
             if $$ref and $$ref.current.clientWidth
-              _show $$ref
+              _.show $$ref
             else
               setTimeout checkIsReady, 100
           checkIsReady()
@@ -76,7 +76,7 @@ module.exports = $tooltipPositioner = (props) ->
   close = ->
     $tooltip?.close()
 
-  _show = ($$ref) ->
+  _.show = ($$ref) ->
     model.tooltip.set$ $z $tooltip, {
       $$target: $$ref
       key

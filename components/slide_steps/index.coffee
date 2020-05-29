@@ -1,5 +1,5 @@
 import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
-import _map from 'lodash/map'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 import $tabs from '../tabs'
@@ -28,7 +28,7 @@ module.exports = $slideSteps = ({onSkip, onDone, steps, doneText}) ->
       selectedIndex
       hideTabBar: true
       isBarFixed: false
-      tabs: _map steps, ({$content}, i) ->
+      tabs: _.map steps, ({$content}, i) ->
         {
           $menuText: "#{i}"
           $el: $content
@@ -57,7 +57,7 @@ module.exports = $slideSteps = ({onSkip, onDone, steps, doneText}) ->
       else
         z '.text'
       z '.step-counter',
-        _map steps, (step, i) ->
+        _.map steps, (step, i) ->
           isActive = i is selectedIndex
           z '.step-dot',
             className: classKebab {isActive}

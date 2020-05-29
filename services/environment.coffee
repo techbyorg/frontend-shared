@@ -1,4 +1,4 @@
-import _includes from 'lodash/includes'
+import * as _ from 'lodash-es'
 
 import config from '../config'
 
@@ -27,7 +27,7 @@ class Environment
 
   isAndroid: ({userAgent} = {}) ->
     userAgent ?= navigator?.userAgent
-    _includes userAgent, 'Android'
+    _.includes userAgent, 'Android'
 
   isIos: ({userAgent} = {}) ->
     userAgent ?= navigator?.userAgent
@@ -35,16 +35,16 @@ class Environment
 
   isNativeApp: ({userAgent} = {}) ->
     userAgent ?= navigator?.userAgent
-    _includes(userAgent?.toLowerCase(), " #{config.APP_KEY}/")
+    _.includes(userAgent?.toLowerCase(), " #{config.APP_KEY}/")
 
   isMainApp: ({userAgent} = {}) ->
     userAgent ?= navigator?.userAgent
-    _includes(userAgent?.toLowerCase(), " #{config.APP_KEY}/#{config.APP_KEY}")
+    _.includes(userAgent?.toLowerCase(), " #{config.APP_KEY}/#{config.APP_KEY}")
 
   isEntityApp: (entityAppKey, {userAgent} = {}) ->
     userAgent ?= navigator?.userAgent
     Boolean entityAppKey and
-      _includes(userAgent?.toLowerCase(), " #{config.APP_KEY}/#{entityAppKey}/")
+      _.includes(userAgent?.toLowerCase(), " #{config.APP_KEY}/#{entityAppKey}/")
 
   getAppKey: ({userAgent} = {}) ->
     userAgent ?= navigator?.userAgent

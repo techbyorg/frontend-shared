@@ -1,5 +1,5 @@
 import {z, classKebab, useContext, useEffect, useStream} from 'zorium'
-import _uniq from 'lodash/uniq'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 import $icon from '../icon'
@@ -21,7 +21,7 @@ module.exports = $tooltip = (props) ->
     catch error
       []
     completedTooltips ?= []
-    cookie.set 'completedTooltips', _uniq(
+    cookie.set 'completedTooltips', _.uniq(
       completedTooltips.concat [key]
     ).join(',')
     $positionedOverlay.close()

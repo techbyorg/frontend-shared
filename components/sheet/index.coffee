@@ -1,5 +1,4 @@
 import {z, createPortal, useContext, useRef, useMemo, useEffect} from 'zorium'
-import _defaults from 'lodash/defaults'
 
 import $icon from '../icon'
 import $button from '../button'

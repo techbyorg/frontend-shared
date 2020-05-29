@@ -1,6 +1,5 @@
 import {z, classKebab, useMemo, useRef, useStream} from 'zorium'
-import _map from 'lodash/map'
-import _find from 'lodash/find'
+import * as _ from 'lodash-es'
 RxBehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 RxReplaySubject = require('rxjs/ReplaySubject').ReplaySubject
 RxObservable = require('rxjs/Observable').Observable
@@ -28,10 +27,10 @@ module.exports = $dropdown = (props) ->
   , []
 
   {value, selectedOption, isOpen, options} = useStream ->
-    _valueStream = valueStreams?.switch() or valueStream
-    value: _valueStream
-    selectedOption: _valueStream.map (value) ->
-      _find options, {value: "#{value}"}
+    _.valueStream = valueStreams?.switch() or valueStream
+    value: _.valueStream
+    selectedOption: _.valueStream.map (value) ->
+      _.find options, {value: "#{value}"}
     error: errorStream
     isOpen: isOpenStream
     options: options
@@ -82,7 +81,7 @@ module.exports = $dropdown = (props) ->
         $$parentRef: $$parentRef
         $content:
           z '.z-dropdown_options',
-            _map options, (option) ->
+            _.map options, (option) ->
               z 'label.option', {
                 className: classKebab {isSelected: "#{value}" is option.value}
                 onclick: ->
