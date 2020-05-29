@@ -1,8 +1,8 @@
-import {z, classKebab} from 'zorium'
+import {z, classKebab, useContext} from 'zorium'
 
 import $ripple from '../ripple'
 import $icon from '../icon'
-import colors from '../../colors'
+import context from '../../context'
 
 if window?
   require './index.styl'
@@ -11,6 +11,7 @@ export default $button = (props) ->
   {isPrimary, isSecondary, isFancy, isInverted, isDisabled, text,
     isFullWidth = true, isOutline, onclick = (-> null), type = 'button', icon,
     heightPx = 36, hasRipple = true} = props or {}
+  {colors} = useContext context
 
   z '.z-button', {
     className: classKebab {

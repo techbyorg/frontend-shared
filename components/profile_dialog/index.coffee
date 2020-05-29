@@ -6,9 +6,8 @@ import * as rx from 'rxjs/operators'
 import $avatar from '../avatar'
 import $dialog from '../dialog'
 import $icon from '../icon'
-import colors from '../../colors'
+import {closeIconPath} from '../icon/paths'
 import context from '../../context'
-import config from '../../config'
 
 if window?
   require './index.styl'
@@ -16,7 +15,7 @@ if window?
 # TODO: if using this with entity/groupStream, get it from context
 export default $profileDialog = (props) ->
   {userStreamy, entityUserStream, entityStream} = props
-  {model, router, browser, lang} = useContext context
+  {model, router, browser, lang, config, colors} = useContext context
 
   {isVisibleStream, loadingItemsStream, meStream, userStream, entityAndMeStream,
     entityAndUserStream, expandedItemsStream} = useMemo ->
@@ -182,7 +181,7 @@ export default $profileDialog = (props) ->
             z '.close',
               z '.icon',
                 z $icon,
-                  icon: 'close'
+                  icon: closeIconPath
                   color: colors.$primaryMain
                   isAlignedTop: true
                   isAlignedRight: true

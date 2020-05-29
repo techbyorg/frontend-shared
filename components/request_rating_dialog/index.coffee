@@ -3,15 +3,13 @@ Rx.BehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
 import $button from '../button'
 import $dialog from '../dialog'
-import colors from '../../colors'
 import context from '../../context'
-import config from '../../config'
 
 if window?
   require './index.styl'
 
 export default $requestRatingDialog = ({onClose}) ->
-  {model, portal, lang} = useContext context
+  {model, portal, lang, config, colors} = useContext context
 
   {isLoadingStream} = useMemo ->
     {

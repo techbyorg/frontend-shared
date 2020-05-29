@@ -2,18 +2,12 @@ import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 
 import DateService from '../services/date'
-import config from '../config'
 
 class Language
   constructor: ({language, @cookie, @files} = {}) ->
     language ?= 'en'
 
     @language = new Rx.BehaviorSubject language
-
-    # also update gulpfile ContextReplacementPlugin for moment
-    if window? and config.ENV is config.ENVS.PROD
-      # done like this so compile time is quicker
-      @files = window.languageStrings
 
     @setLanguage language
 

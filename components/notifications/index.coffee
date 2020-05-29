@@ -5,15 +5,13 @@ import * as rx from 'rxjs/operators'
 import $icon from '../icon'
 import $spinner from '../spinner'
 import DateService from '../../services/date'
-import colors from '../../colors'
 import context from '../../context'
-import config from '../../config'
 
 if window?
   require './index.styl'
 
 export default $notifications = ->
-  {model, router} = useContext context
+  {model, router, config, colors} = useContext context
 
   useEffect ->
     return beforeUnmount
@@ -55,8 +53,7 @@ export default $notifications = ->
         },
           z '.icon',
             z $icon,
-              icon: model.notification.ICON_MAP[notification.data.type] or
-                      'off-topic'
+              icon: '' # TODO
               color: if isUnread \
                      then colors.$secondaryMain \
                      else colors.$bgText54

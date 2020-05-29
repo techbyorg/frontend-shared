@@ -1,4 +1,3 @@
-import config from '../config'
 import PushService from './push'
 import Environment from './environment'
 
@@ -6,7 +5,7 @@ if window?
   PortalGun = require 'portal-gun'
 
 class ServiceWorkerService
-  register: ({model}) =>
+  register: ({model, onError}) =>
     try
       console.log 'registering service worker...'
       navigator.serviceWorker?.register '/service_worker.js'
@@ -20,14 +19,7 @@ class ServiceWorkerService
           @handleUpdate registration, {model}
       .catch (err) ->
         console.log 'sw promise err', err
-        window.fetch config.API_URL + '/log',
-          method: 'POST'
-          headers:
-            'Content-Type': 'text/plain' # Avoid CORS preflight
-          body: JSON.stringify
-            event: 'client_error'
-            trace: null # trace
-            error: 'SERVICE WORKER' + String(err)
+        onError? err
 
     catch err
       console.log 'sw err', err

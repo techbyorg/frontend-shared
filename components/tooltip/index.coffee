@@ -2,7 +2,7 @@ import {z, classKebab, useContext, useEffect, useStream} from 'zorium'
 import * as _ from 'lodash-es'
 
 import $icon from '../icon'
-import colors from '../../colors'
+import {closeIconPath} from '../icon/paths'
 import context from '../../context'
 
 if window?
@@ -12,7 +12,7 @@ if window?
 export default $tooltip = (props) ->
   {$$target, key, anchor, offset, isVisibleStream, zIndex
     $title, $content} = props
-  {cookie} = useContext context
+  {cookie, colors} = useContext context
 
   close = ->
     completedTooltips = try
@@ -35,7 +35,7 @@ export default $tooltip = (props) ->
       $content: [
         z '.close',
           z $icon,
-            icon: 'close'
+            icon: closeIconPath
             size: '16px'
             isTouchTarget: false
             color: colors.$bgText54

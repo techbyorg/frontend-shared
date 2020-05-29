@@ -3,14 +3,14 @@ import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import Environment from '../services/environment'
-import config from '../config'
 
 export default class Auth
   constructor: (options) ->
-    {@exoid, @pushToken, @lang, @cookie, @userAgent, @portal} = options
+    {@exoid, @pushToken, @lang, @cookie, @userAgent,
+      @portal, @authCookie} = options
 
     @waitValidAuthCookie = Rx.defer =>
-      accessToken = @cookie.get config.AUTH_COOKIE
+      accessToken = @cookie.get @authCookie
       language = @lang.getLanguageStr()
       (if accessToken
         @exoid.getCached 'graphql',
@@ -53,7 +53,7 @@ export default class Auth
     .pipe rx.publishReplay(1), rx.refCount()
 
   setAccessToken: (accessToken) =>
-    @cookie.set config.AUTH_COOKIE, accessToken
+    @cookie.set @authCookie, accessToken
 
   logout: =>
     @setAccessToken ''

@@ -1,17 +1,17 @@
 import {z, useContext} from 'zorium'
 
 import $icon from '../icon'
-import colors from '../../colors'
+import {backIconPath} from '../icon/paths'
 import context from '../../context'
 
 export default $buttonBack = (props) ->
   {color, onclick, fallbackPath, isAlignedLeft = true} = props
-  {router} = useContext context
+  {router, colors} = useContext context
 
   z '.z-button-back',
     z $icon,
       isAlignedLeft: isAlignedLeft
-      icon: 'back'
+      icon: backIconPath
       color: color or colors.$header500Icon
       hasRipple: true
       onclick: (e) ->

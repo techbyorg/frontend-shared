@@ -2,15 +2,13 @@ import {z, useContext} from 'zorium'
 
 import $button from '../button'
 import $dialog from '../dialog'
-import colors from '../../colors'
 import context from '../../context'
-import config from '../../config'
 
 if window?
   require './index.styl'
 
 export default $getAppDialog = ({onClose}) ->
-  {lang, portal} = useContext context
+  {config, lang, portal} = useContext context
 
   iosAppUrl = config.IOS_APP_URL
   googlePlayAppUrl = config.GOOGLE_PLAY_APP_URL

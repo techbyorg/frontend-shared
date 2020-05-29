@@ -13,7 +13,7 @@ import GlobalContext from './context'
 # TODO: clean this up a bit
 export default $app = (props) ->
   {routes, requestsStream, serverData, model, router, portal,
-    lang, cookie, browser, isCrawler} = props
+    lang, cookie, browser, isCrawler, config, colors} = props
 
   {hash, requestsStream} = useMemo ->
     hash = new HttpHash()
@@ -165,7 +165,7 @@ export default $app = (props) ->
 
   z GlobalContext.Provider, {
     value: {
-      model, router, portal, lang, cookie, browser
+      model, router, portal, lang, cookie, browser, config, colors
     }
   },
     if window?

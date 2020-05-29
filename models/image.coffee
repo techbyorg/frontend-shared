@@ -1,5 +1,3 @@
-import config from '../config'
-
 hashFn = (s) ->
   unless s
     return 'none'
@@ -44,6 +42,7 @@ export default class ImageModel
 
     unless prefix
       return ''
+    # FIXME have cdn url passed in...
     src = "#{config.USER_CDN_URL}/#{prefix}.#{size}.jpg"
     if cacheBust
       src += "?#{cacheBust}"

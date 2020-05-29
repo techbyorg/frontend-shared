@@ -1,6 +1,5 @@
 import RouterService from '../services/router'
 import Language from '../services/language'
-import config from '../config'
 
 router = new RouterService {
   router: null
@@ -8,6 +7,8 @@ router = new RouterService {
 }
 
 export default class Push
+  constructor: ({@cdnUrl, @host}) -> null
+
   listen: =>
     self.addEventListener 'push', @onPush
 
@@ -44,13 +45,13 @@ export default class Push
           self.registration.showNotification 'TechBy',
             icon: if message.icon \
                   then message.icon \
-                  else "#{config.CDN_URL}/android-chrome-192x192.png"
+                  else "#{@cdnUrl}/android-chrome-192x192.png"
             title: message.title
             body: message.body
             tag: message.data?.path
             vibrate: [200, 100, 200]
             data: _.defaults {
-              url: "https://#{config.HOST}#{path}"
+              url: "https://#{@host}#{path}"
               path: message.data?.path
             }, message.data or {}
     )

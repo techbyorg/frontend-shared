@@ -5,7 +5,6 @@ import * as rx from 'rxjs/operators'
 import Spinner from '../../components/spinner'
 import Button from '../../components/button'
 import context from '../../context'
-import config from '../../config'
 
 if window?
   require './index.styl'

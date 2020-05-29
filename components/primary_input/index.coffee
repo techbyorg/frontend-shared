@@ -1,16 +1,17 @@
-import {z, classKebab, useMemo, useStream} from 'zorium'
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 
 import $icon from '../icon'
 import $input from '../input'
-import allColors from '../../colors'
-
+import {eyeIconPath, helpIconPath} from '../icon/paths'
+import context from '../../context'
 
 if window?
   require './index.styl'
 
 export default $primaryInput = (props) ->
+  allColors = useContext(context).colors
   {isPasswordVisibleStream} = useMemo ->
     {
       isPasswordVisibleStream: new Rx.BehaviorSubject false
@@ -49,7 +50,7 @@ export default $primaryInput = (props) ->
           isPasswordVisibleStream.next not isPasswordVisible
       },
         z $icon,
-          icon: 'eye'
+          icon: eyeIconPath
           color: colors.ink
     else if props.onInfo
       z '.make-visible', {
@@ -57,5 +58,5 @@ export default $primaryInput = (props) ->
           props.onInfo()
       },
         z $icon,
-          icon: 'help'
+          icon: helpIconPath
           color: colors.ink

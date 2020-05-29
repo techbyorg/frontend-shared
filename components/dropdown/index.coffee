@@ -1,11 +1,12 @@
-import {z, classKebab, useMemo, useRef, useStream} from 'zorium'
+import {z, classKebab, useContext, useMemo, useRef, useStream} from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import $icon from '../icon'
 import $positionedOverlay from '../positioned_overlay'
-import colors from '../../colors'
+import {chevronDownIconPath} from '../icon/paths'
+import context from '../../context'
 
 if window?
   require './index.styl'
@@ -13,6 +14,7 @@ if window?
 export default $dropdown = (props) ->
   {valueStreams, valueStream, errorStream, options, $$parentRef,
     anchor = 'top-left', isDisabled = false} = props
+  colors = useContext context
 
   $$ref = useRef()
 
@@ -64,7 +66,7 @@ export default $dropdown = (props) ->
         selectedOption?.text
       z '.arrow',
         z $icon,
-          icon: 'chevron-down'
+          icon: chevronDownIconPath
           isTouchTarget: false
           color: colors.$secondaryMainText
 

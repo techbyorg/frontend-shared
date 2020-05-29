@@ -1,9 +1,9 @@
-import {z, useMemo} from 'zorium'
+import {z, useContext, useMemo} from 'zorium'
 import * as _ from 'lodash-es'
 
 import $icon from '../icon'
 import $ripple from '../ripple'
-import allColors from '../../colors'
+import context from '../../context'
 
 if window?
   require './index.styl'
@@ -11,6 +11,7 @@ if window?
 export default $fab = (props) ->
   {icon, colors, isPrimary, isSecondary, onclick, isImmediate,
     sizePx = 56} = props
+  allColors = useContext(context).colors
 
   {colorsMemo} = useMemo (colors) ->
     {

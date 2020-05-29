@@ -18,7 +18,9 @@ SERIALIZATION_KEY = 'MODEL'
 
 export default class Model
   constructor: (options) ->
-    {serverHeaders, io, @cookie, @portal, lang, userAgent} = options
+    {
+      serverHeaders, io, @cookie, @portal, lang, userAgent, authCookie, apiUrl
+    } = options
     serverHeaders ?= {}
 
     cache = window?[SERIALIZATION_KEY] or {}
@@ -81,7 +83,9 @@ export default class Model
 
     @overlay = new Overlay()
 
-    @auth = new Auth {@exoid, @cookie, pushToken: @token, lang, userAgent, @portal}
+    @auth = new Auth {
+      @exoid, @cookie, pushToken: @token, lang, userAgent, @portal, authCookie
+    }
 
     @offlineData = new OfflineData {@exoid, @portal, @statusBar, lang}
 

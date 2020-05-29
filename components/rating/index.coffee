@@ -1,10 +1,11 @@
-import {z, useMemo, useStream} from 'zorium'
+import {z, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import Icon from '../icon'
-import colors from '../../colors'
+import {starIconPath, starHalfIconPath, starOutlineIconPath} from '../icon/paths'
+import context from '../../context'
 
 if window?
   require './index.styl'
@@ -13,6 +14,7 @@ if window?
 export default $rating = (props) ->
   {valueStream, valueStreams, isInteractive, onRate,
     size = '20px', color = colors.$amber500} = props
+  {colors} = useContext context
 
   {valueStream, ratingStream} = useMemo ->
     valueStream ?= new Rx.BehaviorSubject 0
@@ -30,9 +32,9 @@ export default $rating = (props) ->
       fullStars = Math.floor(halfStars / 2)
       halfStars -= fullStars * 2
       emptyStars = 5 - (fullStars + halfStars)
-      _.map _.range(fullStars), -> 'star'
-      .concat _.map _.range(halfStars), -> 'star-half'
-      .concat _.map _.range(emptyStars), -> 'star-outline'
+      _.map _.range(fullStars), -> starIconPath
+      .concat _.map _.range(halfStars), -> starHalfIconPath
+      .concat _.map _.range(emptyStars), -> starOutlineIconPath
 
   setRating = (value) ->
     if valueStreams

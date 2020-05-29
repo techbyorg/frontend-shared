@@ -1,9 +1,9 @@
-import {z, classKebab, useMemo, useStream} from 'zorium'
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
-import allColors from '../../colors'
+import context from '../../context'
 
 if window?
   require './index.styl'
@@ -13,6 +13,7 @@ export default $input = (props) ->
     colors, hintText = '', type = 'text', isFloating = false,
     isDisabled = false, isFullWidth,  autoCapitalize = true
     height, isDark, isCentered, disableAutoComplete} = props
+  allColors = useContext(context).colors
 
   {valueStream, errorStream, isFocusedStream} = useMemo ->
     {

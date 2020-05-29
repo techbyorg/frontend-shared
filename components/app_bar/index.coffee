@@ -1,6 +1,6 @@
-import {z, classKebab} from 'zorium'
+import {z, classKebab, useContext} from 'zorium'
 
-import colors from '../../colors'
+import context from '../../context'
 
 if window?
   require './index.styl'
@@ -8,6 +8,7 @@ if window?
 export default $appBar = (props) ->
   {$topLeftButton, $topRightButton, title, bgColor, color, isFlat, isPrimary
     isSecondary, isFullWidth, hasLogo} = props
+  {colors} = useContext context
 
   if isPrimary
     color ?= colors.$primaryMainText

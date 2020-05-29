@@ -1,10 +1,10 @@
 import Environment from '../services/environment'
 import SemverService from '../services/semver'
-import config from '../config'
 
 ONE_DAY_MS = 3600 * 24 * 1000
 
 class PushService
+  setFirebaseInfo: (@firebaseInfo) -> null
   # constructor: ->
   #   if window? and not Environment.isNativeApp()
   #     @isReady = new Promise (@resolveReady) => null
@@ -14,13 +14,7 @@ class PushService
   #       `import(/* webpackChunkName: "firebase" */'@firebase/messaging')`
   #     ]
   #     .then ([firebase, firebaseMessaging]) =>
-  #       firebase.initializeApp {
-  #         apiKey: config.FIREBASE.API_KEY
-  #         authDomain: config.FIREBASE.AUTH_DOMAIN
-  #         databaseURL: config.FIREBASE.DATABASE_URL
-  #         projectId: config.FIREBASE.PROJECT_ID
-  #         messagingSenderId: config.FIREBASE.MESSAGING_SENDER_ID
-  #       }
+  #       firebase.initializeApp firebaseInfo
   #       @firebaseMessaging = firebase.messaging()
 
   setFirebaseServiceWorker: (registration) =>
@@ -65,11 +59,6 @@ class PushService
         console.log err
 
   registerWeb: =>
-    # if config.ENV is config.ENVS.DEV
-    #   return Promise.resolve {
-    #     token: navigator?.userAgent, sourceType: 'web-fcm'
-    #   }
-
     @isReady.then =>
       @firebaseMessaging.requestPermission()
       .then =>

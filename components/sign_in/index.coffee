@@ -3,9 +3,7 @@ import * as Rx from 'rxjs'
 
 import $primaryInput from '../primary_input'
 import $button from '../button'
-import colors from '../../colors'
 import context from '../../context'
-import config from '../../config'
 
 if window?
   require './index.styl'
@@ -14,7 +12,7 @@ if window?
 # since state updates in 2 places
 
 export default $signIn = ({modeStream}) ->
-  {model, router, portal, lang} = useContext context
+  {model, router, portal, lang, config} = useContext context
 
   {nameValueStream, nameErrorStream, passwordValueStream, passwordErrorStream,
     emailValueStream, emailErrorStream, modeStream,

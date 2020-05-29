@@ -1,9 +1,9 @@
-import config from '../config'
-
 export default class User
   namespace: 'users'
 
-  constructor: ({@auth, @proxy, @exoid, @cookie, @lang, @overlay, @portal}) -> null
+  constructor: (options) ->
+    {@auth, @proxy, @exoid, @cookie, @lang,
+      @overlay, @portal, @apiUrl} = options
 
   getMe: ({embed} = {}) =>
     @auth.stream
@@ -52,7 +52,7 @@ export default class User
       formData = new FormData()
       formData.append 'file', file, file.name
 
-      @proxy config.API_URL + '/upload', {
+      @proxy @apiUrl + '/upload', {
         method: 'POST'
         query:
           path: 'graphql'

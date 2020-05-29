@@ -1,7 +1,7 @@
-import {z} from 'zorium'
+import {z, useContext} from 'zorium'
 import * as _ from 'lodash-es'
 
-import colors from '../../colors'
+import context from '../../context'
 
 if window?
   require './index.styl'
@@ -9,6 +9,8 @@ if window?
 DEFAULT_SIZE = 50
 
 export default $spinner = ({size = DEFAULT_SIZE}) ->
+  {colors} = useContext context
+
   z '.z-spinner', {
     style:
       width: "#{size}px"

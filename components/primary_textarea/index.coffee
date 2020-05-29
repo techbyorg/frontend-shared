@@ -1,10 +1,12 @@
-import {z} from 'zorium'
+import {z, useContext} from 'zorium'
 import * as _ from 'lodash-es'
 
 import $textaea from '../textarea'
-import colors from '../../colors'
+import context from '../../context'
 
 export default $primaryTextarea = (opts) ->
+  {colors} = useContext context
+
   z '.z-primary-textarea',
     z $textarea, _.defaults opts, {
       isFullWidth: true

@@ -4,7 +4,6 @@ import getUuidByString from 'uuid-by-string'
 import Environment from '../services/environment'
 import PushService from '../services/push'
 import GetAppDialog from '../components/get_app_dialog'
-import config from '../config'
 
 if window?
   PortalGun = require('portal-gun').default
@@ -21,7 +20,7 @@ urlBase64ToUint8Array = (base64String) ->
   outputArray
 
 export default class Portal
-  constructor: ({@lang}) ->
+  constructor: ({@lang, @iosAppUrl, @googlePlayAppUrl}) ->
     if window?
       @portal = new PortalGun() # TODO: check isParentValid
 
@@ -137,8 +136,8 @@ export default class Portal
 
     @call 'browser.openWindow',
       url: if Environment.isIos() \
-           then config.IOS_APP_URL \
-           else config.GOOGLE_PLAY_APP_URL
+           then @iosAppUrl \
+           else @googlePlayAppUrl
       target: '_system'
 
   appGetDeviceId: ->
@@ -155,8 +154,8 @@ export default class Portal
     window.addEventListener 'visibilitychange', @appResumeHandler
 
   appInstall: =>
-    iosAppUrl = config.IOS_APP_URL
-    googlePlayAppUrl = config.GOOGLE_PLAY_APP_URL
+    iosAppUrl = @iosAppUrl
+    googlePlayAppUrl = @googlePlayAppUrl
 
     if Environment.isAndroid() and @isChrome() and false # FIXME
       if @installOverlay.prompt

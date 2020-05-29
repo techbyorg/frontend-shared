@@ -1,8 +1,6 @@
 import z from 'zorium'
 import * as _ from 'lodash-es'
 
-import config from '../config'
-
 class FormatService
   number: (number) ->
     # http://stackoverflow.com/a/2901298

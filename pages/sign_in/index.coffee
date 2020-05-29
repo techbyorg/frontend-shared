@@ -2,7 +2,6 @@ import {z} from 'zorium'
 
 import $appBar from '../../components/app_bar'
 import $signIn from '../../components/sign_in'
-import config from '../../config'
 
 if window?
   require './index.styl'

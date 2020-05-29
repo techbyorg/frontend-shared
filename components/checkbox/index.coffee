@@ -1,16 +1,18 @@
-import {z, useRef, useMemo, useStream} from 'zorium'
+import {z, useContext, useRef, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import $icon from '../icon'
-import allColors from '../../colors'
+import {checkIconPath} from '../icon/paths'
+import context from '../../context'
 
 if window?
   require './index.styl'
 
 export default $checkbox = (props) ->
   {valueStream, valueStreams, isDisabled, colors, onChange} = props
+  allColors = useContext(context).colors
 
   {valueStream, errorStream} = useMemo ->
     {
@@ -53,7 +55,7 @@ export default $checkbox = (props) ->
     }
     z '.icon',
       z $icon,
-        icon: 'check'
+        icon: checkIconPath
         isTouchTarget: false
         color: allColors.$primaryMainText
         size: '16px'

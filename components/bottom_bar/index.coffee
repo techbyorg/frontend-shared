@@ -4,15 +4,13 @@ import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import $icon from '../icon'
-import colors from '../../colors'
 import context from '../../context'
-import config from '../../config'
 
 if window?
   require './index.styl'
 
 export default $bottomBar = ({requestsStream, isAbsolute}) ->
-  {model, router, browser, lang} = useContext context
+  {model, router, browser, lang, colors} = useContext context
 
   # don't need to slow down server-side rendering for this
   {hasUnreadMessagesStream} = useMemo ->
@@ -35,19 +33,19 @@ export default $bottomBar = ({requestsStream, isAbsolute}) ->
 
   menuItems = [
     {
-      icon: 'give'
+      icon: '' # TODO
       route: router.get 'give'
       text: lang.get 'general.give'
       isDefault: true
     }
     {
-      icon: 'chat'
+      icon: '' # TODO
       route: router.get 'social'
       text: lang.get 'general.community'
       hasNotification: hasUnreadMessagesStream
     }
     {
-      icon: 'calendar'
+      icon: '' # TODO
       route: router.get 'events'
       text: lang.get 'general.events'
     }

@@ -1,19 +1,19 @@
 import {z, useContext} from 'zorium'
 
 import $icon from '../icon'
-import colors from '../../colors'
+import {menuIconPath} from '../icon/paths'
 import context from '../../context'
 
 if window?
   require './index.styl'
 
 export default $buttonMenu = ({color, onclick, isAlignedLeft = true}) ->
-  {model} = useContext context
+  {model, colors} = useContext context
 
   z '.z-button-menu',
     z $icon,
       isAlignedLeft: isAlignedLeft
-      icon: 'menu'
+      icon: menuIconPath
       color: color or colors.$header500Icon
       hasRipple: true
       onclick: (e) ->

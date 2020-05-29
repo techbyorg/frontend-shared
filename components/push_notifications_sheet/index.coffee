@@ -3,12 +3,12 @@ import {z, useContext} from 'zorium'
 import $button from '../button'
 import $icon from '../icon'
 import $sheet from '../sheet'
+import {notificationsIconPath} from '../icon/paths'
 import PushService from '../../services/push'
-import colors from '../../colors'
 import context from '../../context'
 
 export default $pushNotificationSheet = ->
-  {model, lang} = useContext context
+  {model, lang, colors} = useContext context
 
   z '.z-push-notifications-sheet',
     z $sheet, {
@@ -16,7 +16,7 @@ export default $pushNotificationSheet = ->
         z '.z-push-notifications-sheet_content',
           z '.icon',
             z $icon,
-              icon: 'notifications'
+              icon: notificationsIconPath
               color: colors.$primaryMain
               isTouchTarget: false
           z '.message', lang.get 'pushNotificationsSheet.message'

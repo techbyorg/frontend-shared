@@ -25,6 +25,16 @@ export default setup = ({$app, Lang, Model, colors, config}) ->
 
   LogService.init()
 
+  Environment.setAppKey config.APP_KEY
+
+  # PushService.setFirebaseInfo {
+  #   apiKey: config.FIREBASE.API_KEY
+  #   authDomain: config.FIREBASE.AUTH_DOMAIN
+  #   databaseURL: config.FIREBASE.DATABASE_URL
+  #   projectId: config.FIREBASE.PROJECT_ID
+  #   messagingSenderId: config.FIREBASE.MESSAGING_SENDER_ID
+  # }
+
   ###
   # Model stuff
   ###
@@ -55,6 +65,7 @@ export default setup = ({$app, Lang, Model, colors, config}) ->
   userAgent = navigator?.userAgent
   cookie = new CookieService {
     initialCookies
+    host: config.HOST
     setCookie: (key, value, options) ->
       document.cookie = cookieLib.serialize \
         key, value, options
@@ -63,12 +74,20 @@ export default setup = ({$app, Lang, Model, colors, config}) ->
     language
     cookie
     # prod uses bundled language json
-    files: if config.ENV isnt config.ENVS.PROD then Lang.getLangFiles()
+    files: if config.ENV is config.ENVS.PROD \
+           then window.languageStrings \
+           else Lang.getLangFiles()
   }
-  portal = new PortalService {lang}
+  portal = new PortalService {
+    lang
+    iosAppUrl: config.IOS_APP_URL
+    googlePlayAppUrl: config.GOOGLE_PLAY_APP_URL
+  }
   browser = new WindowService {cookie, userAgent}
   model = new Model {
     io, portal, lang, cookie, userAgent
+    authCookie: config.AUTH_COOKIE
+    apiUrl: config.API_URL
   }
 
   onOnline = ->
@@ -158,6 +177,8 @@ export default setup = ({$app, Lang, Model, colors, config}) ->
       browser
       isBackendUnavailable
       currentNotification
+      config
+      colors
     }), document.body # document.documentElement
 
     # re-fetch and potentially replace data, in case html is served from cache

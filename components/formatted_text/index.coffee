@@ -1,4 +1,4 @@
-import {z, classKebab, useMemo, useStream} from 'zorium'
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
 supportsWebP = window? and require 'supports-webp'
 # remark = require 'remark'
@@ -15,7 +15,8 @@ import $button from '../button'
 # $imageViewOverlay = require '../image_view_overlay'
 # $embeddedVideo = require '../embedded_video'
 import $profileDialog from '../profile_dialog'
-import config from '../../config'
+import context from '../../context'
+import sharedConfig from '../shared_config'
 
 if window?
   require './index.styl'
@@ -24,6 +25,8 @@ export default $formattedText = (props) ->
   {textStreamy, imageWidth, model, router, skipImages, mentionedUsers,
     isFullWidth, embedVideos, truncate
     useThumbnails} = options
+
+  {config} = useContext context
 
   # FIXME: usememo
 
@@ -45,7 +48,7 @@ export default $formattedText = (props) ->
   }
 
 get$ = ({text, model, state}) ->
-  mentions = text?.match config.MENTION_REGEX
+  mentions = text?.match sharedConfig.MENTION_REGEX
   text = _.reduce mentions, (newText, find) ->
     username = find.replace('', '').toLowerCase()
     newText.replace(
@@ -118,8 +121,8 @@ get$ = ({text, model, state}) ->
         if isMention
           username = props.title.replace 'user:', ''
           mentionedUser = _.find mentionedUsers, {username}
-        youtubeId = props.href?.match(config.YOUTUBE_ID_REGEX)?[1]
-        imgurId = props.href?.match(config.IMGUR_ID_REGEX)?[1]
+        youtubeId = props.href?.match(sharedConfig.YOUTUBE_ID_REGEX)?[1]
+        imgurId = props.href?.match(sharedConfig.IMGUR_ID_REGEX)?[1]
 
         # if youtubeId and embedVideos
         #   $embeddedVideo = new EmbeddedVideo {

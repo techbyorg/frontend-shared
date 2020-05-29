@@ -10,6 +10,7 @@ import fs from 'fs'
 import socketIO from 'socket.io-client'
 import request from 'xhr-request'
 
+import Environment from './environment'
 import RouterService from './router'
 import LanguageService from './language'
 import CookieService from './cookie'
@@ -22,7 +23,9 @@ HEALTHCHECK_TIMEOUT = 200
 RENDER_TO_STRING_TIMEOUT_MS = 1200
 BOT_RENDER_TO_STRING_TIMEOUT_MS = 4500
 
-export default setup = ({$app, Lang, Model, gulpPaths, config}) ->
+export default setup = ({$app, Lang, Model, gulpPaths, config, colors}) ->
+  Environment.setAppKey config.APP_KEY
+
   app = express()
   app.use compress()
 
@@ -108,6 +111,8 @@ export default setup = ({$app, Lang, Model, gulpPaths, config}) ->
       lang
       cookie
       userAgent
+      authCookie: config.AUTH_COOKIE
+      apiUrl: config.API_URL
       serverHeaders: req.headers
     }
     router = new RouterService {
@@ -159,7 +164,8 @@ export default setup = ({$app, Lang, Model, gulpPaths, config}) ->
 
     try
       html = await renderToString (z $app, {
-        requestsStream, model, lang, cookie, browser, serverData, router, isCrawler
+        requestsStream, model, lang, cookie, browser,
+        serverData, router, isCrawler, config, colors
       }), {
         timeout: if isCrawler \
                  then BOT_RENDER_TO_STRING_TIMEOUT_MS \

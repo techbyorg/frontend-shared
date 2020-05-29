@@ -1,7 +1,7 @@
-import {z, classKebab, useRef, useMemo} from 'zorium'
-import Environment from '../../services/environment'
+import {z, classKebab, useContext, useRef, useMemo} from 'zorium'
 
-import colors from '../../colors'
+import Environment from '../../services/environment'
+import context from '../../context'
 
 if window?
   require './index.styl'
@@ -15,6 +15,7 @@ if window?
 ANIMATION_TIME_MS = 350
 
 export default $ripple = ({color, isCircle, isCenter, onComplete, fadeIn}) ->
+  {colors} = useContext context
   $$ref = useRef()
 
   ripple = ({$$ref, color, isCenter, mouseX, mouseY, onComplete, fadeIn} = {}) ->

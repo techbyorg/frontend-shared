@@ -3,8 +3,7 @@ import qs from 'qs-lite'
 
 import Environment from '../services/environment'
 import SemverService from '../services/semver'
-import colors from '../colors'
-import config from '../config'
+import sharedConfig from '../shared_config'
 
 ev = (fn) ->
   # coffeelint: disable=missing_fat_arrows
@@ -105,7 +104,7 @@ class RouterService
 
   openLink: (url) =>
     isAbsoluteUrl = url?.match /^(?:[a-z-]+:)?\/\//i
-    webAppRegex = new RegExp "https?://(.*?)\.?(#{config.HOST})", 'i'
+    webAppRegex = new RegExp "https?://(.*?)\.?(#{@host})", 'i'
     isWebApp = url?.match webAppRegex
     if not isAbsoluteUrl or isWebApp
       path = if isWebApp \
@@ -144,7 +143,7 @@ class RouterService
 
   onBack: (@onBackFn) => null
 
-  openInAppBrowser: (addon, {replacements} = {}) =>
+  openInAppBrowser: (addon, {colors, replacements} = {}) =>
     if _.isEmpty(addon.data?.translatedLanguages) or
           addon.data?.translatedLanguages.indexOf(
             @lang.getLanguageStr()
@@ -210,8 +209,7 @@ class RouterService
   getSubdomain: =>
     hostParts = @host?.split '.'
     isStaging = hostParts[0] is 'free-roam-staging'
-    isDevSubdomain = config.ENV is config.ENVS.DEV and hostParts.length is 7
-    if (hostParts.length is 3 or isDevSubdomain) and not isStaging
+    if (hostParts.length is 3) and not isStaging
       return hostParts[0]
 
   link: (node) =>

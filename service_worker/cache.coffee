@@ -1,7 +1,6 @@
 import * as _ from 'lodash-es'
 
 import Environment from '../services/environment'
-import config from '../config'
 
 export default class Cache
   constructor: ->

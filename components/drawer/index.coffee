@@ -1,9 +1,7 @@
 import {z, classKebab, useContext, useRef, useStream, useEffect, useMemo} from 'zorium'
 import * as rx from 'rxjs/operators'
 
-import colors from '../../colors'
 import context from '../../context'
-import config from '../../config'
 
 if window?
   IScroll = require 'iscroll/build/iscroll-lite-snap-zoom.js'
@@ -16,7 +14,7 @@ MAX_OVERLAY_OPACITY = 0.5
 export default $drawer = (props) ->
   {isOpenStream, onOpen, onClose, side = 'left', key = 'nav', isStaticStream,
     $content, hasAppBar} = props
-  {model, browser} = useContext context
+  {model, browser, config, colors} = useContext context
 
 
   $$ref = useRef()

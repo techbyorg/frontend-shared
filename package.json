@@ -1,6 +1,7 @@
 {
   "name": "frontend-shared",
   "private": true,
+  "sideEffects": false,
   "scripts": {
     "dist": "./bin/dist.sh",
     "sw": "./bin/sw.sh",

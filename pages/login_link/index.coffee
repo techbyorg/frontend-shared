@@ -4,7 +4,6 @@ import * as rx from 'rxjs/operators'
 
 import $spinner from '../../components/spinner'
 import context from '../../context'
-import config from '../../config'
 
 if window?
   require './index.styl'

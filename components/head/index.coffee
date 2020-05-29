@@ -5,15 +5,13 @@ import * as rx from 'rxjs/operators'
 
 import Environment from '../../services/environment'
 import fontsCss from './fonts'
-import colors from '../../colors'
 import context from '../../context'
-import config from '../../config'
 
 DEFAULT_IMAGE = 'https://fdn.uno/d/images/web_icon_256.png'
 
 export default $head = (props) ->
   {meta, requestsStream, serverData, entity} = props
-  {router, lang, model, browser, cookie} = useContext context
+  {router, lang, model, browser, cookie, config, colors} = useContext context
 
   console.log 'render head'
 

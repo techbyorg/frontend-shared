@@ -1,5 +1,4 @@
 import * as Rx from 'rxjs'
-import config from '../config'
 
 COOKIE_DURATION_MS = 365 * 24 * 3600 * 1000 # 1 year
 
@@ -10,8 +9,6 @@ class Cookie
 
   getCookieOpts: (key, ttlMs) =>
     host = @host
-    if not host
-      host = config.HOST
     ttlMs ?= COOKIE_DURATION_MS
     hostname = host.split(':')[0]
 

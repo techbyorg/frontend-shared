@@ -2,9 +2,7 @@ import {z, createPortal, useContext, useRef, useMemo, useEffect} from 'zorium'
 
 import $icon from '../icon'
 import $button from '../button'
-import colors from '../../colors'
 import context from '../../context'
-import config from '../../config'
 
 CLOSE_DELAY_MS = 450 # 0.45s for animation
 

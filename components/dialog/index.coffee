@@ -1,15 +1,16 @@
-import {z, classKebab, createPortal, useEffect, useMemo, useRef} from 'zorium'
+import {z, classKebab, createPortal, useContext, useEffect, useMemo, useRef} from 'zorium'
 
 if window?
   require './index.styl'
 
 import $button from '../button'
-import colors from '../../colors'
+import context from '../../context'
 
 CLOSE_DELAY_MS = 450 # 0.45s for animation
 
 export default $dialog = (props) ->
   {onClose, $content = '', $title, $actions, isWide} = props
+  {colors} = useContext context
 
   $$ref = useRef()
 

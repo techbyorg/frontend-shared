@@ -1,7 +1,6 @@
-import {z, classKebab} from 'zorium'
+import {z, classKebab, useContext} from 'zorium'
 
-import icons from './icons'
-import colors from '../../colors'
+import context from '../../context'
 
 if window?
   require './index.styl'
@@ -11,6 +10,7 @@ export default $icon = (props) ->
     isAlignedBottom, isTouchTarget, color, onclick, onmousedown,
     viewBox, heightRatio, hasRipple,
     touchHeight, touchWidth} = props
+  {colors} = useContext context
 
   size ?= '24px'
   viewBox ?= 24
@@ -51,7 +51,7 @@ export default $icon = (props) ->
     },
       z 'path', {
         namespace: 'http://www.w3.org/2000/svg'
-        d: icons[icon]
+        d: icon
         fill: color
         'fill-rule': 'evenodd'
       }

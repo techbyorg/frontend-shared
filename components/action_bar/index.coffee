@@ -3,7 +3,7 @@ import * as _ from 'lodash-es'
 
 import $appBar from '../app_bar'
 import $icon from '../icon'
-import colors from '../../colors'
+import {ellipsisIconPath} from '../icon/paths'
 import context from '../../context'
 
 if window?
@@ -11,7 +11,7 @@ if window?
 
 export default $actionBar = (props) ->
   {title, cancel, save, isSaving, isPrimary, isSecondary} = props
-  {lang} = useContext context
+  {lang, colors} = useContext context
 
   cancel = _.defaults cancel, {
     icon: 'close'
@@ -50,7 +50,7 @@ export default $actionBar = (props) ->
       $topRightButton:
         if save?.onclick
           z $icon,
-            icon: if isSaving then 'ellipsis' else save.icon
+            icon: if isSaving then ellipsisIconPath else save.icon
             color: color
             hasRipple: true
             onclick: (e) ->

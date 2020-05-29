@@ -2,20 +2,19 @@ import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 
-import Icon from '../icon'
-import Button from '../button'
-import Privacy from '../privacy'
-import Tos from '../tos'
+import $icon from '../icon'
+import $button from '../button'
+import $privacy from '../privacy'
+import $tos from '../tos'
+import {expandMoreIconPath} from '../icon/paths'
 import Environment from '../../services/environment'
-import colors from '../../colors'
 import context from '../../context'
-import config from '../../config'
 
 if window?
   require './index.styl'
 
 export default $policies = ({isIabStream, $dropdowns}) ->
-  {lang, router} = useContext context
+  {lang, router, config, colors} = useContext context
 
   $dropdowns = [
     {
@@ -62,7 +61,7 @@ export default $policies = ({isIabStream, $dropdowns}) ->
             z '.title', $title
             z '.icon',
               z $icon,
-                icon: 'expand-more'
+                icon: expandMoreIconPath
                 isTouchTarget: false
                 color: colors.$primaryMain
           z '.content', {className: classKebab {isVisible}},

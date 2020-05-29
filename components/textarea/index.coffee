@@ -1,9 +1,9 @@
-import {z, classKebab, useRef, useMemo, useStream} from 'zorium'
+import {z, classKebab, useContext, useRef, useMemo, useStream} from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
-import allColors from '../../colors'
+import context from '../../context'
 
 if window?
   require './index.styl'
@@ -14,6 +14,7 @@ export default $textarea = (props) ->
   {valueStream, valueStreams, errorStream, isFocusedStream, defaultHeight,
     colors, hintText = '', type = 'text', isFloating, isDisabled, isFull,
     isDark, isCentered} = props
+  allColors = useContext(context).colors
 
   $$ref = useRef()
 

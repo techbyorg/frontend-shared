@@ -1,8 +1,8 @@
 import * as _ from 'lodash-es'
 
-import config from '../config'
-
 class Environment
+  setAppKey: (@appKey) -> null
+
   isMobile: ({userAgent} = {}) ->
     userAgent ?= navigator?.userAgent
     ///
@@ -35,16 +35,16 @@ class Environment
 
   isNativeApp: ({userAgent} = {}) ->
     userAgent ?= navigator?.userAgent
-    _.includes(userAgent?.toLowerCase(), " #{config.APP_KEY}/")
+    _.includes(userAgent?.toLowerCase(), " #{@appKey}/")
 
   isMainApp: ({userAgent} = {}) ->
     userAgent ?= navigator?.userAgent
-    _.includes(userAgent?.toLowerCase(), " #{config.APP_KEY}/#{config.APP_KEY}")
+    _.includes(userAgent?.toLowerCase(), " #{@appKey}/#{@appKey}")
 
   isEntityApp: (entityAppKey, {userAgent} = {}) ->
     userAgent ?= navigator?.userAgent
     Boolean entityAppKey and
-      _.includes(userAgent?.toLowerCase(), " #{config.APP_KEY}/#{entityAppKey}/")
+      _.includes(userAgent?.toLowerCase(), " #{@appKey}/#{entityAppKey}/")
 
   getAppKey: ({userAgent} = {}) ->
     userAgent ?= navigator?.userAgent
@@ -56,14 +56,14 @@ class Environment
 
   getAppVersion: ({userAgent} = {}) ->
     userAgent ?= navigator?.userAgent
-    regex = new RegExp("(#{config.APP_KEY})\/(?:[a-zA-Z0-9]+/)?([0-9\.]+)")
+    regex = new RegExp("(#{@appKey})\/(?:[a-zA-Z0-9]+/)?([0-9\.]+)")
     matches = userAgent.match(regex)
     matches?[2]
 
   getPlatform: ({userAgent} = {}) =>
     userAgent ?= navigator?.userAgent
 
-    isApp = @isNativeApp config.APP_KEY, {userAgent}
+    isApp = @isNativeApp @appKey, {userAgent}
 
     if isApp and @isIos({userAgent}) then 'ios'
     else if isApp and @isAndroid({userAgent}) then 'android'
