@@ -10,7 +10,7 @@ export default class Cache
         version: '|HASH|'
         files: [
           'https://fdn.uno/d/scripts/bundle_|HASH|_en.js'
-          'https://fdn.uno/d/scripts/vendors~firebase_bundle_|HASH|.js'
+          # 'https://fdn.uno/d/scripts/vendors~firebase_bundle_|HASH|.js'
           'https://fdn.uno/d/scripts/bundle_|HASH|.css'
           # 'http://localhost:50341/bundle.js'
         ]
