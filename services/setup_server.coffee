@@ -160,6 +160,8 @@ export default setup = ({$app, Lang, Model, gulpPaths, config, colors}) ->
       cache = await untilStable $tree, {timeout}
     catch err
       console.log err
+      console.log err.cache
+      cache = err.cache
     exoidCache = await model.exoid.getCacheStream().pipe(rx.take(1)).toPromise()
     model.exoid.setSynchronousCache exoidCache
     html = renderToString $tree, {cache}

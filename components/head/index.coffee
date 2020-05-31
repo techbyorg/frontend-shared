@@ -46,7 +46,7 @@ export default $head = (props) ->
     document?.getElementById('bundle-css')?.href
 
   {meta, serverData, path, route, routeKey, entity, additionalCss,
-    modelSerialization, cssVariables} = useStream ->
+    cssVariables} = useStream ->
     meta: meta
     serverData: serverData
     route: route
@@ -55,10 +55,12 @@ export default $head = (props) ->
     routeKey: route.pipe rx.map (route) ->
       if route?.src
         routeKey = lang.getRouteKeyByValue route.src
-    modelSerialization: unless window?
-      # model.getSerializationStream()
-      model.getSerialization() # synchronous since react ssr sucks atm
+    # modelSerialization: unless window?
+    #   # model.getSerializationStream()
+    #   model.getSerialization() # synchronous since react ssr sucks atm
     cssVariables: _getCssVariables entity
+
+  modelSerialization = not window? and model.getSerialization()
 
   gaId = 'UA-27992080-36'
   gaSampleRate = 100
@@ -122,6 +124,7 @@ export default $head = (props) ->
   webpackDevUrl = config.WEBPACK_DEV_URL
   isNative = Environment.isNativeApp({userAgent})
   host = serverData?.req?.headers.host or window?.location?.host
+
 
   z 'head',
     z 'title', "#{meta.title}"

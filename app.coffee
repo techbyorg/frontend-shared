@@ -90,8 +90,6 @@ export default $app = (props) ->
         serverData?.res?.status? 404
 
 
-  console.log 'overlay', request, $overlays
-
   userAgent = browser.getUserAgent()
   isIos = Environment.isIos {userAgent}
   isAndroid = Environment.isAndroid {userAgent}
