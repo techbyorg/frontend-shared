@@ -85,7 +85,8 @@ export default setup = ({$app, Lang, Model, gulpPaths, config, colors}) ->
 
   app.use (req, res, next) ->
     userAgent = req.headers['user-agent']
-    host = req.headers.host
+    # host = req.headers.host
+    host = config.HOST # req.headers.host is wrong sometimes for cookie?
     accessToken = req.query.accessToken
 
     # could potentially keep this connection open?

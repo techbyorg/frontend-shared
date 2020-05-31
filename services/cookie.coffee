@@ -8,9 +8,8 @@ class Cookie
     @stream = new Rx.BehaviorSubject @cookies
 
   getCookieOpts: (key, ttlMs) =>
-    host = @host
     ttlMs ?= COOKIE_DURATION_MS
-    hostname = host.split(':')[0]
+    hostname = @host.split(':')[0]
 
     {
       path: '/'
