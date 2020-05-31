@@ -88,11 +88,15 @@ export default setup = ({$app, Lang, Model, gulpPaths, config, colors}) ->
     host = req.headers.host
     accessToken = req.query.accessToken
 
+    # could potentially keep this connection open?
+    # would reduce response time ~100ms
+    # would need to namespace per user though instead of 'exoid'
     io = socketIO config.API_HOST, {
       path: (config.API_PATH or '') + '/socket.io'
       timeout: 5000
       transports: ['websocket']
     }
+    start = Date.now()
     fullLanguage = req.headers?['accept-language']
     language = req.query?.lang or
       req.cookies?['language'] or
@@ -160,7 +164,6 @@ export default setup = ({$app, Lang, Model, gulpPaths, config, colors}) ->
       cache = await untilStable $tree, {timeout}
     catch err
       console.log err
-      console.log err.cache
       cache = err.cache
     exoidCache = await model.exoid.getCacheStream().pipe(rx.take(1)).toPromise()
     model.exoid.setSynchronousCache exoidCache

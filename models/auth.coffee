@@ -16,14 +16,15 @@ export default class Auth
         @exoid.getCached 'graphql',
           query: '''
             query Query { me { id, name, data { bio } } }
-          '''
+          '''.trim()
         .then (user) =>
           if user?
             return {data: userLoginAnon: {accessToken}}
-          @exoid.call 'graphql',
+          @exoid.stream 'graphql',
             query: '''
               query Query { me { id, name, data { bio } } }
-            '''
+            '''.trim()
+          .pipe(rx.take(1)).toPromise()
           .then ->
             return {data: userLoginAnon: {accessToken}}
         .catch =>
@@ -119,15 +120,20 @@ export default class Auth
     .then @afterLogin
 
   stream: ({query, variables, pull}, options = {}) =>
+    console.log 'stream start'
+    start = Date.now()
     options = _.pick options, [
       'isErrorable', 'clientChangesStream', 'ignoreCache', 'initialSortFn'
       'isStreamed', 'limit'
     ]
     @waitValidAuthCookie
     .pipe rx.switchMap =>
+      console.log 'valid auth', Date.now() - start
       stream = @exoid.stream 'graphql', {query, variables}, options
       if pull
-        stream.pipe rx.map ({data}) -> data[pull]
+        stream.pipe rx.map ({data}) ->
+          console.log 'data', Date.now() - start
+          data[pull]
       else
         stream
 

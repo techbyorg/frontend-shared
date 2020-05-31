@@ -19,11 +19,12 @@ SERIALIZATION_KEY = 'MODEL'
 export default class Model
   constructor: (options) ->
     {
-      serverHeaders, io, @cookie, @portal, lang, userAgent, authCookie, apiUrl
+      serverHeaders, io, @cookie, @portal, lang, userAgent, authCookie
     } = options
     serverHeaders ?= {}
 
     cache = window?[SERIALIZATION_KEY] or {}
+    console.log 'using cache', cache
     window?[SERIALIZATION_KEY] = null
     # maybe this means less memory used for long caches?
     document?.querySelector('.model')?.innerHTML = ''
@@ -71,7 +72,9 @@ export default class Model
       catch
         {}
 
+    console.log 'offline', offlineCache
     @initialCache = _.defaults offlineCache, cache.exoid
+    console.log 'init', @initialCache
 
     @exoid = new Exoid
       ioEmit: ioEmit
