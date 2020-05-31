@@ -56,7 +56,8 @@ export default $head = (props) ->
       if route?.src
         routeKey = lang.getRouteKeyByValue route.src
     modelSerialization: unless window?
-      model.getSerializationStream()
+      # model.getSerializationStream()
+      model.getSerialization() # synchronous since react ssr sucks atm
     cssVariables: _getCssVariables entity
 
   gaId = 'UA-27992080-36'

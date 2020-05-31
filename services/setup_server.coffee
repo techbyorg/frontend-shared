@@ -1,6 +1,7 @@
-import {z, renderToString} from 'zorium'
+import {z, renderToString, untilStable} from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 import express from 'express'
 import compress from 'compression'
 import helmet from 'helmet'
@@ -143,44 +144,33 @@ export default setup = ({$app, Lang, Model, gulpPaths, config, colors}) ->
     isCrawler = isFacebookCrawler or isOtherBot
     start = Date.now()
 
-    onError = (err) ->
-      console.log 'CAUGGGHTTT'
-      console.log Date.now() - start
-      io.disconnect()
-      model.dispose()
-      disposable?.unsubscribe()
-      if err?.message?.indexOf('Timeout') is -1
-        console.log err
-      if err.html
-        if err.html.indexOf('<HEAD') is -1
-          res.redirect 302, '/'
-        else
-          res.send '<!DOCTYPE html>' + err.html
-      else
-        if config.ENV is config.ENVS.PROD and req.path isnt '/'
-          res.redirect 302, '/'
-        else
-          next err
+    $tree = z $app, {
+      requestsStream, model, lang, cookie, browser,
+      serverData, router, isCrawler, config, colors
+    }
+    timeout = if isCrawler \
+              then BOT_RENDER_TO_STRING_TIMEOUT_MS \
+              else RENDER_TO_STRING_TIMEOUT_MS
 
     try
-      html = await renderToString (z $app, {
-        requestsStream, model, lang, cookie, browser,
-        serverData, router, isCrawler, config, colors
-      }), {
-        timeout: if isCrawler \
-                 then BOT_RENDER_TO_STRING_TIMEOUT_MS \
-                 else RENDER_TO_STRING_TIMEOUT_MS
-      }
-      console.log Date.now() - start
-      io.disconnect()
-      model.dispose()
-      disposable = null
-      # console.log html
-      if html.indexOf('<HEAD') is -1
-        console.log 'redir'
-        res.redirect 302, '/'
-      else
-        console.log 'send'
-        res.send '<!DOCTYPE html>' + html
+      # wait for initial models to load so we have exoid cache we can use
+      # in 2nd render. ideal solution is what zorium does with dyo
+      # https://github.com/Zorium/zorium/blob/dyo/src/index.coffee
+      # but react async server-side rendering sucks atm (5/2020)
+      cache = await untilStable $tree, {timeout}
     catch err
-      onError err
+      console.log err
+    exoidCache = await model.exoid.getCacheStream().pipe(rx.take(1)).toPromise()
+    model.exoid.setSynchronousCache exoidCache
+    html = renderToString $tree, {cache}
+    console.log 'rendered', Date.now() - start
+    io.disconnect()
+    model.dispose()
+    disposable = null
+    # console.log html
+    if not html and req.path isnt '/'
+      console.log 'redir'
+      res.redirect 302, '/'
+    else
+      console.log 'send'
+      res.send '<!DOCTYPE html>' + html

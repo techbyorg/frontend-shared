@@ -158,7 +158,13 @@ export default class Model
     .pipe rx.map (exoidCache) ->
       string = JSON.stringify({
         exoid: exoidCache
-        # problem with this is clock skew
-        # expires: Date.now() + SERIALIZATION_EXPIRE_TIME_MS
       }).replace /<\/script/gi, '<\\/script'
       "window['#{SERIALIZATION_KEY}']=#{string};"
+
+  # synchronous version for crappy react ssr
+  getSerialization: =>
+    exoidCache = @exoid.getSynchronousCache()
+    string = JSON.stringify({
+      exoid: exoidCache
+    }).replace /<\/script/gi, '<\\/script'
+    "window['#{SERIALIZATION_KEY}']=#{string};"
