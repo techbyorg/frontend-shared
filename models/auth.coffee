@@ -3,11 +3,12 @@ import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import Environment from '../services/environment'
+import sharedConfig from '../shared_config'
 
 export default class Auth
   constructor: (options) ->
     {@exoid, @pushToken, @lang, @cookie, @userAgent,
-      @portal, @authCookie} = options
+      @portal, @authCookie, @host} = options
 
     @waitValidAuthCookie = Rx.defer =>
       accessToken = @cookie.get @authCookie
@@ -54,7 +55,14 @@ export default class Auth
     .pipe rx.publishReplay(1), rx.refCount()
 
   setAccessToken: (accessToken) =>
-    @cookie.set @authCookie, accessToken
+    domain = if sharedConfig.ENV is sharedConfig.ENVS.DEV \
+             then sharedConfig.HOST \
+             else _.takeRight(@host.split('.'), 2).join '.'
+    console.log 'domain', domain
+    @cookie.set @authCookie, accessToken, {
+      # top level domain
+      host: domain
+    }
 
   logout: =>
     @setAccessToken ''

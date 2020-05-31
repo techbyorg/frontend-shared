@@ -7,9 +7,12 @@ class Cookie
     @cookies = initialCookies or {}
     @stream = new Rx.BehaviorSubject @cookies
 
-  getCookieOpts: (key, ttlMs) =>
+  getCookieOpts: (key, {ttlMs, host}) =>
     ttlMs ?= COOKIE_DURATION_MS
-    hostname = @host.split(':')[0]
+    host ?= @host
+    hostname = host.split(':')[0]
+
+    console.log 'set', hostname
 
     {
       path: '/'
@@ -18,11 +21,11 @@ class Cookie
       domain: if hostname is 'localhost' then hostname else '.' + hostname
     }
 
-  set: (key, value, {ttlMs} = {}) =>
+  set: (key, value, {ttlMs, host} = {}) =>
     ttlMs ?= COOKIE_DURATION_MS
     @cookies[key] = value
     @stream.next @cookies
-    options = @getCookieOpts key, ttlMs
+    options = @getCookieOpts key, {ttlMs, host}
     @setCookie key, value, options
 
   get: (key) =>

@@ -88,6 +88,7 @@ export default setup = ({$app, Lang, Model, colors, config}) ->
     io, portal, lang, cookie, userAgent
     authCookie: config.AUTH_COOKIE
     apiUrl: config.API_URL
+    host: config.HOST
   }
 
   onOnline = ->

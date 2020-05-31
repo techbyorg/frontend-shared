@@ -119,6 +119,7 @@ export default setup = ({$app, Lang, Model, gulpPaths, config, colors}) ->
       userAgent
       authCookie: config.AUTH_COOKIE
       apiUrl: config.API_URL
+      host: config.HOST
       serverHeaders: req.headers
     }
     router = new RouterService {
