@@ -102,7 +102,7 @@ class RouterService
   setEntitySlug: (@entitySlug) => null
   setRequests: (@requestsStream) => null
 
-  openLink: (url) =>
+  openLink: (url, target) =>
     isAbsoluteUrl = url?.match /^(?:[a-z-]+:)?\/\//i
     webAppRegex = new RegExp "https?://(.*?)\.?(#{@host})", 'i'
     isWebApp = url?.match webAppRegex
@@ -114,7 +114,7 @@ class RouterService
     else
       @portal.call 'browser.openWindow', {
         url: url
-        target: '_system'
+        target: target or '_system'
       }
 
   back: ({fromNative, fallbackPath} = {}) =>
@@ -216,7 +216,7 @@ class RouterService
     node.props.onclick = ev (e, $$el) =>
       if isSimpleClick e
         e.preventDefault()
-        @openLink node.props.href
+        @openLink node.props.href, node.props.target
 
     return node
 
