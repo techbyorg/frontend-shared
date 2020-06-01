@@ -3,8 +3,9 @@ import * as _ from 'lodash-es'
 import HttpHash from 'http-hash'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
+import useMetaTags from 'react-metatags-hook'
 
-import $head from './components/head'
+import {getDefaultMeta} from './components/head'
 # $navDrawer = require './components/nav_drawer'
 import $bottomBar from './components/bottom_bar'
 import Environment from './services/environment'
@@ -24,9 +25,6 @@ export default $app = (props) ->
 
     requestsStream = requestsStream.pipe(
       rx.map (req) ->
-        if window? and isFirstRequest and req.query.referrer
-          model.user.setReferrer req.query.referrer
-
         if isFirstRequest and isNativeApp
           path = cookie.get('routerLastPath') or req.path
           if window?
@@ -65,9 +63,6 @@ export default $app = (props) ->
 
   # used for overlay pages
   router.setRequests requestsStream
-
-
-  isNativeApp = Environment.isNativeApp {userAgent}
 
   # used if state / requestsStream fails to work
   $backupPage = if serverData?
@@ -117,7 +112,13 @@ export default $app = (props) ->
       request.$page is $page
   }
 
-  $body =
+  useMetaTags getDefaultMeta({lang, colors, config}), []
+
+  z GlobalContext.Provider, {
+    value: {
+      model, router, portal, lang, cookie, browser, config, colors
+    }
+  },
     z '#zorium-root', {
       key: props.key
       className: classKebab {isIos, isAndroid, isFirefox, hasOverlayPage}
@@ -161,21 +162,3 @@ export default $app = (props) ->
             display: 'none'
             backgroundColor: 'var(--test-color)'
 
-  z GlobalContext.Provider, {
-    value: {
-      model, router, portal, lang, cookie, browser, config, colors
-    }
-  },
-    if window?
-      $body
-    else
-      z 'html', {
-        lang: 'en'
-      },
-        z $head, {
-          requestsStream
-          serverData
-          # FIXME
-          meta: $page?.getMeta?()
-        }
-        z 'body', $body

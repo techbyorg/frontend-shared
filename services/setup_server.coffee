@@ -10,7 +10,9 @@ import cookieParser from 'cookie-parser'
 import fs from 'fs'
 import socketIO from 'socket.io-client'
 import request from 'xhr-request'
+import {generateStaticHtml} from 'react-metatags-hook'
 
+import $head from '../components/head'
 import Environment from './environment'
 import RouterService from './router'
 import LanguageService from './language'
@@ -172,7 +174,13 @@ export default setup = ({$app, Lang, Model, gulpPaths, config, colors}) ->
       new Promise (resolve) -> setTimeout resolve, 100
     ]
     model.exoid.setSynchronousCache exoidCache
-    html = renderToString $tree, {cache}
+    bodyHtml = renderToString $tree, {cache}
+    metaHtml = generateStaticHtml()
+    console.log 'META', metaHtml
+    headHtml = renderToString z $head, {
+      metaHtml, lang, model, cookie, config, colors
+    }
+    html = "<html><head>#{metaHtml}#{headHtml}</head><body>#{bodyHtml}</body></html>"
     console.log 'rendered', Date.now() - start
     io.disconnect()
     model.dispose()
