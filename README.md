@@ -1,9 +1,4 @@
-# TODO:
-- remove colors.coffee, some of strings_en, some of icons
-- stylus_xyz.js?
-- tree shakeable icons
-- esm imports on everything
-
-npm link causes weird bugs, so use
-`npm pack ../frontend-shared`
-`npm install ...`
+# Install as git submodule
+Since you might be changing code in here periodically... to make it easy, this repo should be a submodule of the individual projects
+`git submodule add git@github.com:techbyorg/frontend-shared.git`
+`npm install file:frontend-shared`

@@ -4,6 +4,8 @@ if window?
   require './index.styl'
 
 import $button from '../button'
+import $icon from '../icon'
+import {closeIconPath} from '../icon/paths'
 import context from '../../context'
 
 CLOSE_DELAY_MS = 450 # 0.45s for animation
@@ -50,7 +52,15 @@ export default $dialog = (props) ->
 
       z '.dialog',
         if $title
-          z '.title', $title
+          z '.title',
+            $title
+            z '.close',
+              z $icon, {
+                icon: closeIconPath
+                color: colors.$bgText26
+                isTouchTarget: false
+                onclick: close
+              }
         z '.content',
           $content
         if $actions
