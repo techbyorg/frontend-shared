@@ -41,8 +41,8 @@ export default $appBar = (props) ->
           if hasLogo
             [
               # z '.icon'
-              z '.span.logo-tech', 'tech'
-              z '.span.logo-by', 'by'
+              z '.span.logo-tech', 'Fundraise'
+              z '.span.logo-by', 'byTechBy'
             ]
           else
             title

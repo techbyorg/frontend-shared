@@ -176,7 +176,6 @@ export default setup = ({$app, Lang, Model, gulpPaths, config, colors}) ->
     model.exoid.setSynchronousCache exoidCache
     bodyHtml = renderToString $tree, {cache}
     metaHtml = generateStaticHtml()
-    console.log 'META', metaHtml
     headHtml = renderToString z $head, {
       metaHtml, lang, model, cookie, config, colors
     }

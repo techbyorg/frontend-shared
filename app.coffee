@@ -3,12 +3,12 @@ import * as _ from 'lodash-es'
 import HttpHash from 'http-hash'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
-import useMetaTags from 'react-metatags-hook'
 
 import {getDefaultMeta} from './components/head'
 # $navDrawer = require './components/nav_drawer'
 import $bottomBar from './components/bottom_bar'
 import Environment from './services/environment'
+import useMeta from './services/use_meta'
 import GlobalContext from './context'
 
 # TODO: clean this up a bit
@@ -112,7 +112,7 @@ export default $app = (props) ->
       request.$page is $page
   }
 
-  useMetaTags getDefaultMeta({lang, colors, config}), []
+  useMeta (-> getDefaultMeta {lang, colors, config}), []
 
   z GlobalContext.Provider, {
     value: {
