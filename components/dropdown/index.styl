@@ -16,6 +16,22 @@
     > .options
        display: block
 
+  &.is-primary
+    > .current
+      font-subtitle2()
+      background: getColor('$secondaryMain')
+      color: getColor('$secondaryMainText')
+      height: 34px
+      border-radius: 17.5px
+      border: none
+      padding: 0
+
+      > .text
+        padding: 8px 24px
+
+      > .arrow
+        border-left: 1px solid getColor('$secondary200')
+
   > .wrapper
     display: none
     position: fixed
@@ -26,22 +42,20 @@
     height: 100%
 
   > .current
-    font-subtitle2()
-    background: getColor('$secondaryMain')
-    color: getColor('$secondaryMainText')
-    height: 34px
-    border-radius: 17.5px
+    font-subtitle1()
+    background: getColor('$bgColor')
+    padding: 12px 8px 12px 24px
+    border-radius: 8px
     display: flex
+    border: 1px solid getColor('$bgText12')
 
     > .text
       flex1()
       text-align: center
-      padding: 8px 24px
       white-space: nowrap
 
     > .arrow
       margin-left: auto
-      border-left: 1px solid getColor('$secondary200')
       padding: 0 8px
 
 

@@ -1,14 +1,19 @@
 @require '../../vars'
 
 .z-tags
-  display: flex
+  &.is-wrapped
+    display: flex
 
-  > .more
-    font-micro()
+  > .row
+    display: flex
+    margin-bottom: 8px
+
+  > .more, > .row > .more
+    font-tbd2-name()
     flex-shrink: 0
-    width: 30px
-    height: 30px
-    line-height: 30px
+    width: 32px
+    height: 32px
+    line-height: 32px
     border-radius: 50%
-    background: getColor('$bgText12')
+    background: getColor('$bgColorAlt1')
     text-align: center

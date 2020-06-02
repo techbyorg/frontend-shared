@@ -12,7 +12,7 @@ if window?
   require './index.styl'
 
 export default $dropdown = (props) ->
-  {valueStreams, valueStream, errorStream, options, $$parentRef,
+  {valueStreams, valueStream, errorStream, options, $$parentRef, isPrimary,
     anchor = 'top-left', isDisabled = false} = props
   {colors} = useContext context
 
@@ -50,6 +50,7 @@ export default $dropdown = (props) ->
     ref: $$ref
     className: classKebab {
       hasValue: value isnt ''
+      isPrimary
       isDisabled
       isOpen
       isError: error?
@@ -68,7 +69,9 @@ export default $dropdown = (props) ->
         z $icon,
           icon: chevronDownIconPath
           isTouchTarget: false
-          color: colors.$secondaryMainText
+          color: if isPrimary \
+                 then colors.$secondaryMainText \
+                 else colors.$bgText
 
     if isOpen
       z $positionedOverlay,

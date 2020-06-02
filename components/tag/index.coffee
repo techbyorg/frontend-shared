@@ -6,7 +6,7 @@ if window?
 export default $tag = ({tag}) ->
   z '.z-tag', {
     style:
-      background: "#{tag.color}10"
+      background: tag.background
       color: tag.color
   },
     tag.text

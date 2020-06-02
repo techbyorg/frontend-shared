@@ -40,7 +40,10 @@ export default $button = (props) ->
           z $icon,
           icon: icon
           isTouchTarget: false
-          color: colors.$white # FIXME
+          color: if isPrimary \
+                 then colors.$primaryMainText \
+                 else colors.$primaryMain
       text
       if hasRipple
-        z $ripple
+        z $ripple,
+          color: if isPrimary then colors.$primaryMainText else colors.$bgText26
