@@ -68,7 +68,6 @@ export default $dropdown = (props) ->
       z '.arrow',
         z $icon,
           icon: chevronDownIconPath
-          isTouchTarget: false
           color: if isPrimary \
                  then colors.$secondaryMainText \
                  else colors.$bgText

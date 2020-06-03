@@ -16,6 +16,7 @@ export default $buttonMenu = ({color, onclick, isAlignedLeft = true}) ->
       icon: menuIconPath
       color: color or colors.$header500Icon
       hasRipple: true
+      isTouchTarget: true
       onclick: (e) ->
         e.preventDefault()
         if onclick

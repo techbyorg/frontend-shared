@@ -37,7 +37,6 @@ export default $tooltip = (props) ->
           z $icon,
             icon: closeIconPath
             size: '16px'
-            isTouchTarget: false
             color: colors.$bgText54
             onclick: close
         z '.content',

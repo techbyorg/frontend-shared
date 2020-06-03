@@ -52,6 +52,5 @@ export default $rating = (props) ->
         z $icon,
           icon: icon
           size: size
-          isTouchTarget: false
           color: color
           onclick: if isInteractive then (-> setRating i + 1) else null

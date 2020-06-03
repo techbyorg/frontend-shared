@@ -62,7 +62,6 @@ export default $policies = ({isIabStream, $dropdowns}) ->
             z '.icon',
               z $icon,
                 icon: expandMoreIconPath
-                isTouchTarget: false
                 color: colors.$primaryMain
           z '.content', {className: classKebab {isVisible}},
             $content

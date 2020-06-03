@@ -76,7 +76,6 @@ export default $tabsBar = (props) ->
             if hasIcon
               z '.icon',
                 z item.$menuIcon,
-                  isTouchTarget: false
                   color: if isSelected then color else inactiveColor
                   icon: item.menuIconName
             item.$after

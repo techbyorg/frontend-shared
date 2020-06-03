@@ -44,6 +44,7 @@ export default $actionBar = (props) ->
           icon: cancel.icon
           color: color
           hasRipple: true
+          isTouchTarget: true
           onclick: (e) ->
             e?.stopPropagation()
             cancel.onclick e
@@ -53,6 +54,7 @@ export default $actionBar = (props) ->
             icon: if isSaving then ellipsisIconPath else save.icon
             color: color
             hasRipple: true
+            isTouchTarget: true
             onclick: (e) ->
               e?.stopPropagation()
               save.onclick e

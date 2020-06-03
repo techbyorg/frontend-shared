@@ -33,7 +33,6 @@ export default $notifications = ->
       z '.no-notifications',
         z $notificationsIcon,
           icon: 'notifications-none'
-          isTouchTarget: false
           size: '80px'
           color: colors.$black26
         z '.message',
@@ -57,7 +56,6 @@ export default $notifications = ->
               color: if isUnread \
                      then colors.$secondaryMain \
                      else colors.$bgText54
-              isTouchTarget: false
           z '.right',
             z '.title', "#{notification.title}: #{notification.text}"
             z '.time', DateService.fromNow notification.time

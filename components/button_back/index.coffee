@@ -14,6 +14,7 @@ export default $buttonBack = (props) ->
       icon: backIconPath
       color: color or colors.$header500Icon
       hasRipple: true
+      isTouchTarget: true
       onclick: (e) ->
         e.preventDefault()
         setTimeout ->

@@ -56,6 +56,5 @@ export default $checkbox = (props) ->
     z '.icon',
       z $icon,
         icon: checkIconPath
-        isTouchTarget: false
         color: allColors.$primaryMainText
         size: '16px'

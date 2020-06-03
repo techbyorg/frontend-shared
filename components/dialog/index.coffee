@@ -58,7 +58,6 @@ export default $dialog = (props) ->
               z $icon, {
                 icon: closeIconPath
                 color: colors.$bgText26
-                isTouchTarget: false
                 onclick: close
               }
         z '.content',

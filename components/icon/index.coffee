@@ -15,7 +15,6 @@ export default $icon = (props) ->
   size ?= '24px'
   viewBox ?= 24
   heightRatio ?= 1
-  isTouchTarget ?= true
   touchWidth ?= '48px'
   touchHeight ?= '48px'
   isClickable = Boolean onclick or onmousedown

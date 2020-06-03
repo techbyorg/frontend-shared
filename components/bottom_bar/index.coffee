@@ -80,5 +80,4 @@ export default $bottomBar = ({requestsStream, isAbsolute}) ->
           z $icon,
             icon: icon
             color: if isSelected then colors.$primaryMain else colors.$bgText54
-            isTouchTarget: false
         z '.text', text

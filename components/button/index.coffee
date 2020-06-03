@@ -39,7 +39,6 @@ export default $button = (props) ->
         z '.icon',
           z $icon,
           icon: icon
-          isTouchTarget: false
           color: if isPrimary \
                  then colors.$primaryMainText \
                  else colors.$primaryMain

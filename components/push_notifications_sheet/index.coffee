@@ -18,7 +18,6 @@ export default $pushNotificationSheet = ->
             z $icon,
               icon: notificationsIconPath
               color: colors.$primaryMain
-              isTouchTarget: false
           z '.message', lang.get 'pushNotificationsSheet.message'
       $actions:
         z '.z-push-notifications-sheet_actions',

@@ -37,7 +37,6 @@ export default $fab = (props) ->
     z '.icon-container',
       z $icon,
         icon: icon
-        isTouchTarget: false
         color: colorsMemo.cText
     z $ripple,
       onComplete: if not isImmediate then onclick

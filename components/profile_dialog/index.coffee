@@ -126,7 +126,6 @@ export default $profileDialog = (props) ->
           z $icon, {
             icon: icon
             color: colors.$primaryMain
-            isTouchTarget: false
           }
         z '.text', text
         if not _.isEmpty children
@@ -136,7 +135,6 @@ export default $profileDialog = (props) ->
                     then 'chevron-up' \
                     else 'chevron-down'
               color: colors.$bgText70
-              isTouchTarget: false
       if isExpanded
         z 'ul.menu',
         _.map children, renderItem
@@ -175,7 +173,6 @@ export default $profileDialog = (props) ->
                     z $icon, {
                       icon: type
                       size: '18px'
-                      isTouchTarget: false
                       color: colors.$primaryMain
                     }
             z '.close',

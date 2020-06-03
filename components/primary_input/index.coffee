@@ -52,6 +52,7 @@ export default $primaryInput = (props) ->
         z $icon,
           icon: eyeIconPath
           color: colors.ink
+          isTouchTarget: true
     else if props.onInfo
       z '.make-visible', {
         onclick: ->
@@ -60,3 +61,4 @@ export default $primaryInput = (props) ->
         z $icon,
           icon: helpIconPath
           color: colors.ink
+          isTouchTarget: true
