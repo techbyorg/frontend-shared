@@ -92,7 +92,7 @@ export default class Cache
     request = event.request
     # console.log 'fetch'
     # console.log event.request.url
-    if event.request.url.match /(:\/\/techby.org|localhost:50340)([^\.]*)$/i
+    if event.request.url.match /((:\/\/|\.)techby.org|localhost:50340)([^\.]*)$/i
       request = "https://#{@host}/cache-shell"
       # request = 'https://staging.techby.org/cache-shell'
       # request = 'http://localhost:50340/cache-shell'
