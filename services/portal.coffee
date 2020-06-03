@@ -228,7 +228,8 @@ export default class Portal
     }
 
   pushRegister: ->
-    PushService.registerWeb()
+    null
+    # PushService.registerWeb()
     # navigator.serviceWorker.ready.then (serviceWorkerRegistration) =>
     #   serviceWorkerRegistration.pushManager.subscribe {
     #     userVisibleOnly: true,

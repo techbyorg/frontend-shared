@@ -3,7 +3,7 @@ import * as _ from 'lodash-es'
 import Environment from '../services/environment'
 
 export default class Cache
-  constructor: ->
+  constructor: ({@host}) ->
     @isRecording = false
     @cachesFiles =
       deploy: {
@@ -28,13 +28,6 @@ export default class Cache
       #     'https://fdn.uno/d/images/maps/sprite_2019_12_04.png'
       #     'https://fdn.uno/d/images/maps/sprite_2019_12_04@2x.json'
       #     'https://fdn.uno/d/images/maps/sprite_2019_12_04@2x.png'
-      #   ]
-      # }
-      # mapbox: {
-      #   version: 3 # bump when changing
-      #   files: [
-      #     "#{config.SCRIPTS_CDN_URL}/mapbox-gl-1.3.0b1.css"
-      #     "#{config.SCRIPTS_CDN_URL}/mapbox-gl-1.3.0b1.js"
       #   ]
       # }
 
@@ -100,7 +93,7 @@ export default class Cache
     # console.log 'fetch'
     # console.log event.request.url
     if event.request.url.match /(:\/\/techby.org|localhost:50340)([^\.]*)$/i
-      request = 'https://techby.org/cache-shell'
+      request = "https://#{@host}/cache-shell"
       # request = 'https://staging.techby.org/cache-shell'
       # request = 'http://localhost:50340/cache-shell'
 

@@ -39,7 +39,6 @@ export default $app = (props) ->
         #   if route.handler?() is routes.fourOhFour
         #     route = routes.get req.path
         # else
-        console.log 'hash get', req.path
         route = hash.get req.path
 
         $page = route.handler()

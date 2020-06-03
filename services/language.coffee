@@ -29,8 +29,8 @@ class Language
 
   getLanguageStr: => @language.getValue()
 
-  getAll: ->
-    config.LANGUAGES
+  # getAll: ->
+  #   config.LANGUAGES
 
   getAllUrlLanguages: ->
     ['en']

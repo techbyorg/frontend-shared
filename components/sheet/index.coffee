@@ -1,8 +1,7 @@
-import {z, createPortal, useContext, useRef, useMemo, useEffect} from 'zorium'
+import {z, createPortal, useRef, useMemo, useEffect} from 'zorium'
 
 import $icon from '../icon'
 import $button from '../button'
-import context from '../../context'
 
 CLOSE_DELAY_MS = 450 # 0.45s for animation
 
@@ -11,7 +10,6 @@ if window?
 
 export default $sheet = (props) ->
   {onClose, $content, $actions} = props
-  {lang} = useContext context
 
   $$ref = useRef()
 

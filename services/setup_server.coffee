@@ -23,7 +23,7 @@ requestPromise = Promise.promisify request
 
 MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS = 10886400000 # 18 weeks
 HEALTHCHECK_TIMEOUT = 200
-RENDER_TO_STRING_TIMEOUT_MS = 1200
+RENDER_TO_STRING_TIMEOUT_MS = 300
 BOT_RENDER_TO_STRING_TIMEOUT_MS = 4500
 
 export default setup = ({$app, Lang, Model, gulpPaths, config, colors}) ->
@@ -177,7 +177,7 @@ export default setup = ({$app, Lang, Model, gulpPaths, config, colors}) ->
     bodyHtml = renderToString $tree, {cache}
     metaHtml = generateStaticHtml()
     headHtml = renderToString z $head, {
-      metaHtml, lang, model, cookie, config, colors
+      serverData, metaHtml, lang, model, cookie, config, colors
     }
     html = "<html><head>#{metaHtml}#{headHtml}</head><body>#{bodyHtml}</body></html>"
     console.log 'rendered', Date.now() - start

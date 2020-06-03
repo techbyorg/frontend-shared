@@ -9,7 +9,7 @@ if window?
   require './index.styl'
 
 export default $requestRatingDialog = ({onClose}) ->
-  {model, portal, lang, config, colors} = useContext context
+  {model, portal, lang, colors} = useContext context
 
   {isLoadingStream} = useMemo ->
     {

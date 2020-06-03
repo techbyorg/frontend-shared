@@ -3,12 +3,13 @@ MAX_ERRORS_LOGGED = 5
 class Log
   constructor: ->
     @errorsSent = 0
-  init: =>
+
+  init: ({apiUrl}) =>
     # Report errors to API_URL/log
     postErrToServer = (err) =>
       if @errorsSent < MAX_ERRORS_LOGGED
         @errorsSent += 1
-        window.fetch config.API_URL + '/log',
+        window.fetch "#{apiUrl}/log",
           method: 'POST'
           headers:
             'Content-Type': 'text/plain' # Avoid CORS preflight

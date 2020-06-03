@@ -5,7 +5,7 @@ if window?
   PortalGun = require 'portal-gun'
 
 class ServiceWorkerService
-  register: ({model, onError}) =>
+  register: ({model, lang, onError}) =>
     try
       console.log 'registering service worker...'
       navigator.serviceWorker?.register '/service_worker.js'
@@ -16,7 +16,7 @@ class ServiceWorkerService
         @hasActiveServiceWorker = Boolean registration.active
 
         @listenForWaitingServiceWorker registration, (registration) =>
-          @handleUpdate registration, {model}
+          @handleUpdate registration, {model, lang}
       .catch (err) ->
         console.log 'sw promise err', err
         onError? err
@@ -24,7 +24,7 @@ class ServiceWorkerService
     catch err
       console.log 'sw err', err
 
-  handleUpdate: (registration, {model}) =>
+  handleUpdate: (registration, {model, lang}) =>
     if @hasActiveServiceWorker
       model.statusBar.open {
         text: lang.get 'status.newVersion'

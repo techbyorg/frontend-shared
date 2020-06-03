@@ -6,7 +6,7 @@ import fontsCss from './fonts'
 import context from '../../context'
 
 export default $head = (props) ->
-  {metaHtml, lang, model, cookie, config, colors} = props
+  {serverData, metaHtml, lang, model, cookie, config, colors} = props
 
   cssColors = colors.default
   cssColors['--drawer-header-500'] ?= cssColors['--primary-500']

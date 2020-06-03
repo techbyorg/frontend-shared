@@ -48,7 +48,6 @@ export default class Auth
             }
           ''')
       .then ({data}) =>
-        console.log 'RESPONSE', data
         accessToken = data?.userLoginAnon.accessToken
         if accessToken and accessToken isnt 'undefined'
           @setAccessToken data?.userLoginAnon.accessToken
@@ -58,7 +57,6 @@ export default class Auth
     domain = if sharedConfig.ENV is sharedConfig.ENVS.DEV \
              then sharedConfig.HOST \
              else _.takeRight(@host.split('.'), 2).join '.'
-    console.log 'domain', domain
     @cookie.set @authCookie, accessToken, {
       # top level domain
       host: domain
@@ -80,13 +78,17 @@ export default class Auth
       @exoid.invalidateAll()
 
   join: ({name, email, password} = {}) =>
-    @exoid.call 'auth.join', {name, email, password}
-    .then ({accessToken}) =>
-      @setAccessToken accessToken
-      @exoid.invalidateAll()
+    console.log 'FIXME'
+    Promise.resolve null
+    # @exoid.call 'auth.join', {name, email, password}
+    # .then ({accessToken}) =>
+    #   @setAccessToken accessToken
+    #   @exoid.invalidateAll()
 
   resetPassword: ({email} = {}) =>
-    @exoid.call 'auth.resetPassword', {email}
+    console.log 'FIXME'
+    Promise.resolve null
+    # @exoid.call 'auth.resetPassword', {email}
 
   afterLogin: ({accessToken}) =>
     @setAccessToken accessToken
@@ -100,7 +102,8 @@ export default class Auth
         sourceType = if Environment.isAndroid() \
                      then 'android' \
                      else 'ios-fcm'
-        @call 'pushTokens.upsert', {tokenStr: pushToken, sourceType, deviceId}
+        console.log 'FIXME: tokens'
+        # @call 'pushTokens.upsert', {tokenStr: pushToken, sourceType, deviceId}
       .catch -> null
 
   login: ({email, password} = {}) =>
@@ -128,7 +131,9 @@ export default class Auth
     .then @afterLogin
 
   stream: ({query, variables, pull}, options = {}) =>
-    console.log 'stream start'
+    unless query
+      console.warn 'missing', arguments[0]
+
     start = Date.now()
     options = _.pick options, [
       'isErrorable', 'clientChangesStream', 'ignoreCache', 'initialSortFn'
@@ -136,11 +141,9 @@ export default class Auth
     ]
     @waitValidAuthCookie
     .pipe rx.switchMap =>
-      console.log 'valid auth', Date.now() - start
       stream = @exoid.stream 'graphql', {query, variables}, options
       if pull
         stream.pipe rx.map ({data}) ->
-          console.log 'data', Date.now() - start
           data[pull]
       else
         stream

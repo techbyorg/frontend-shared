@@ -26,7 +26,7 @@ export default $formattedText = (props) ->
     isFullWidth, embedVideos, truncate
     useThumbnails} = options
 
-  {config} = useContext context
+  {lang, config} = useContext context
 
   # FIXME: usememo
 

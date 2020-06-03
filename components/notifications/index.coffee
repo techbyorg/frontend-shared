@@ -11,7 +11,7 @@ if window?
   require './index.styl'
 
 export default $notifications = ->
-  {model, router, config, colors} = useContext context
+  {model, router, colors} = useContext context
 
   useEffect ->
     return beforeUnmount

@@ -9,6 +9,7 @@ import Image from './image'
 import LoginLink from './login_link'
 import OfflineData from './offline_data'
 import Overlay from './overlay'
+import StatusBar from './status_bar'
 import Time from './time'
 import Tooltip from './tooltip'
 import User from './user'
@@ -95,6 +96,7 @@ export default class Model
 
     @image = new Image {@additionalScript}
     @loginLink = new LoginLink {@auth}
+    @statusBar = new StatusBar()
     @time = new Time {@auth}
     @user = new User {@auth, proxy, @exoid, @cookie, lang, @overlay, @portal, @router}
 
@@ -118,7 +120,7 @@ export default class Model
         Rx.of null
 
       if req.path
-        @auth.stream req.path, req.body, {ignoreCache: true} #, options
+        @auth.stream req.body, {ignoreCache: true} #, options
 
     # TODO: seems to use anon cookie for this. not sure how to fix...
     # i guess keep initial cookie stored and run using that?

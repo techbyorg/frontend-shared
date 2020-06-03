@@ -15,7 +15,7 @@ if window?
 # TODO: if using this with entity/groupStream, get it from context
 export default $profileDialog = (props) ->
   {userStreamy, entityUserStream, entityStream} = props
-  {model, router, browser, lang, config, colors} = useContext context
+  {model, router, browser, lang, colors} = useContext context
 
   {isVisibleStream, loadingItemsStream, meStream, userStream, entityAndMeStream,
     entityAndUserStream, expandedItemsStream} = useMemo ->

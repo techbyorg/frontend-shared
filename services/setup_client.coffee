@@ -23,7 +23,7 @@ import WindowService from './window'
 export default setup = ({$app, Lang, Model, colors, config}) ->
   MAX_ERRORS_LOGGED = 5
 
-  LogService.init()
+  LogService.init {apiUrl: config.API_URL}
 
   Environment.setAppKey config.APP_KEY
 
@@ -142,7 +142,7 @@ export default setup = ({$app, Lang, Model, colors, config}) ->
   # on some devices. Might be better anyways so initial load can be quicker?
   ###
   window.addEventListener 'load', ->
-    ServiceWorkerService.register {model}
+    ServiceWorkerService.register {model, lang}
 
   portal.listen()
 
@@ -295,12 +295,13 @@ export default setup = ({$app, Lang, Model, colors, config}) ->
     # window.addEventListener 'resize', app.onResize
     # portal.call 'orientation.onChange', app.onResize
 
-    (if Environment.isNativeApp()
-      PushService.register {model, isAlwaysCalled: true}
-      .then ->
-        PushService.init {model, portal, cookie}
-    else
-      Promise.resolve null)
+    # (if Environment.isNativeApp()
+    #   PushService.register {model, isAlwaysCalled: true}
+    #   .then ->
+    #     PushService.init {model, portal, cookie}
+    # else
+    #   Promise.resolve null)
+    Promise.resolve null
     .then ->
       portal.call 'app.onResume', ->
         # console.log 'resume invalidate'

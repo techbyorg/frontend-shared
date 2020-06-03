@@ -14,7 +14,7 @@ if window?
   require './index.styl'
 
 export default $policies = ({isIabStream, $dropdowns}) ->
-  {lang, router, config, colors} = useContext context
+  {lang, router, colors} = useContext context
 
   $dropdowns = [
     {
