@@ -17,13 +17,15 @@ export default $tapTabs = ({selectedIndexStream, tabs, tabProps}) ->
 
   z '.z-tap-tabs',
     z '.menu',
-      _.map tabs, ({name}, i) ->
-        isSelected = selectedIndex is i
-        z '.tap-tab', {
-          className: classKebab {isSelected}
-          onclick: -> selectedIndexStream.next i
-        },
-          name
+      z '.container',
+        _.map tabs, ({name}, i) ->
+          isSelected = selectedIndex is i
+          z '.tap-tab', {
+            className: classKebab {isSelected}
+            onclick: -> selectedIndexStream.next i
+          },
+            name
 
     z '.current-tab',
-      z tabs[selectedIndex].$el, tabProps
+      z '.container',
+        z tabs[selectedIndex].$el, tabProps

@@ -6,8 +6,8 @@ if window?
   require './index.styl'
 
 export default $appBar = (props) ->
-  {$topLeftButton, $topRightButton, title, bgColor, color, isFlat, isPrimary
-    isSecondary, isFullWidth, hasLogo} = props
+  {$topLeftButton, $topRightButton, title, bgColor, color, isRaised, isPrimary
+    isSecondary, isFullWidth, hasLogo, isContained = true} = props
   {colors} = useContext context
 
   if isPrimary
@@ -21,7 +21,7 @@ export default $appBar = (props) ->
     bgColor ?= colors.$header500
 
   z 'header.z-app-bar', {
-    className: classKebab {isFlat, hasLogo}
+    className: classKebab {isRaised, isContained, hasLogo}
   },
     z '.bar', {
       style:
