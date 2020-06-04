@@ -27,8 +27,6 @@ export default $head = (props) ->
 
   modelSerialization = not window? and model.getSerialization()
 
-  config.GOOGLE_ANALYTICS_ID = 'UA-27992080-36'
-
   isInliningSource = config.ENV is config.ENVS.PROD
 
   return [
@@ -118,12 +116,13 @@ export getDefaultMeta = ({lang, colors, config}) ->
       {name: 'theme-color', content: "#{colors.getRawColor colors.$primaryMain}"}
       {name: 'msapplication-tap-highlight', content: 'no'}
     ]
-    links: [
+    links: _.filter [
       {rel: 'apple-touch-icon', href: config.ICON_256_URL}
       # {rel: 'canonical', href: "#{meta.canonical}"}
       {rel: 'icon', href: config.FAVICON_URL}
       {rel: 'preconnect', href: 'https://fonts.gstatic.com/'} # faster dns for fonts
-      {rel: 'manifest', href: '/manifest.json'}
+      if config.HAS_MANIFEST
+        {rel: 'manifest', href: '/manifest.json'}
     ]
     twitter: {}
     openGraph:

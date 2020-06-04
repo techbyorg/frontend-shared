@@ -104,7 +104,7 @@ class RouterService
 
   openLink: (url, target) =>
     isAbsoluteUrl = url?.match /^(?:[a-z-]+:)?\/\//i
-    webAppRegex = new RegExp "https?://(.*?)\.?(#{@host})", 'i'
+    webAppRegex = new RegExp "https?://(#{@host})", 'i'
     isWebApp = url?.match webAppRegex
     if not isAbsoluteUrl or isWebApp
       path = if isWebApp \
