@@ -12,14 +12,12 @@ if window?
 # https://github.com/mckervinc/react-fluid-table
 # so i'm using same api to make for easy replacement
 export default $table = (props) ->
-  {data, columns, onRowClick, mobileRowRenderer} = props
+  {data, columns, onRowClick, mobileRowRenderer, breakpoint} = props
   getStyle = ({width, isFlex}) ->
     if isFlex
       {minWidth: "#{width}px", flex: 1}
     else if width
       {width: if width then "#{width}px"}
-
-  isMobile = Environment.isMobile()
 
   columnsWithRefAndSize = useMemo ->
     _.map columns, (column) ->
@@ -31,6 +29,8 @@ export default $table = (props) ->
         column = _.defaults {$$ref, size}, column
       column
   , [columns]
+
+  isMobile = breakpoint is 'mobile'
 
   z '.z-table', {
     className: classKebab {isMobile, hasRowClick: onRowClick}
