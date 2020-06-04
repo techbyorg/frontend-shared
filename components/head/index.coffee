@@ -119,9 +119,9 @@ export getDefaultMeta = ({lang, colors, config}) ->
       {name: 'msapplication-tap-highlight', content: 'no'}
     ]
     links: [
-      {rel: 'apple-touch-icon', href: "#{config.CDN_URL}/web_icon_256.png"}
+      {rel: 'apple-touch-icon', href: config.ICON_256_URL}
       # {rel: 'canonical', href: "#{meta.canonical}"}
-      {rel: 'icon', href: config.CDN_URL + '/favicon.png'}
+      {rel: 'icon', href: config.FAVICON_URL}
       {rel: 'preconnect', href: 'https://fonts.gstatic.com/'} # faster dns for fonts
       {rel: 'manifest', href: '/manifest.json'}
     ]
