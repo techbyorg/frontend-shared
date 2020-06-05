@@ -19,6 +19,7 @@ export default $checkbox = (props) ->
       valueStream: valueStream or new Rx.BehaviorSubject null
       errorStream: new Rx.BehaviorSubject null
     }
+  , []
 
   # $$ref = useRef (props) ->
   #   props.ref.current = {isChecked: -> ref.current.checked}
@@ -43,14 +44,14 @@ export default $checkbox = (props) ->
         border: if value \
                 then "1px solid #{colors.checkedBorder}" \
                 else "1px solid #{colors.border}"
-      disabled: if isDisabled then true else undefined
-      checked: if value then true else undefined
+      disabled: if isDisabled then true else false
+      checked: if value then true else false
       onchange: (e) ->
         if valueStreams
           valueStreams.next Rx.of e.target.checked
         else
           valueStream.next e.target.checked
-        onChange?()
+        onChange? e.target.checked
         e.target.blur()
     }
     z '.icon',

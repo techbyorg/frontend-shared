@@ -101,7 +101,7 @@ export default $textarea = (props) ->
     },
       hintText
     z 'textarea.textarea#textarea',
-      disabled: if isDisabled then true else undefined
+      disabled: Boolean isDisabled
       type: type
       value: value
       oninput: z.ev (e, $$ref) ->

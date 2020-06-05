@@ -3,7 +3,7 @@ import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 
 import $icon from '../icon'
-import $input from '../input'
+import $inputOld from '../input_old'
 import {eyeIconPath, helpIconPath} from '../icon/paths'
 import context from '../../context'
 
@@ -38,7 +38,7 @@ export default $primaryInput = (props) ->
   z '.z-primary-input', {
     className: classKebab {isFullWidth}
   },
-    z $input, _.defaults props, {
+    z $inputOld, _.defaults props, {
       isRaised: true
       isFloating: true
       isDark: true
