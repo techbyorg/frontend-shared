@@ -70,7 +70,8 @@ export default $textarea = (props) ->
   # FIXME: useref for parent to reference this, or just pass in streams?
   getHeightPxStream: ->
     textareaHeightStream.map (height) ->
-      Math.min height, 150 # max height in css
+      # max height in css
+      Math.min height, 150
 
   colors = _.defaults colors, {
     c500: allColors.$bgText54

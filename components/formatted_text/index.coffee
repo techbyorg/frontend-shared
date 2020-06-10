@@ -31,7 +31,7 @@ export default $formattedText = (props) ->
   # FIXME: usememo
 
   if textStreamy?.pipe
-    $elStreamy = textStreamy.pipe rx.map (text) -> get$ {text, model})
+    $elStreamy = textStreamy.pipe rx.map (text) -> get$ {text, model}
   else
     text = textStreamy
     $elStreamy = get$ {text, model} # use right away
@@ -45,7 +45,6 @@ export default $formattedText = (props) ->
     $elStreamy: $el
     text: text
     isExpanded: isExpandedStream
-  }
 
 get$ = ({text, model, state}) ->
   mentions = text?.match sharedConfig.MENTION_REGEX

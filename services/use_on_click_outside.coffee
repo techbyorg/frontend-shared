@@ -7,7 +7,8 @@ export default useOnClickOutside = ($$refs, handler) ->
 
   useEffect ->
     listener = (e) ->
-      unless _.some $$refs, ($$ref) -> $$ref.current?.contains e.target
+      isInTarget = _.some $$refs, ($$ref) -> $$ref.current?.contains e.target
+      unless isInTarget
         handler e
 
     document.addEventListener 'mousedown', listener

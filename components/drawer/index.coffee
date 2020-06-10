@@ -27,7 +27,7 @@ export default $drawer = (props) ->
           breakpoint in ['desktop']
         rx.publishReplay(1)
         rx.refCount()
-      )
+      ))
     }
   , []
 
