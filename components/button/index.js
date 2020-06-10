@@ -1,41 +1,46 @@
-let $button;
-import {z, classKebab, useContext} from 'zorium';
+/* eslint-disable
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import { z, classKebab, useContext } from 'zorium'
 
-import $ripple from '../ripple';
-import $icon from '../icon';
-import context from '../../context';
+import $ripple from '../ripple'
+import $icon from '../icon'
+import context from '../../context'
+let $button
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
-export default $button = function(props) {
-  const obj = props || {},
-        {
-          isPrimary,
-          isSecondary,
-          isFancy,
-          isInverted,
-          isDisabled,
-          text
-        } = obj,
-        val = obj.isFullWidth,
-        isFullWidth = val != null ? val : true,
-        {
-          isOutline
-        } = obj,
-        val1 = obj.onclick,
-        onclick = val1 != null ? val1 : () => null,
-        val2 = obj.type,
-        type = val2 != null ? val2 : 'button',
-        {
-          icon
-        } = obj,
-        val3 = obj.heightPx,
-        heightPx = val3 != null ? val3 : 36,
-        val4 = obj.hasRipple,
-        hasRipple = val4 != null ? val4 : true;
-  const {colors} = useContext(context);
+export default $button = function (props) {
+  const obj = props || {}
+  const {
+    isPrimary,
+    isSecondary,
+    isFancy,
+    isInverted,
+    isDisabled,
+    text
+  } = obj
+  const val = obj.isFullWidth
+  const isFullWidth = val != null ? val : true
+  const {
+    isOutline
+  } = obj
+  const val1 = obj.onclick
+  const onclick = val1 != null ? val1 : () => null
+  const val2 = obj.type
+  const type = val2 != null ? val2 : 'button'
+  const {
+    icon
+  } = obj
+  const val3 = obj.heightPx
+  const heightPx = val3 != null ? val3 : 36
+  const val4 = obj.hasRipple
+  const hasRipple = val4 != null ? val4 : true
+  const { colors } = useContext(context)
 
   return z('.z-button', {
     className: classKebab({
@@ -47,35 +52,35 @@ export default $button = function(props) {
       isInverted,
       isDisabled
     }),
-    onclick(e) {
+    onclick (e) {
       if (!isDisabled) {
-        return onclick(e);
+        return onclick(e)
       }
     }
   },
 
-    z('button.button', {
-      type,
-      disabled: Boolean(isDisabled),
-      style: {
-        // lineHeight: "#{heightPx}px"
-        minHeight: `${heightPx}px`
+  z('button.button', {
+    type,
+    disabled: Boolean(isDisabled),
+    style: {
+      // lineHeight: "#{heightPx}px"
+      minHeight: `${heightPx}px`
+    }
+  },
+  icon
+    ? z('.icon',
+      z($icon, {
+        icon,
+        color: isPrimary
+          ? colors.$primaryMainText
+          : colors.$primaryMain
       }
-    },
-      icon ?
-        z('.icon',
-          z($icon, {
-          icon,
-          color: isPrimary 
-                 ? colors.$primaryMainText 
-                 : colors.$primaryMain
-        }
-          )
-        ) : undefined,
-      text,
-      hasRipple ?
-        z($ripple,
-          {color: isPrimary ? colors.$primaryMainText : colors.$bgText26}) : undefined
-    )
-  );
-};
+      )
+    ) : undefined,
+  text,
+  hasRipple
+    ? z($ripple,
+      { color: isPrimary ? colors.$primaryMainText : colors.$bgText26 }) : undefined
+  )
+  )
+}

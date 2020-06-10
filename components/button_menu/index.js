@@ -1,23 +1,28 @@
-let $buttonMenu;
-import {z, useContext} from 'zorium';
+/* eslint-disable
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import { z, useContext } from 'zorium'
 
-import $icon from '../icon';
-import {menuIconPath} from '../icon/paths';
-import context from '../../context';
+import $icon from '../icon'
+import { menuIconPath } from '../icon/paths'
+import context from '../../context'
+let $buttonMenu
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
-export default $buttonMenu = function(...args) {
-  const obj = args[0],
-        {
-          color,
-          onclick
-        } = obj,
-        val = obj.isAlignedLeft,
-        isAlignedLeft = val != null ? val : true;
-  const {model, colors} = useContext(context);
+export default $buttonMenu = function (...args) {
+  const obj = args[0]
+  const {
+    color,
+    onclick
+  } = obj
+  const val = obj.isAlignedLeft
+  const isAlignedLeft = val != null ? val : true
+  const { model, colors } = useContext(context)
 
   return z('.z-button-menu',
     z($icon, {
@@ -26,15 +31,15 @@ export default $buttonMenu = function(...args) {
       color: color || colors.$header500Icon,
       hasRipple: true,
       isTouchTarget: true,
-      onclick(e) {
-        e.preventDefault();
+      onclick (e) {
+        e.preventDefault()
         if (onclick) {
-          return onclick();
+          return onclick()
         } else {
-          return model.drawer.open();
+          return model.drawer.open()
         }
       }
     }
     )
-  );
-};
+  )
+}

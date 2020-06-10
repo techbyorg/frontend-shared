@@ -1,14 +1,19 @@
-let $tos;
-import {z, useContext} from 'zorium';
+/* eslint-disable
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import { z, useContext } from 'zorium'
 
-import context from '../../context';
+import context from '../../context'
+let $tos
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
-export default $tos = function() {
-  const {router} = useContext(context);
+export default $tos = function () {
+  const { router } = useContext(context)
 
   return z('.z-tos',
     z('p',
@@ -18,7 +23,7 @@ The following terms and conditions govern all use of the TechBy app and all cont
 policies (including, without limitation,\
 `,
       router.link(z('a',
-        {href: router.get('privacy')},
+        { href: router.get('privacy') },
         'TechBy\'s Privacy Policy')
       ),
       `\
@@ -82,7 +87,7 @@ of others. If you believe that material located on or linked to by TechBy violat
 accordance with\
 `,
         router.link(z('a',
-          {href: 'https://github.com/techby/legal/blob/master/DMCA/Site%20Pages/DMCA%20Takedown%20Notice.md'},
+          { href: 'https://github.com/techby/legal/blob/master/DMCA/Site%20Pages/DMCA%20Takedown%20Notice.md' },
           'TechBy\'s Digital Millennium Copyright Act Policy')
         ),
         `\
@@ -194,6 +199,6 @@ upon and will inure to the benefit of the parties, their successors and permitte
 `
       )
     )
-  );
-};
-  // coffeelint: enable=max_line_length
+  )
+}
+// coffeelint: enable=max_line_length

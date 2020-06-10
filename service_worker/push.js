@@ -1,38 +1,45 @@
-import RouterService from '../services/router';
-import Language from '../services/language';
+/* eslint-disable
+    no-undef,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import RouterService from '../services/router'
+import Language from '../services/language'
 
 const router = new RouterService({
   router: null,
   lang: new Language()
-});
+})
 
 export default class Push {
-  constructor({cdnUrl, host}) { this.listen = this.listen.bind(this);   this.cdnUrl = cdnUrl; this.host = host; null; }
+  constructor ({ cdnUrl, host }) { this.listen = this.listen.bind(this); this.cdnUrl = cdnUrl; this.host = host; null }
 
-  listen() {
-    self.addEventListener('push', this.onPush);
+  listen () {
+    self.addEventListener('push', this.onPush)
 
-    return self.addEventListener('notificationclick', this.onNotificationClick);
+    return self.addEventListener('notificationclick', this.onNotificationClick)
   }
 
-  onPush(e) {
-    let path;
-    console.log('PUSH', e);
-    let message = e.data ? e.data.json() : {};
-    console.log(message);
+  onPush (e) {
+    let path
+    console.log('PUSH', e)
+    let message = e.data ? e.data.json() : {}
+    console.log(message)
     if (message.data?.title) {
-      message = message.data;
-      message.data = (() => { try {
-        return JSON.parse(message.data);
-      } catch (error) {
-        return {};
-      } })();
+      message = message.data
+      message.data = (() => {
+        try {
+          return JSON.parse(message.data)
+        } catch (error) {
+          return {}
+        }
+      })()
     }
 
     if (message.data?.path) {
-      path = router.get(message.data.path.key, message.data.path.params);
+      path = router.get(message.data.path.key, message.data.path.params)
     } else {
-      path = '';
+      path = ''
     }
 
     return e.waitUntil(
@@ -40,44 +47,46 @@ export default class Push {
         includeUncontrolled: true,
         type: 'window'
       })
-      .then(function(activeClients) {
-        const isFocused = activeClients?.some(client => client.focused);
+        .then(function (activeClients) {
+          const isFocused = activeClients?.some(client => client.focused)
 
-        if (!isFocused || (
-          contextId && (contextId !== message.data?.contextId)
-        )) {
-          return self.registration.showNotification('TechBy', {
-            icon: message.icon 
-                  ? message.icon 
-                  : `${this.cdnUrl}/android-chrome-192x192.png`,
-            title: message.title,
-            body: message.body,
-            tag: message.data?.path,
-            vibrate: [200, 100, 200],
-            data: _.defaults({
-              url: `https://${this.host}${path}`,
-              path: message.data?.path
-            }, message.data || {})
-          });
-        }})
-    );
+          if (!isFocused || (
+            contextId && (contextId !== message.data?.contextId)
+          )) {
+            return self.registration.showNotification('TechBy', {
+              icon: message.icon
+                ? message.icon
+                : `${this.cdnUrl}/android-chrome-192x192.png`,
+              title: message.title,
+              body: message.body,
+              tag: message.data?.path,
+              vibrate: [200, 100, 200],
+              data: _.defaults({
+                url: `https://${this.host}${path}`,
+                path: message.data?.path
+              }, message.data || {})
+            })
+          }
+        })
+    )
   }
 
-  onNotificationClick(e) {
-    e.notification.close();
+  onNotificationClick (e) {
+    e.notification.close()
 
     return e.waitUntil(
       clients.matchAll({
         includeUncontrolled: true,
         type: 'window'
       })
-      .then(function(activeClients) {
-        if (activeClients.length > 0) {
-          activeClients[0].focus();
-          return onPushFn?.(e.notification.data);
-        } else {
-          return clients.openWindow(e.notification.data.url);
-        }})
-    );
+        .then(function (activeClients) {
+          if (activeClients.length > 0) {
+            activeClients[0].focus()
+            return onPushFn?.(e.notification.data)
+          } else {
+            return clients.openWindow(e.notification.data.url)
+          }
+        })
+    )
   }
 }

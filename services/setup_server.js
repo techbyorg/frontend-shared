@@ -1,3 +1,5 @@
+// TODO: This file was created by bulk-decaffeinate.
+// Sanity-check the conversion and remove this comment.
 let setup;
 import {z, renderToString, untilStable} from 'zorium';
 import * as _ from 'lodash-es';

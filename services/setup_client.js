@@ -1,32 +1,39 @@
-let setup;
-require('frontend-shared/polyfill');
+/* eslint-disable
+    no-return-assign,
+    no-undef,
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import { z, render } from 'zorium'
+import cookieLib from 'cookie'
+import LocationRouter from 'location-router'
+import socketIO from 'socket.io-client/dist/socket.io.slim.js'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
-import {z, render} from 'zorium';
-import cookieLib from 'cookie';
-import LocationRouter from 'location-router';
-import socketIO from 'socket.io-client/dist/socket.io.slim.js';
-import * as Rx from 'rxjs';
-import * as rx from 'rxjs/operators';
+import Environment from './environment'
+import DateService from './date'
+import RouterService from './router'
+import PushService from './push'
+import ServiceWorkerService from './service_worker'
+import CookieService from './cookie'
+import LogService from './log'
+import LanguageService from './language'
+import PortalService from './portal'
+import WindowService from './window'
 
-require('../root.styl');
+let setup
+require('frontend-shared/polyfill')
 
-import Environment from './environment';
-import DateService from './date';
-import RouterService from './router';
-import PushService from './push';
-import ServiceWorkerService from './service_worker';
-import CookieService from './cookie';
-import LogService from './log';
-import LanguageService from './language';
-import PortalService from './portal';
-import WindowService from './window';
+require('../root.styl')
 
-export default setup = function({$app, Lang, Model, colors, config}) {
-  const MAX_ERRORS_LOGGED = 5;
+export default setup = function ({ $app, Lang, Model, colors, config }) {
+  const MAX_ERRORS_LOGGED = 5
 
-  LogService.init({apiUrl: config.API_URL});
+  LogService.init({ apiUrl: config.API_URL })
 
-  Environment.setAppKey(config.APP_KEY);
+  Environment.setAppKey(config.APP_KEY)
 
   // PushService.setFirebaseInfo {
   //   apiKey: config.FIREBASE.API_KEY
@@ -40,10 +47,10 @@ export default setup = function({$app, Lang, Model, colors, config}) {
    * Model stuff
    */
 
-  const initialCookies = cookieLib.parse(document.cookie);
+  const initialCookies = cookieLib.parse(document.cookie)
 
-  const isBackendUnavailable = new Rx.BehaviorSubject(false);
-  const currentNotification = new Rx.BehaviorSubject(false);
+  const isBackendUnavailable = new Rx.BehaviorSubject(false)
+  const currentNotification = new Rx.BehaviorSubject(false)
 
   const io = socketIO(config.API_HOST, {
     path: (config.API_PATH || '') + '/socket.io',
@@ -58,60 +65,65 @@ export default setup = function({$app, Lang, Model, colors, config}) {
     // see kaiser experiments for how to pass source ip in gke, but
     // it doesn't keep session affinity (for now?) if adding polling
     transports: ['websocket']
-  });
-  const fullLanguage = window.navigator.languages?.[0] || window.navigator.language;
-  let language = initialCookies?.['language'] || fullLanguage?.substr(0, 2);
+  })
+  const fullLanguage = window.navigator.languages?.[0] || window.navigator.language
+  let language = initialCookies?.['language'] || fullLanguage?.substr(0, 2)
   if (!Array.from(config.LANGUAGES).includes(language)) {
-    language = 'en';
+    language = 'en'
   }
-  const userAgent = navigator?.userAgent;
+  const userAgent = navigator?.userAgent
   const cookie = new CookieService({
     initialCookies,
     host: config.HOST,
-    setCookie(key, value, options) {
-      return document.cookie = cookieLib.serialize( 
-        key, value, options);
+    setCookie (key, value, options) {
+      return document.cookie = cookieLib.serialize(
+        key, value, options)
     }
-  });
+  })
   const lang = new LanguageService({
     language,
     cookie,
     // prod uses bundled language json
-    files: config.ENV === config.ENVS.PROD 
-           ? window.languageStrings 
-           : Lang.getLangFiles()
-  });
+    files: config.ENV === config.ENVS.PROD
+      ? window.languageStrings
+      : Lang.getLangFiles()
+  })
   const portal = new PortalService({
     lang,
     iosAppUrl: config.IOS_APP_URL,
     googlePlayAppUrl: config.GOOGLE_PLAY_APP_URL
-  });
-  const browser = new WindowService({cookie, userAgent});
+  })
+  const browser = new WindowService({ cookie, userAgent })
   const model = new Model({
-    io, portal, lang, cookie, userAgent,
+    io,
+    portal,
+    lang,
+    cookie,
+    userAgent,
     authCookie: config.AUTH_COOKIE,
     apiUrl: config.API_URL,
     host: config.HOST
-  });
+  })
 
-  const onOnline = function() {
-    model.statusBar.close();
-    model.exoid.enableInvalidation();
-    return model.exoid.invalidateAll();
-  };
-  const onOffline = function() {
-    model.exoid.disableInvalidation();
+  function onOnline () {
+    model.statusBar.close()
+    model.exoid.enableInvalidation()
+    return model.exoid.invalidateAll()
+  }
+
+  function onOffline () {
+    model.exoid.disableInvalidation()
     return model.statusBar.open({
       text: lang.get('status.offline')
-    });
-  };
+    })
+  }
 
   // TODO: show status bar for translating
   // @isTranslateCardVisibleStreams = new Rx.ReplaySubject 1
-  lang.getLanguage().pipe(rx.take(1)).subscribe(function(lang) {
-    console.log('lang', lang);
-    const needTranslations = ['fr', 'es'];
-    const isNeededLanguage = Array.from(needTranslations).includes(lang);
+  lang.getLanguage().pipe(rx.take(1)).subscribe(function (lang) {
+    console.log('lang', lang)
+    const needTranslations = ['fr', 'es']
+    const isNeededLanguage = Array.from(needTranslations).includes(lang)
     const translation = {
       ko: '한국어',
       ja: '日本語',
@@ -120,7 +132,7 @@ export default setup = function({$app, Lang, Model, colors, config}) {
       es: 'español',
       fr: 'français',
       pt: 'português'
-    };
+    }
 
     if (isNeededLanguage && !cookie.get('hideTranslateBar')) {
       return model.statusBar.open({
@@ -128,25 +140,25 @@ export default setup = function({$app, Lang, Model, colors, config}) {
           replacements: {
             language: translation[language] || language
           }
-          }),
+        }),
         type: 'snack',
         onClose: () => {
-          return cookie.set('hideTranslateBar', '1');
+          return cookie.set('hideTranslateBar', '1')
         },
         action: {
           text: lang.get('general.yes'),
-          onclick() {
-            ga?.('send', 'event', 'translate', 'click', language);
+          onclick () {
+            ga?.('send', 'event', 'translate', 'click', language)
             return portal.call('browser.openWindow', {
               url: 'https://crowdin.com/project/FIXME', // FIXME
               target: '_system'
             }
-            );
+            )
           }
         }
-      });
-    }});
-
+      })
+    }
+  })
 
   /*
    * Service workers
@@ -154,21 +166,24 @@ export default setup = function({$app, Lang, Model, colors, config}) {
    * "Failed to register a ServiceWorker: The document is in an invalid state"
    * on some devices. Might be better anyways so initial load can be quicker?
    */
-  window.addEventListener('load', () => ServiceWorkerService.register({model, lang}));
+  window.addEventListener('load', () => ServiceWorkerService.register({ model, lang }))
 
-  portal.listen();
+  portal.listen()
 
   /*
    * DOM stuff
    */
 
-  const init = function() {
-    console.log('INIIIIIIIT');
+  function init () {
+    console.log('INIIIIIIIT')
     const router = new RouterService({
-      model, cookie, lang, portal,
+      model,
+      cookie,
+      lang,
+      portal,
       router: new LocationRouter(),
       host: window.location.host
-    });
+    })
 
     // alternative is to find a way for zorium to subscribe to observables
     // to not start with null
@@ -177,8 +192,8 @@ export default setup = function({$app, Lang, Model, colors, config}) {
     // root = document.getElementById('zorium-root').cloneNode(true)
     const requestsStream = router.getStream().pipe(
       rx.publishReplay(1), rx.refCount()
-    );
-    console.log('HMR RENDER');
+    )
+    console.log('HMR RENDER')
     render((z($app, {
       key: Math.random(), // for hmr to work properly
       requestsStream,
@@ -192,37 +207,36 @@ export default setup = function({$app, Lang, Model, colors, config}) {
       currentNotification,
       config,
       colors
-    })), document.body); // document.documentElement
+    })), document.body) // document.documentElement
 
     // re-fetch and potentially replace data, in case html is served from cache
-    model.validateInitialCache();
+    model.validateInitialCache()
 
     // window.addEventListener 'beforeinstallprompt', (e) ->
     //   e.preventDefault()
     //   model.installOverlay.setPrompt e
     //   return false
 
-    portal.call('networkInformation.onOffline', onOffline);
-    portal.call('networkInformation.onOnline', onOnline);
+    portal.call('networkInformation.onOffline', onOffline)
+    portal.call('networkInformation.onOnline', onOnline)
 
     portal.call('statusBar.setBackgroundColor', {
       color: colors.getRawColor(colors.$primary700)
-    });
+    })
 
-    portal.call('app.onBack', () => router.back({fromNative: true}));
+    portal.call('app.onBack', () => router.back({ fromNative: true }))
 
-    const lastVisitDate = cookie.get('lastVisitDate');
-    const currentDate = DateService.format(new Date(), 'yyyy-mm-dd');
-    let daysVisited = parseInt(cookie.get('daysVisited'));
+    const lastVisitDate = cookie.get('lastVisitDate')
+    const currentDate = DateService.format(new Date(), 'yyyy-mm-dd')
+    let daysVisited = parseInt(cookie.get('daysVisited'))
     if (lastVisitDate !== currentDate) {
       if (isNaN(daysVisited)) {
-        daysVisited = 0;
+        daysVisited = 0
       }
-      cookie.set('lastVisitDate', currentDate);
-      daysVisited += 1;
-      cookie.set('daysVisited', daysVisited);
+      cookie.set('lastVisitDate', currentDate)
+      daysVisited += 1
+      cookie.set('daysVisited', daysVisited)
     }
-
 
     // iOS scrolls past header
     // portal.call 'keyboard.disableScroll'
@@ -231,86 +245,87 @@ export default setup = function({$app, Lang, Model, colors, config}) {
     // portal.call 'keyboard.onHide', ->
     //   browser.setKeyboardHeight 0
 
-    const routeHandler = function(data) {
-      if (data == null) { data = {}; }
-      let {path, query, source, _isPush, _original, _isDeepLink} = data;
+    function routeHandler (data) {
+      if (data == null) { data = {} }
+      let { path, query, source, _isPush, _original, _isDeepLink } = data
 
       if (_isDeepLink) {
-        return router.goPath(path);
+        return router.goPath(path)
       }
 
       // ios fcm for now. TODO: figure out how to get it a better way
       if (!path && (typeof _original?.additionalData?.path === 'string')) {
-        path = JSON.parse(_original.additionalData.path);
+        path = JSON.parse(_original.additionalData.path)
       }
 
       if (query?.accessToken != null) {
-        model.auth.setAccessToken(query.accessToken);
+        model.auth.setAccessToken(query.accessToken)
       }
 
       if (_isPush && _original?.additionalData?.foreground) {
-        model.exoid.invalidateAll();
+        model.exoid.invalidateAll()
         if (Environment.isIos() && Environment.isNativeApp()) {
-          portal.call('push.setBadgeNumber', {number: 0});
+          portal.call('push.setBadgeNumber', { number: 0 })
         }
 
         currentNotification.next({
           title: _original?.additionalData?.title || _original.title,
           message: _original?.additionalData?.message || _original.message,
           type: _original?.additionalData?.type,
-          data: {path}
-        });
+          data: { path }
+        })
       } else if (path != null) {
-        ga?.('send', 'event', 'hit_from_share', 'hit', JSON.stringify(path));
+        ga?.('send', 'event', 'hit_from_share', 'hit', JSON.stringify(path))
         if (path?.key) {
-          router.go(path.key, path.params);
+          router.go(path.key, path.params)
         } else if (typeof path === 'string') {
-          router.goPath(path); // from deeplinks
+          router.goPath(path) // from deeplinks
         }
       }
       // else
       //   router.go()
 
       if (data.logEvent) {
-        const {category, action, label} = data.logEvent;
-        return ga?.('send', 'event', category, action, label);
+        const { category, action, label } = data.logEvent
+        return ga?.('send', 'event', category, action, label)
       }
-    };
+    }
 
-    portal.call('top.onData', function(e) {
-      console.log('top on data', e);
-      return routeHandler(e);
+    portal.call('top.onData', function (e) {
+      console.log('top on data', e)
+      return routeHandler(e)
     });
 
-    (Environment.isNativeApp() ?
-      portal.call('top.getData')
-    :
-      Promise.resolve(null))
-    .then(routeHandler)
-    .catch(function(err) {
-      console.log(err);
-      return router.go();}).then(function() {
-      portal.call('app.isLoaded');
+    (Environment.isNativeApp()
+      ? portal.call('top.getData')
+      : Promise.resolve(null))
+      .then(routeHandler)
+      .catch(function (err) {
+        console.log(err)
+        return router.go()
+      }).then(function () {
+        portal.call('app.isLoaded')
 
-      // untilStable hangs many seconds and the timeout (200ms) doesn't  work
-      if (model.wasCached()) {
-        return new Promise(resolve => // give time for exoid combinedStreams to resolve
-        // (dataStreams are cached, combinedStreams are technically async)
-        // so we don't get flicker or no data
-        setTimeout(resolve, 1)); // dropped from 300 to see if it causes any issues
+        // untilStable hangs many seconds and the timeout (200ms) doesn't  work
+        if (model.wasCached()) {
+          return new Promise(resolve => // give time for exoid combinedStreams to resolve
+          // (dataStreams are cached, combinedStreams are technically async)
+          // so we don't get flicker or no data
+            setTimeout(resolve, 1)) // dropped from 300 to see if it causes any issues
           // z.untilStable $app, {timeout: 200} # arbitrary
-      } else {
-        return null;
-      }}).then(() => requestsStream.pipe(rx.tap(function({path}) {
-      if (typeof window !== 'undefined' && window !== null) {
-        return ga?.('send', 'pageview', path);
-      }
-    })).subscribe());
+        } else {
+          return null
+        }
+      }).then(() => requestsStream.pipe(rx.tap(function ({ path }) {
+        if (typeof window !== 'undefined' && window !== null) {
+          return ga?.('send', 'pageview', path)
+        }
+      })).subscribe())
 
-      // nextTick prevents white flash, lets first render happen
-      // window.requestAnimationFrame ->
-      //   $$root = document.getElementById 'zorium-root'
-      //   $$root.parentNode.replaceChild root, $$root
+    // nextTick prevents white flash, lets first render happen
+    // window.requestAnimationFrame ->
+    //   $$root = document.getElementById 'zorium-root'
+    //   $$root.parentNode.replaceChild root, $$root
 
     // window.addEventListener 'resize', app.onResize
     // portal.call 'orientation.onChange', app.onResize
@@ -322,27 +337,27 @@ export default setup = function({$app, Lang, Model, colors, config}) {
     // else
     //   Promise.resolve null)
     return Promise.resolve(null)
-    .then(() => portal.call('app.onResume', function() {
+      .then(() => portal.call('app.onResume', function () {
       // console.log 'resume invalidate'
-      model.exoid.invalidateAll();
-      browser.resume();
-      if (Environment.isIos() && Environment.isNativeApp()) {
-        return portal.call('push.setBadgeNumber', {number: 0});
-      }
-  }));
-  };
+        model.exoid.invalidateAll()
+        browser.resume()
+        if (Environment.isIos() && Environment.isNativeApp()) {
+          return portal.call('push.setBadgeNumber', { number: 0 })
+        }
+      }))
+  }
 
   if ((document.readyState !== 'complete') &&
       !document.getElementById('zorium-root')) {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', init)
   } else {
-    init();
+    init()
   }
-  //############################
+  // ############################
   // ENABLE WEBPACK HOT RELOAD #
-  //############################
+  // ############################
 
   if (module.hot) {
-    return module.hot.accept();
+    return module.hot.accept()
   }
-};
+}

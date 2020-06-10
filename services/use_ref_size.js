@@ -1,43 +1,50 @@
-let useRefSize;
-import {useState, useMemo, useCallback, useLayoutEffect, useStream} from 'zorium';
-import * as Rx from 'rxjs';
+/* eslint-disable
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import { useState, useMemo, useCallback, useLayoutEffect, useStream } from 'zorium'
+import * as Rx from 'rxjs'
+let useRefSize
 
-const getSize = $$el => ({
-  width: $$el?.clientWidth || 0,
-  height: $$el?.clientHeight || 0
-});
+function getSize ($$el) {
+  return {
+    width: $$el?.clientWidth || 0,
+    height: $$el?.clientHeight || 0
+  }
+}
 
-export default useRefSize = function($$ref) {
-  const {sizeStream} = useMemo(() => ({
+export default useRefSize = function ($$ref) {
+  const { sizeStream } = useMemo(() => ({
     sizeStream: new Rx.BehaviorSubject(null)
   })
-  , []);
+  , [])
 
-  const onResize = useCallback(function() {
+  const onResize = useCallback(function () {
     if ($$ref?.current) {
-      return sizeStream.next(getSize($$ref.current));
+      return sizeStream.next(getSize($$ref.current))
     }
   }
-  , [$$ref]);
+  , [$$ref])
 
-  useLayoutEffect(function() {
-    onResize();
+  useLayoutEffect(function () {
+    onResize()
 
     if ((typeof ResizeObserver === 'function') && $$ref.current) {
-      const resizeObserver = new ResizeObserver(onResize);
-      resizeObserver.observe($$ref.current);
+      const resizeObserver = new ResizeObserver(onResize)
+      resizeObserver.observe($$ref.current)
 
-      return () => resizeObserver.disconnect($$ref.current);
+      return () => resizeObserver.disconnect($$ref.current)
     } else if ($$ref.current) {
-      window.addEventListener('resize', onResize);
-      return () => window.removeEventListener('resize', onResize);
+      window.addEventListener('resize', onResize)
+      return () => window.removeEventListener('resize', onResize)
     }
   }
-  , [$$ref]);
+  , [$$ref])
 
-  const {size} = useStream(() => ({
+  const { size } = useStream(() => ({
     size: sizeStream
-  }));
+  }))
 
-  return size;
-};
+  return size
+}

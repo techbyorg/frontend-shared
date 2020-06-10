@@ -1,11 +1,18 @@
-let $ripple;
-import {z, classKebab, useContext, useRef, useMemo} from 'zorium';
+/* eslint-disable
+    no-return-assign,
+    no-unused-vars,
+    prefer-const,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import { z, classKebab, useContext, useRef, useMemo } from 'zorium'
 
-import Environment from '../../services/environment';
-import context from '../../context';
+import Environment from '../../services/environment'
+import context from '../../context'
+let $ripple
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
 // adding to DOM directly is actually a little faster in this case
@@ -14,51 +21,51 @@ if (typeof window !== 'undefined' && window !== null) {
 
 // note that ripples are slow if network requestsStream are happening simultaneously
 
-const ANIMATION_TIME_MS = 350;
+const ANIMATION_TIME_MS = 350
 
-export default $ripple = function({color, isCircle, isCenter, onComplete, fadeIn}) {
-  const {colors} = useContext(context);
-  let $$ref = useRef();
+export default $ripple = function ({ color, isCircle, isCenter, onComplete, fadeIn }) {
+  const { colors } = useContext(context)
+  let $$ref = useRef()
 
-  const ripple = function(param) {
-    let mouseX, mouseY, x, y;
-    let $$ref, color, isCenter, onComplete, fadeIn;
-    if (param == null) { param = {}; }
-    ({$$ref, color, isCenter, mouseX, mouseY, onComplete, fadeIn} = param);
-    const $$wave = $$ref.querySelector('.wave');
+  function ripple (param) {
+    let mouseX, mouseY, x, y
+    let $$ref, color, isCenter, onComplete, fadeIn
+    if (param == null) { param = {} }
+    ({ $$ref, color, isCenter, mouseX, mouseY, onComplete, fadeIn } = param)
+    const $$wave = $$ref.querySelector('.wave')
 
     if (!$$wave) {
-      return;
+      return
     }
 
-    const {width, height, top, left} = $$ref.getBoundingClientRect();
+    const { width, height, top, left } = $$ref.getBoundingClientRect()
 
     if (isCenter) {
-      x = width / 2;
-      y = height / 2;
+      x = width / 2
+      y = height / 2
     } else {
-      x = mouseX - left;
-      y = mouseY - top;
+      x = mouseX - left
+      y = mouseY - top
     }
 
-    $$wave.style.top = y + 'px';
-    $$wave.style.left = x + 'px';
-    $$wave.style.backgroundColor = color;
-    $$wave.className = fadeIn 
-                       ? 'wave fade-in is-visible' 
-                       : 'wave is-visible';
+    $$wave.style.top = y + 'px'
+    $$wave.style.left = x + 'px'
+    $$wave.style.backgroundColor = color
+    $$wave.className = fadeIn
+      ? 'wave fade-in is-visible'
+      : 'wave is-visible'
 
-    return new Promise((resolve, reject) => setTimeout(function() {
-      onComplete?.();
-      resolve();
+    return new Promise((resolve, reject) => setTimeout(function () {
+      onComplete?.()
+      resolve()
       return setTimeout(() => $$wave.className = 'wave'
-      , 100);
+        , 100)
     } // give some time for onComplete to render
-    , ANIMATION_TIME_MS));
-  };
+    , ANIMATION_TIME_MS))
+  }
 
-  const onTouch = function(e) {
-    $$ref = e.target;
+  function onTouch (e) {
+    $$ref = e.target
     return ripple({
       $$ref,
       color,
@@ -67,14 +74,14 @@ export default $ripple = function({color, isCircle, isCenter, onComplete, fadeIn
       fadeIn,
       mouseX: e.clientX || e.touches?.[0]?.clientX,
       mouseY: e.clientY || e.touches?.[0]?.clientY
-    });
-  };
+    })
+  }
 
   return z('.z-ripple', {
     ref: $$ref,
-    className: classKebab({isCircle}),
+    className: classKebab({ isCircle }),
     ontouchstart: onTouch,
     onmousedown: Environment.isAndroid() ? null : onTouch
   },
-    z('.wave'));
-};
+  z('.wave'))
+}

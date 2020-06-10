@@ -1,57 +1,62 @@
-let $tapTabs;
-import {z, classKebab, useContext, useMemo, useStream} from 'zorium';
-import * as _ from 'lodash-es';
-import * as Rx from 'rxjs';
-import * as rx from 'rxjs/operators';
+/* eslint-disable
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
+import * as _ from 'lodash-es'
+import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
-import context from '../../context';
+import context from '../../context'
+let $tapTabs
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
-export default $tapTabs = function(props) {
-  let {selectedIndexStreams, selectedIndexStream, tabs, tabProps} = props;
-  const {router} = useContext(context);
+export default $tapTabs = function (props) {
+  let { selectedIndexStreams, selectedIndexStream, tabs, tabProps } = props
+  const { router } = useContext(context);
 
-  ({selectedIndexStream} = useMemo(() => ({
+  ({ selectedIndexStream } = useMemo(() => ({
     selectedIndexStream: selectedIndexStream || new Rx.BehaviorSubject(0)
   })
-  , []));
+  , []))
 
-  const {selectedIndex} = useStream(() => ({
+  const { selectedIndex } = useStream(() => ({
     selectedIndex:
       selectedIndexStreams?.pipe(rx.switchAll()) || selectedIndexStream
-  }));
+  }))
 
   return z('.z-tap-tabs',
     z('.menu',
       z('.container',
-        _.map(tabs, function({name, route}, i) {
-          const isSelected = selectedIndex === i;
+        _.map(tabs, function ({ name, route }, i) {
+          const isSelected = selectedIndex === i
 
           return router.linkIfHref(z('.tap-tab', {
-            className: classKebab({isSelected}),
+            className: classKebab({ isSelected }),
             href: route,
-            onclick() {
+            onclick () {
               if (selectedIndexStreams) {
-                return selectedIndexStreams.next(Rx.of(i));
+                return selectedIndexStreams.next(Rx.of(i))
               } else {
-                return selectedIndexStream.next(i);
+                return selectedIndexStream.next(i)
               }
             }
           },
-            name)
-          );
+          name)
+          )
         })
       )
     ),
 
     z('.current-tab',
       z('.container',
-        (selectedIndex != null) ?
-          z(tabs[selectedIndex].$el, tabProps) : undefined
+        (selectedIndex != null)
+          ? z(tabs[selectedIndex].$el, tabProps) : undefined
       )
     )
-  );
-};
+  )
+}

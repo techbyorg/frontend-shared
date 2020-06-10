@@ -1,83 +1,88 @@
-let $dialog;
-import {z, classKebab, createPortal, useContext, useEffect, useMemo, useRef} from 'zorium';
+/* eslint-disable
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import { z, classKebab, createPortal, useContext, useEffect, useMemo, useRef } from 'zorium'
+
+import $button from '../button'
+import $icon from '../icon'
+import { closeIconPath } from '../icon/paths'
+import context from '../../context'
+let $dialog
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
-import $button from '../button';
-import $icon from '../icon';
-import {closeIconPath} from '../icon/paths';
-import context from '../../context';
+const CLOSE_DELAY_MS = 450 // 0.45s for animation
 
-const CLOSE_DELAY_MS = 450; // 0.45s for animation
-
-export default $dialog = function(props) {
+export default $dialog = function (props) {
   const {
-          onClose
-        } = props,
-        val = props.$content,
-        $content = val != null ? val : '',
-        {
-          $title,
-          $actions,
-          isWide
-        } = props;
-  const {colors} = useContext(context);
+    onClose
+  } = props
+  const val = props.$content
+  const $content = val != null ? val : ''
+  const {
+    $title,
+    $actions,
+    isWide
+  } = props
+  const { colors } = useContext(context)
 
-  const $$ref = useRef();
+  const $$ref = useRef()
 
-  const {$$overlays} = useMemo(() => ({
+  const { $$overlays } = useMemo(() => ({
     $$overlays: document?.getElementById('overlays-portal')
   })
-  , []);
+  , [])
 
-  useEffect(function() {
-    setTimeout((() => $$ref.current.classList.add('is-mounted')), 0);
-    window.addEventListener('keydown', keyListener);
+  useEffect(function () {
+    setTimeout(() => $$ref.current.classList.add('is-mounted'), 0)
+    window.addEventListener('keydown', keyListener)
 
-    return () => window.removeEventListener('keydown', keyListener);
+    return () => window.removeEventListener('keydown', keyListener)
   }
-  , []);
+  , [])
 
-  const close = function() {
-    $$ref.current.classList.remove('is-mounted');
+  function close () {
+    $$ref.current.classList.remove('is-mounted')
     return setTimeout(() => onClose()
-    , CLOSE_DELAY_MS);
-  };
+      , CLOSE_DELAY_MS)
+  }
 
-  var keyListener = function(e) {
+  function keyListener (e) {
     if ((e.key === 'Escape') || (e.key === 'Esc') || (e.keyCode === 27)) {
-      e.preventDefault();
-      return close();
+      e.preventDefault()
+      return close()
     }
-  };
+  }
 
   return createPortal(
     z('.z-dialog', {
       ref: $$ref,
-      className: classKebab({isWide})
+      className: classKebab({ isWide })
     },
-      z('.backdrop', {
-        onclick: close
-      }),
+    z('.backdrop', {
+      onclick: close
+    }),
 
-      z('.dialog',
-        $title ?
-          z('.title',
-            $title,
-            z('.close',
-              z($icon, {
-                icon: closeIconPath,
-                color: colors.$bgText26,
-                onclick: close
-              }))) : undefined,
-        z('.content',
-          $content),
-        $actions ?
-          z('.actions', $actions) : undefined
-      )
+    z('.dialog',
+      $title
+        ? z('.title',
+          $title,
+          z('.close',
+            z($icon, {
+              icon: closeIconPath,
+              color: colors.$bgText26,
+              onclick: close
+            }))) : undefined,
+      z('.content',
+        $content),
+      $actions
+        ? z('.actions', $actions) : undefined
+    )
     ),
     $$overlays
-  );
-};
+  )
+}

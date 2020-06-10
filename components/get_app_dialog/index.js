@@ -1,19 +1,24 @@
-let $getAppDialog;
-import {z, useContext} from 'zorium';
+/* eslint-disable
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import { z, useContext } from 'zorium'
 
-import $button from '../button';
-import $dialog from '../dialog';
-import context from '../../context';
+import $button from '../button'
+import $dialog from '../dialog'
+import context from '../../context'
+let $getAppDialog
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
-export default $getAppDialog = function({onClose}) {
-  const {config, lang, portal} = useContext(context);
+export default $getAppDialog = function ({ onClose }) {
+  const { config, lang, portal } = useContext(context)
 
-  const iosAppUrl = config.IOS_APP_URL;
-  const googlePlayAppUrl = config.GOOGLE_PLAY_APP_URL;
+  const iosAppUrl = config.IOS_APP_URL
+  const googlePlayAppUrl = config.GOOGLE_PLAY_APP_URL
 
   return z('.z-get-app-dialog',
     z($dialog, {
@@ -22,21 +27,21 @@ export default $getAppDialog = function({onClose}) {
       $content:
         z('.z-get-app-dialog_dialog',
           z('.badge.ios', {
-            onclick() {
+            onclick () {
               return portal.call('browser.openWindow', {
                 url: iosAppUrl,
                 target: '_system'
               }
-              );
+              )
             }
           }),
           z('.badge.android', {
-            onclick() {
+            onclick () {
               return portal.call('browser.openWindow', {
                 url: googlePlayAppUrl,
                 target: '_system'
               }
-              );
+              )
             }
           }),
           z('.text',
@@ -50,5 +55,5 @@ export default $getAppDialog = function({onClose}) {
         )
     }
     )
-  );
-};
+  )
+}

@@ -1,12 +1,18 @@
-let $primaryTextarea;
-import {z, useContext} from 'zorium';
-import * as _ from 'lodash-es';
+/* eslint-disable
+    no-undef,
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import { z, useContext } from 'zorium'
+import * as _ from 'lodash-es'
 
-import $textaea from '../textarea';
-import context from '../../context';
+import $textaea from '../textarea'
+import context from '../../context'
+let $primaryTextarea
 
-export default $primaryTextarea = function(opts) {
-  const {colors} = useContext(context);
+export default $primaryTextarea = function (opts) {
+  const { colors } = useContext(context)
 
   return z('.z-primary-textarea',
     z($textarea, _.defaults(opts, {
@@ -21,5 +27,5 @@ export default $primaryTextarea = function(opts) {
         c700: colors.$bgText70,
         ink: colors.$bgText
       }
-    })));
-};
+    })))
+}

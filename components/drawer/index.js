@@ -1,3 +1,5 @@
+// TODO: This file was created by bulk-decaffeinate.
+// Sanity-check the conversion and remove this comment.
 let $drawer, IScroll;
 import {z, classKebab, useContext, useRef, useStream, useEffect, useMemo} from 'zorium';
 import * as rx from 'rxjs/operators';
@@ -59,14 +61,14 @@ export default $drawer = function(props) {
     const onStaticChange = isStatic => // sometimes get cannot get length of undefined for gotopage with this
     setTimeout(function() {
       if (!iScrollContainer && !isStatic) {
-        var checkIsReady = function() {
+        function checkIsReady() {
           const $$container = $$ref;
           if ($$container && $$container.clientWidth) {
             return initIScroll($$container);
           } else {
             return setTimeout(checkIsReady, 1000);
           }
-        };
+        }
 
         return checkIsReady();
       } else if (iScrollContainer && isStatic) {
@@ -88,7 +90,7 @@ export default $drawer = function(props) {
   , []);
 
 
-  const close = function(animationLengthMs) {
+  function close(animationLengthMs) {
     if (animationLengthMs == null) { animationLengthMs = 500; }
     try {
       if (side === 'right') {
@@ -99,9 +101,9 @@ export default $drawer = function(props) {
     } catch (err) {
       return console.log('caught err', err);
     }
-  };
+  }
 
-  var open = function(animationLengthMs) {
+  function open(animationLengthMs) {
     if (animationLengthMs == null) { animationLengthMs = 500; }
     try {
       if (side === 'right') {
@@ -112,9 +114,9 @@ export default $drawer = function(props) {
     } catch (err) {
       return console.log('caught err', err);
     }
-  };
+  }
 
-  var initIScroll = function($$container) {
+  function initIScroll($$container) {
     const iScrollContainer = new IScroll($$container, {
       scrollX: true,
       scrollY: false,
@@ -134,12 +136,14 @@ export default $drawer = function(props) {
     iScrollContainer.on('scrollStart', function() {
       isScrolling = true;
       const $$overlay = $$ref.current.querySelector('.overlay-tab');
-      var update = function() {
+
+      function update() {
         updateOpacity();
         if (isScrolling) {
           return window.requestAnimationFrame(update);
         }
-      };
+      }
+
       update();
       return updateOpacity();
     });
@@ -158,11 +162,10 @@ export default $drawer = function(props) {
         return onClose();
       }
     });
-  };
-
+  }
 
   // the scroll listener in IScroll (iscroll-probe.js) is really slow
-  var updateOpacity = function() {
+  function updateOpacity() {
     let opacity;
     if (side === 'right') {
       opacity = (-1 * iScrollContainer.x) / drawerWidth;
@@ -171,7 +174,7 @@ export default $drawer = function(props) {
     }
 
     return $$overlay.style.opacity = opacity * MAX_OVERLAY_OPACITY;
-  };
+  }
 
   // HACK: isStatic is null on first render for some reason
   // FIXME: is this still the case w/ zorium 3?

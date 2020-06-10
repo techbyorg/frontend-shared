@@ -1,37 +1,43 @@
-let $notifications;
-import {z, classKebab, useContext, useStream} from 'zorium';
-import * as _ from 'lodash-es';
-import * as rx from 'rxjs/operators';
+/* eslint-disable
+    no-undef,
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import { z, classKebab, useContext, useStream } from 'zorium'
+import * as _ from 'lodash-es'
+import * as rx from 'rxjs/operators'
 
-import $icon from '../icon';
-import $spinner from '../spinner';
-import DateService from '../../services/date';
-import context from '../../context';
+import $icon from '../icon'
+import $spinner from '../spinner'
+import DateService from '../../services/date'
+import context from '../../context'
+let $notifications
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
-export default $notifications = function() {
-  const {model, router, colors} = useContext(context);
+export default $notifications = function () {
+  const { model, router, colors } = useContext(context)
 
   useEffect(() => beforeUnmount
-  , []);
+    , [])
 
-  const {notifications} = useStream(() => ({
+  const { notifications } = useStream(() => ({
     notifications: model.notification.getAll().pipe(rx.map(notifications => _.map(notifications, notification => ({
       notification
     }))))
-  }));
+  }))
 
-  var beforeUnmount = function() {
-    model.exoid.invalidate('notifications.getAll', {});
-    return model.exoid.invalidate('notifications.getUnreadCount', {});
-  };
+  function beforeUnmount () {
+    model.exoid.invalidate('notifications.getAll', {})
+    return model.exoid.invalidate('notifications.getUnreadCount', {})
+  }
 
   return z('.z-notifications',
-    notifications && _.isEmpty(notifications) ?
-      z('.no-notifications',
+    notifications && _.isEmpty(notifications)
+      ? z('.no-notifications',
         z($notificationsIcon, {
           icon: 'notifications-none',
           size: '80px',
@@ -41,35 +47,34 @@ export default $notifications = function() {
         z('.message',
           'You\'re all caught up!')
       )
-    : notifications ?
-      _.map(notifications, function({notification}) {
-        const isUnread = !notification.isRead;
+      : notifications
+        ? _.map(notifications, function ({ notification }) {
+          const isUnread = !notification.isRead
 
-        return z('.notification', {
-          className: classKebab({isUnread}),
-          onclick() {
-            if (notification.data?.path) {
-              return router.go(
-                notification.data.path.key, notification.data.path.params,
-                {qs: notification.data.path.qs}
-              );
+          return z('.notification', {
+            className: classKebab({ isUnread }),
+            onclick () {
+              if (notification.data?.path) {
+                return router.go(
+                  notification.data.path.key, notification.data.path.params,
+                  { qs: notification.data.path.qs }
+                )
+              }
             }
-          }
-        },
+          },
           z('.icon',
             z($icon, {
               icon: '', // TODO
-              color: isUnread 
-                     ? colors.$secondaryMain 
-                     : colors.$bgText54
+              color: isUnread
+                ? colors.$secondaryMain
+                : colors.$bgText54
             }
             )
           ),
           z('.right',
             z('.title', `${notification.title}: ${notification.text}`),
             z('.time', DateService.fromNow(notification.time)))
-        );
-      })
-    :
-      z($spinner, {model}));
-};
+          )
+        })
+        : z($spinner, { model }))
+}

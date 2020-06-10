@@ -1,16 +1,21 @@
-const MAX_ERRORS_LOGGED = 5;
+/* eslint-disable
+    no-return-assign,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+const MAX_ERRORS_LOGGED = 5
 
 class Log {
-  constructor() {
-    this.init = this.init.bind(this);
-    this.errorsSent = 0;
+  constructor () {
+    this.init = this.init.bind(this)
+    this.errorsSent = 0
   }
 
-  init({apiUrl}) {
+  init ({ apiUrl }) {
     // Report errors to API_URL/log
     const postErrToServer = err => {
       if (this.errorsSent < MAX_ERRORS_LOGGED) {
-        this.errorsSent += 1;
+        this.errorsSent += 1
         return window.fetch(`${apiUrl}/log`, {
           method: 'POST',
           headers: {
@@ -21,24 +26,24 @@ class Log {
             trace: null, // trace
             error: JSON.stringify(err)
           })
-        }).catch(err => console?.log('logs post', err));
+        }).catch(err => console?.log('logs post', err))
       }
-    };
+    }
 
-    const oldOnError = window.onerror;
-    return window.onerror = function(message, file, line, column, error) {
+    const oldOnError = window.onerror
+    return window.onerror = function (message, file, line, column, error) {
       // if we log with `new Error` it's pretty pointless (gives error message that
       // just points to this line). if we pass the 5th argument (error), it breaks
       // on json.stringify
       // log.error error or new Error message
-      const err = {message, file, line, column};
-      postErrToServer(err);
+      const err = { message, file, line, column }
+      postErrToServer(err)
 
       if (oldOnError) {
-        return oldOnError(...arguments);
+        return oldOnError(...arguments)
       }
-    };
+    }
   }
 }
 
-export default new Log();
+export default new Log()

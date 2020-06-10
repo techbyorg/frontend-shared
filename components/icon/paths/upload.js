@@ -1,1 +1,3 @@
-export default 'M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z';
+// TODO: This file was created by bulk-decaffeinate.
+// Sanity-check the conversion and remove this comment.
+export default 'M9,16V10H5L12,3L19,10H15V16H9M5,20V18H19V20H5Z'

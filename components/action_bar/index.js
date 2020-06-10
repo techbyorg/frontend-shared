@@ -1,42 +1,48 @@
-let $actionBar;
-import {z, useContext} from 'zorium';
-import * as _ from 'lodash-es';
+/* eslint-disable
+    no-undef,
+    no-unused-vars,
+*/
+// TODO: This file was created by bulk-decaffeinate.
+// Fix any style issues and re-enable lint.
+import { z, useContext } from 'zorium'
+import * as _ from 'lodash-es'
 
-import $appBar from '../app_bar';
-import $icon from '../icon';
-import {ellipsisIconPath} from '../icon/paths';
-import context from '../../context';
+import $appBar from '../app_bar'
+import $icon from '../icon'
+import { ellipsisIconPath } from '../icon/paths'
+import context from '../../context'
+let $actionBar
 
 if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl');
+  require('./index.styl')
 }
 
-export default $actionBar = function(props) {
-  let color;
-  let {title, cancel, save, isSaving, isPrimary, isSecondary} = props;
-  const {lang, colors} = useContext(context);
+export default $actionBar = function (props) {
+  let color
+  let { title, cancel, save, isSaving, isPrimary, isSecondary } = props
+  const { lang, colors } = useContext(context)
 
   cancel = _.defaults(cancel, {
     icon: 'close',
     text: lang.get('general.cancel'),
-    onclick() { return null; }
-  });
+    onclick () { return null }
+  })
   save = _.defaults(save, {
     icon: 'check',
     text: lang.get('general.save')
     // onclick: -> null
-  });
+  })
 
   if (isPrimary) {
-    color = colors.$primaryMainText;
+    color = colors.$primaryMainText
     // bgColor = colors.$primaryMain
   } else if (isSecondary) {
-    color = colors.$secondaryMainText;
+    color = colors.$secondaryMainText
     // bgColor = colors.$secondaryMain
   } else {
-    color = colors.$header500Icon;
+    color = colors.$header500Icon
   }
-    // bgColor = colors.$header500
+  // bgColor = colors.$header500
 
   return z('.z-action-bar',
     z($appBar, {
@@ -49,25 +55,25 @@ export default $actionBar = function(props) {
           color,
           hasRipple: true,
           isTouchTarget: true,
-          onclick(e) {
-            e?.stopPropagation();
-            return cancel.onclick(e);
+          onclick (e) {
+            e?.stopPropagation()
+            return cancel.onclick(e)
           }
         }
         ),
       $topRightButton:
-        save?.onclick ?
-          z($icon, {
+        save?.onclick
+          ? z($icon, {
             icon: isSaving ? ellipsisIconPath : save.icon,
             color,
             hasRipple: true,
             isTouchTarget: true,
-            onclick(e) {
-              e?.stopPropagation();
-              return save.onclick(e);
+            onclick (e) {
+              e?.stopPropagation()
+              return save.onclick(e)
             }
           }
           ) : undefined,
       isFlat: true
-    }));
-};
+    }))
+}
