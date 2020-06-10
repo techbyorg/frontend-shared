@@ -94,7 +94,7 @@ export default $tabs = (props) ->
           iScrollContainer.x / iScrollContainer.scrollerWidth
         )
         xOffset = "#{xOffset}%"
-        $$selector?.style[transformProperty] = "translateX(#{xOffset})"
+        $$selector and selector.style[transformProperty] = "translateX(#{xOffset})"
 
     # the scroll listener in IScroll (iscroll-probe.js) is really slow
     isScrolling = false

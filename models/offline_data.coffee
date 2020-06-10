@@ -23,6 +23,6 @@ export default class OfflineDataModel
     @isRecording = false
     @exoid.getCacheStream().take(1).subscribe (cache) =>
       @exoid.enableInvalidation()
-      localStorage?.offlineCache = JSON.stringify cache
+      localStorage? and localStorage.offlineCache = JSON.stringify cache
       @statusBar.close()
     @portal.call 'cache.stopRecording'

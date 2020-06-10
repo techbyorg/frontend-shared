@@ -40,7 +40,7 @@ export default class Overlay
     @setData data # TODO: per-overlay data
 
     # prevent body scrolling while viewing menu
-    document?.body.style.overflow = 'hidden'
+    document.body.style.overflow = 'hidden'
 
   closeFromBackButton: (e) =>
     e.stopPropagation()
@@ -70,4 +70,4 @@ export default class Overlay
     else
       onCancel? response
 
-    document?.body.style.overflow = 'auto'
+    document.body.style.overflow = 'auto'

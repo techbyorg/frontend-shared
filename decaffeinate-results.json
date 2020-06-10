@@ -1,0 +1,774 @@
+[
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/app.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/action_bar/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/app_bar/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/avatar/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/base/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/bottom_bar/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/button/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/button_back/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/button_menu/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/checkbox/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/dialog/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/drawer/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/dropdown/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/dropdown_multiple/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/fab/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/formatted_text/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/get_app_dialog/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/head/fonts.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/head/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/accountCircle.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/add.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/addCircle.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/addFriend.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/arrowDown.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/arrowRight.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/arrowUp.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/back.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/block.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/bold.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/briefcase.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/bulletList.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/calendar.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/channels.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/chat.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/chatBubble.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/check.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/chevronDown.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/chevronLeft.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/chevronRight.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/chevronUp.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/clock.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/close.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/comment.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/copy.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/creditCard.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/delete.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/dev.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/donate.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/download.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/edit.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/editOutline.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/ellipsis.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/email.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/entity.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/expandLess.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/expandMore.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/eye.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/facebook.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/filter.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/flag.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/friendHeart.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/friends.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/get.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/gifs.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/give.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/hashtag.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/heart.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/heartOutline.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/help.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/home.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/image.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/info.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/instagram.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/ipBan.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/italic.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/layers.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/location.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/lock.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/menu.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/mod.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/notifications.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/offTopic.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/open.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/overflow.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/pdf.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/permaBan.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/photoAdd.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/pin.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/pinOff.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/pms.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/profile.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/refresh.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/reply.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/rss.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/search.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/send.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/settings.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/share.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/star.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/starHalf.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/starOutline.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/stickers.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/subtractCircle.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/swap.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/text.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/thumbDown.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/thumbUp.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/twitter.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/underline.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/upload.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/usd.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/video.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/videoAdd.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/warning.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/water.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/web.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/work.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths/youtube.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/icon/paths.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/input/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/input_old/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/input_range/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/masonry_grid/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/notifications/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/policies/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/positioned_overlay/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/primary_input/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/primary_textarea/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/privacy/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/profile_dialog/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/push_notifications_sheet/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/rating/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/request_rating_dialog/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/ripple/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/sheet/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/sign_in/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/slide_steps/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/spinner/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/step_bar/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/table/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/tabs/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/tabs_bar/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/tag/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/tags/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/tap_tabs/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/textarea/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/toggle/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/tooltip/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/tooltip_positioner/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/tos/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/components/upload_overlay/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/context.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/models/auth.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/models/drawer.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/models/image.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/models/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/models/login_link.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/models/offline_data.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/models/overlay.coffee",
+    "error": "Command failed: ../../../misc_git/decaffeinate/bin/decaffeinate  --disable-suggestion-comment --use-optional-chaining < /home/austin/dev/tech-by/frontend-shared/models/overlay.coffee\nstdin: AddVariableDeclarationsStage failed to parse: Invalid left-hand side in assignment expression (98:11)\n   96 |     }\n   97 | \n>  98 |     return document?.body.style.overflow = 'auto';\n      |            ^\n   99 |   }\n  100 | };\n\n"
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/models/status_bar.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/models/time.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/models/tooltip.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/models/user.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/pages/login_link/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/pages/policies/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/pages/privacy/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/pages/sign_in/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/pages/tos/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/pages/unsubscribe_email/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/pages/verify_email/index.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/polyfill.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/service_worker/cache.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/service_worker/portal.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/service_worker/push.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/cookie.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/date.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/environment.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/format.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/language.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/log.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/portal.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/push.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/router.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/semver.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/service_worker.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/setup_client.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/setup_server.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/use_meta.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/use_on_click_outside.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/use_ref_size.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/services/window.coffee",
+    "error": null
+  },
+  {
+    "path": "/home/austin/dev/tech-by/frontend-shared/shared_config.coffee",
+    "error": null
+  }
+]

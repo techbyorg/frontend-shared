@@ -25,10 +25,12 @@ export default class Model
     serverHeaders ?= {}
 
     cache = window?[SERIALIZATION_KEY] or {}
-    console.log 'using cache', cache
-    window?[SERIALIZATION_KEY] = null
-    # maybe this means less memory used for long caches?
-    document?.querySelector('.model')?.innerHTML = ''
+    if window?
+      console.log 'using cache', cache
+      window[SERIALIZATION_KEY] = null
+      # maybe this means less memory used for long caches
+      $$el = document.querySelector('.model')
+      $$el and $$el.innerHTML = ''
 
     # isExpired = if serialization.expires?
     #   # Because of potential clock skew we check around the value
