@@ -1,16 +1,25 @@
-import * as Rx from 'rxjs'
+import * as Rx from 'rxjs';
 
-export default class StatusBar
-  constructor: ->
-    @_data = new Rx.BehaviorSubject null
+export default class StatusBar {
+  constructor() {
+    this.getData = this.getData.bind(this);
+    this.open = this.open.bind(this);
+    this.close = this.close.bind(this);
+    this._data = new Rx.BehaviorSubject(null);
+  }
 
-  getData: =>
-    @_data
+  getData() {
+    return this._data;
+  }
 
-  open: (data) =>
-    @_data.next data
-    if data?.timeMs
-      setTimeout @close, data.timeMs
+  open(data) {
+    this._data.next(data);
+    if (data?.timeMs) {
+      return setTimeout(this.close, data.timeMs);
+    }
+  }
 
-  close: =>
-    @_data.next null
+  close() {
+    return this._data.next(null);
+  }
+}

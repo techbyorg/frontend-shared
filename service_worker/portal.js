@@ -1,46 +1,64 @@
-import PortalGun from 'portal-gun'
+import PortalGun from 'portal-gun';
 
-export default class Portal
-  constructor: ({@cache}) ->
-    @portal = new PortalGun()
+export default class Portal {
+  constructor({cache}) {
+    this.listen = this.listen.bind(this);
+    this.topOnData = this.topOnData.bind(this);
+    this.pushSetContextId = this.pushSetContextId.bind(this);
+    this.deleteHtmlCache = this.deleteHtmlCache.bind(this);
+    this.startRecording = this.startRecording.bind(this);
+    this.stopRecording = this.stopRecording.bind(this);
+    this.getSizeByCacheName = this.getSizeByCacheName.bind(this);
+    this.clearByCacheName = this.clearByCacheName.bind(this);
+    this.cache = cache;
+    this.portal = new PortalGun();
 
-    # TODO: set fn for all clients. need to update portal-gun to handle
-    # responding to all clients better
-    @onPushFn = null
-    @contextId = null
+    // TODO: set fn for all clients. need to update portal-gun to handle
+    // responding to all clients better
+    this.onPushFn = null;
+    this.contextId = null;
+  }
 
-  listen: =>
-    @portal.listen()
-    @portal.on 'top.onData', @topOnData
-    @portal.on 'push.setContextId', @pushSetContextId
-    @portal.on 'cache.deleteHtmlCache', @deleteHtmlCache
-    @portal.on 'cache.startRecording', @startRecording
-    @portal.on 'cache.stopRecording', @stopRecording
-    @portal.on 'cache.getSizeByCacheName', @getSizeByCacheName
-    @portal.on 'cache.clearByCacheName', @clearByCacheName
-    @portal.on 'cache.getVersion', ->
-      Promise.resolve '|HASH|'
-    # portal.on 'cache.onUpdateAvailable', onUpdateAvailable
+  listen() {
+    this.portal.listen();
+    this.portal.on('top.onData', this.topOnData);
+    this.portal.on('push.setContextId', this.pushSetContextId);
+    this.portal.on('cache.deleteHtmlCache', this.deleteHtmlCache);
+    this.portal.on('cache.startRecording', this.startRecording);
+    this.portal.on('cache.stopRecording', this.stopRecording);
+    this.portal.on('cache.getSizeByCacheName', this.getSizeByCacheName);
+    this.portal.on('cache.clearByCacheName', this.clearByCacheName);
+    return this.portal.on('cache.getVersion', () => Promise.resolve('|HASH|'));
+  }
+    // portal.on 'cache.onUpdateAvailable', onUpdateAvailable
 
-  topOnData: (fn) =>
-    @onPushFn = fn
+  topOnData(fn) {
+    return this.onPushFn = fn;
+  }
 
-  pushSetContextId: (options) =>
-    @contextId = options.contextId
+  pushSetContextId(options) {
+    return this.contextId = options.contextId;
+  }
 
-  deleteHtmlCache: =>
-    console.log 'portal update cache', "html:#{@cache.cachesFiles.html.version}"
-    cache = @cache.cachesFiles.html
-    @cache.updateCache cache, 'html'
+  deleteHtmlCache() {
+    console.log('portal update cache', `html:${this.cache.cachesFiles.html.version}`);
+    const cache = this.cache.cachesFiles.html;
+    return this.cache.updateCache(cache, 'html');
+  }
 
-  startRecording: =>
-    @cache.isRecording = true
+  startRecording() {
+    return this.cache.isRecording = true;
+  }
 
-  stopRecording: =>
-    @cache.isRecording = false
+  stopRecording() {
+    return this.cache.isRecording = false;
+  }
 
-  getSizeByCacheName: ({cacheName}) =>
-    @cache.getSizeByCacheName cacheName
+  getSizeByCacheName({cacheName}) {
+    return this.cache.getSizeByCacheName(cacheName);
+  }
 
-  clearByCacheName: ({cacheName}) =>
-    @cache.clearByCacheName cacheName
+  clearByCacheName({cacheName}) {
+    return this.cache.clearByCacheName(cacheName);
+  }
+}

@@ -1,96 +1,123 @@
-import {z, classKebab, useContext, useMemo, useRef, useStream} from 'zorium'
-import * as _ from 'lodash-es'
-import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
+let $dropdown;
+import {z, classKebab, useContext, useMemo, useRef, useStream} from 'zorium';
+import * as _ from 'lodash-es';
+import * as Rx from 'rxjs';
+import * as rx from 'rxjs/operators';
 
-import $icon from '../icon'
-import $positionedOverlay from '../positioned_overlay'
-import {chevronDownIconPath} from '../icon/paths'
-import context from '../../context'
+import $icon from '../icon';
+import $positionedOverlay from '../positioned_overlay';
+import {chevronDownIconPath} from '../icon/paths';
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $dropdown = (props) ->
-  {valueStreams, valueStream, errorStream, options, $$parentRef, isPrimary,
-    anchor = 'top-left', isDisabled = false} = props
-  {colors} = useContext context
+export default $dropdown = function(props) {
+  let isOpen, isOpenStream, selectedOption, selectedOptionStream, value;
+  let {
+        valueStreams,
+        valueStream,
+        errorStream,
+        options,
+        $$parentRef,
+        isPrimary
+      } = props,
+      val = props.anchor,
+      anchor = val != null ? val : 'top-left',
+      val1 = props.isDisabled,
+      isDisabled = val1 != null ? val1 : false;
+  const {colors} = useContext(context);
 
-  $$ref = useRef()
+  const $$ref = useRef();
 
-  {valueStream, selectedOptionStream, isOpenStream} = useMemo ->
-    {
-      valueStream: valueStream or new Rx.ReplaySubject 1
-      selectedOptionStream: valueStream
-      isOpenStream: new Rx.BehaviorSubject false
+  ({valueStream, selectedOptionStream, isOpenStream} = useMemo(() => ({
+    valueStream: valueStream || new Rx.ReplaySubject(1),
+    selectedOptionStream: valueStream,
+    isOpenStream: new Rx.BehaviorSubject(false)
+  })
+  , []));
+
+  ({value, selectedOption, isOpen, options} = useStream(function() {
+    _.valueStream = valueStreams?.pipe(switchAll()) || valueStream;
+    return {
+      value: _.valueStream,
+      selectedOption: _.valueStream.pipe(rx.map(value => _.find(options, {value: `${value}`}))),
+      error: errorStream,
+      isOpen: isOpenStream,
+      options
+    };
+  }));
+
+  console.log('dropdown val', value);
+
+  const setValue = function(value) {
+    if (valueStreams) {
+      return valueStreams.next(Rx.of(value));
+    } else {
+      return valueStream.next(value);
     }
-  , []
+  };
 
-  {value, selectedOption, isOpen, options} = useStream ->
-    _.valueStream = valueStreams?.pipe(switchAll()) or valueStream
-    value: _.valueStream
-    selectedOption: _.valueStream.pipe rx.map (value) ->
-      _.find options, {value: "#{value}"}
-    error: errorStream
-    isOpen: isOpenStream
-    options: options
+  const toggle = () => isOpenStream.next(!isOpen);
 
-  console.log 'dropdown val', value
-
-  setValue = (value) ->
-    if valueStreams
-      valueStreams.next Rx.of value
-    else
-      valueStream.next value
-
-  toggle = ->
-    isOpenStream.next not isOpen
-
-  z '.z-dropdown', {
-    ref: $$ref
-    className: classKebab {
-      hasValue: value isnt ''
-      isPrimary
-      isDisabled
-      isOpen
-      isError: error?
-    }
+  return z('.z-dropdown', {
+    ref: $$ref,
+    className: classKebab({
+      hasValue: value !== '',
+      isPrimary,
+      isDisabled,
+      isOpen,
+      isError: (typeof error !== 'undefined' && error !== null)
+    })
   },
-    z '.wrapper', {
-      onclick: ->
-        toggle()
-    }
-    z '.current', {
+    z('.wrapper', {
+      onclick() {
+        return toggle();
+      }
+    }),
+    z('.current', {
       onclick: toggle
     },
-      z '.text',
-        selectedOption?.text
-      z '.arrow',
-        z $icon,
-          icon: chevronDownIconPath
-          color: if isPrimary \
-                 then colors.$secondaryMainText \
-                 else colors.$bgText
+      z('.text',
+        selectedOption?.text),
+      z('.arrow',
+        z($icon, {
+          icon: chevronDownIconPath,
+          color: isPrimary 
+                 ? colors.$secondaryMainText 
+                 : colors.$bgText
+        }
+        )
+      )
+    ),
 
-    if isOpen
-      z $positionedOverlay,
-        onClose: ->
-          isOpenStream.next false
-        $$targetRef: $$ref
-        fillTargetWidth: true
-        anchor: anchor
-        zIndex: 999
-        $$parentRef: $$parentRef
+    isOpen ?
+      z($positionedOverlay, {
+        onClose() {
+          return isOpenStream.next(false);
+        },
+        $$targetRef: $$ref,
+        fillTargetWidth: true,
+        anchor,
+        zIndex: 999,
+        $$parentRef,
         $content:
-          z '.z-dropdown_options',
-            _.map options, (option) ->
-              z 'label.option', {
-                className: classKebab {isSelected: "#{value}" is option.value}
-                onclick: ->
-                  setValue option.value
-                  toggle()
-              },
-                z '.text',
-                  option.text
-    if error?
-      z '.error', error
+          z('.z-dropdown_options',
+            _.map(options, option => z('label.option', {
+              className: classKebab({isSelected: `${value}` === option.value}),
+              onclick() {
+                setValue(option.value);
+                return toggle();
+              }
+            },
+              z('.text',
+                option.text)
+            ))
+          )
+      }
+      ) : undefined,
+    (typeof error !== 'undefined' && error !== null) ?
+      z('.error', error) : undefined
+  );
+};

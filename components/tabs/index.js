@@ -1,182 +1,211 @@
-import {z, classKebab, useContext, useEffect, useMemo, useRef, useStream} from 'zorium'
-import * as _ from 'lodash-es'
-import * as Rx from 'rxjs'
+let $tabs, IScroll;
+import {z, classKebab, useContext, useEffect, useMemo, useRef, useStream} from 'zorium';
+import * as _ from 'lodash-es';
+import * as Rx from 'rxjs';
 
-import $tabsBar from '../../components/tabs_bar'
-import context from '../../context'
+import $tabsBar from '../../components/tabs_bar';
+import context from '../../context';
 
-if window?
-  IScroll = require 'iscroll/build/iscroll-lite-snap-zoom.js'
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  IScroll = require('iscroll/build/iscroll-lite-snap-zoom.js');
+  require('./index.styl');
+}
 
-TRANSITION_TIME_MS = 500 # 0.5s
+const TRANSITION_TIME_MS = 500; // 0.5s
 
-# FIXME: i don't think this will actually unsub mountDisposable?
-export default $tabs = (props) ->
-  {selectedIndexStream, hideTabBarStream,
+// FIXME: i don't think this will actually unsub mountDisposable?
+export default $tabs = function(props) {
+  let hideTabBar, isPaused, isPausedStream, selectedIndex;
+  let {selectedIndexStream, hideTabBarStream,
     disableDeceleration, deferTabLoads, tabs, barColor, barBgColor,
     barInactiveColor, isBarFixed, isBarFlat, isBarArrow, barTabWidth,
-    barTabHeight, windowSize, vDomKey, isPrimary} = props
-  {browser} = useContext context
+    barTabHeight, windowSize, vDomKey, isPrimary} = props;
+  const {browser} = useContext(context);
 
-  $$ref = useRef()
+  const $$ref = useRef();
 
-  {selectedIndexStream, isPausedStream} = useMemo ->
-    {
-      selectedIndexStream: selectedIndexStream or new Rx.BehaviorSubject 0
-      isPausedStream: new Rx.BehaviorSubject false
-    }
-  , []
+  ({selectedIndexStream, isPausedStream} = useMemo(() => ({
+    selectedIndexStream: selectedIndexStream || new Rx.BehaviorSubject(0),
+    isPausedStream: new Rx.BehaviorSubject(false)
+  })
+  , []));
 
-  transformProperty = browser.getTransformProperty()
-  transitionTime = TRANSITION_TIME_MS
+  const transformProperty = browser.getTransformProperty();
+  let transitionTime = TRANSITION_TIME_MS;
 
 
-  useEffect ($$ref) ->
-    mountDisposable = null
-    iScrollContainer = null
-    loadedIndices = []
+  useEffect(function($$ref) {
+    const mountDisposable = null;
+    const iScrollContainer = null;
+    let loadedIndices = [];
 
-    checkIsReady = ->
-      $$container = $$ref?.querySelector('.z-tabs > .content > .tabs-scroller')
-      if $$container and $$container.clientWidth
-        initIScroll $$container, {
+    var checkIsReady = function() {
+      const $$container = $$ref?.querySelector('.z-tabs > .content > .tabs-scroller');
+      if ($$container && $$container.clientWidth) {
+        return initIScroll($$container, {
           mountDisposable, iScrollContainer, loadedIndices
-        }
-      else
-        setTimeout checkIsReady, 1000
+        });
+      } else {
+        return setTimeout(checkIsReady, 1000);
+      }
+    };
 
-    checkIsReady()
+    checkIsReady();
 
-    return ->
-      loadedIndices = []
-      mountDisposable?.unsubscribe()
-      iScrollContainer?.destroy()
-  , []
+    return function() {
+      loadedIndices = [];
+      mountDisposable?.unsubscribe();
+      return iScrollContainer?.destroy();
+    };
+  }
+  , []);
 
-  {selectedIndex, hideTabBar, isPaused, windowSize} = useStream ->
-    selectedIndex: selectedIndexStream
-    hideTabBar: hideTabBarStream
-    isPaused: isPausedStream
+  ({selectedIndex, hideTabBar, isPaused, windowSize} = useStream(() => ({
+    selectedIndex: selectedIndexStream,
+    hideTabBar: hideTabBarStream,
+    isPaused: isPausedStream,
     windowSize: browser.getSize()
+  })));
 
-  # FIXME: have these callable by parent (ref, see checkbox component for ex)
-  disableTransition = -> transitionTime = 0
+  // FIXME: have these callable by parent (ref, see checkbox component for ex)
+  const disableTransition = () => transitionTime = 0;
 
-  enableTransition = -> transitionTime = TRANSITION_TIME_MS
+  const enableTransition = () => transitionTime = TRANSITION_TIME_MS;
 
-  toggle = (mode) ->
-    if mode is 'enable' and isPaused
-      iScrollContainer?.enable()
-      isPausedStream.next false
-    else if mode is 'disable' and not isPaused
-      iScrollContainer?.disable()
-      isPausedStream.next true
+  const toggle = function(mode) {
+    if ((mode === 'enable') && isPaused) {
+      iScrollContainer?.enable();
+      return isPausedStream.next(false);
+    } else if ((mode === 'disable') && !isPaused) {
+      iScrollContainer?.disable();
+      return isPausedStream.next(true);
+    }
+  };
 
-  initIScroll = ($$container) ->
-    iScrollContainer = new IScroll $$container, {
-      scrollX: true
-      scrollY: false
-      eventPassthrough: true
-      bounce: false
-      snap: '.iscroll-tab'
-      # when disabled, bounce anim is done by our transitions and there
-      # is no momentum. fast swiping through photo gallery breaks with
-      # defaul deceleration
-      deceleration: if disableDeceleration then 1 else 0.002
+  var initIScroll = function($$container) {
+    let $$selector, mountDisposable, updateSelectorPosition;
+    const iScrollContainer = new IScroll($$container, {
+      scrollX: true,
+      scrollY: false,
+      eventPassthrough: true,
+      bounce: false,
+      snap: '.iscroll-tab',
+      // when disabled, bounce anim is done by our transitions and there
+      // is no momentum. fast swiping through photo gallery breaks with
+      // defaul deceleration
+      deceleration: disableDeceleration ? 1 : 0.002
+    });
+
+    if (!hideTabBar) {
+      $$selector = $el?.querySelector('.z-tabs-bar .selector');
+      updateSelectorPosition = function() {
+        // updating state and re-rendering every time is way too slow
+        let xOffset = -100 * iScrollContainer.pages.length * (
+          iScrollContainer.x / iScrollContainer.scrollerWidth
+        );
+        xOffset = `${xOffset}%`;
+        return $$selector && (selector.style[transformProperty] = `translateX(${xOffset})`);
+      };
     }
 
-    unless hideTabBar
-      $$selector = $el?.querySelector '.z-tabs-bar .selector'
-      updateSelectorPosition = ->
-        # updating state and re-rendering every time is way too slow
-        xOffset = -100 * iScrollContainer.pages.length * (
-          iScrollContainer.x / iScrollContainer.scrollerWidth
-        )
-        xOffset = "#{xOffset}%"
-        $$selector and selector.style[transformProperty] = "translateX(#{xOffset})"
-
-    # the scroll listener in IScroll (iscroll-probe.js) is really slow
-    isScrolling = false
-    iScrollContainer.on 'scrollStart', ->
-      isScrolling = true
-      unless hideTabBar
-        $$selector = document.querySelector '.z-tabs-bar .selector'
-        update = ->
-          updateSelectorPosition()
-          if isScrolling
-            window.requestAnimationFrame update
-        update()
-        updateSelectorPosition()
-
-    iScrollContainer.on 'scrollEnd', ->
-      isScrolling = false
-
-      newIndex = iScrollContainer.currentPage.pageX
-      # landing on new tab
-      if selectedIndex isnt newIndex
-        selectedIndexStream.next newIndex
-
-    mountDisposable = selectedIndexStream.do((index) ->
-      loadedIndices.push index
-      if iScrollContainer.pages?[index]
-        iScrollContainer.goToPage index, 0, transitionTime
-      unless hideTabBar
-        $$selector = document.querySelector '.z-tabs-bar .selector'
-        updateSelectorPosition()
-    ).subscribe()
-
-  tabs ?= [{$el: ''}]
-  x = iScrollContainer?.x or -1 * selectedIndex * (windowSize?.width or 0)
-
-  vDomKey = "#{vDomKey}-tabs-#{tabs?.length}"
-  isBarFixed ?= true
-  isBarFlat ?= true
-
-  z '.z-tabs', {
-    rel: $$ref
-    className: classKebab {isBarFixed}
-    key: vDomKey
-    style:
-      maxWidth: "#{windowSize.width}px"
-  },
-    z '.content',
-      unless hideTabBar
-        z '.tabs-bar',
-          z $tabsBar, {
-            selectedIndexStream
-            isFixed: isBarFixed
-            isFlat: isBarFlat
-            isArrow: isBarArrow
-            tabWidth: barTabWidth
-            tabHeight: barTabHeight
-            color: barColor
-            inactiveColor: barInactiveColor
-            bgColor: barBgColor
-            isPrimary: isPrimary
-            items: tabs
+    // the scroll listener in IScroll (iscroll-probe.js) is really slow
+    let isScrolling = false;
+    iScrollContainer.on('scrollStart', function() {
+      isScrolling = true;
+      if (!hideTabBar) {
+        $$selector = document.querySelector('.z-tabs-bar .selector');
+        var update = function() {
+          updateSelectorPosition();
+          if (isScrolling) {
+            return window.requestAnimationFrame(update);
           }
-      z '.tabs-scroller', {
+        };
+        update();
+        return updateSelectorPosition();
+      }
+    });
+
+    iScrollContainer.on('scrollEnd', function() {
+      isScrolling = false;
+
+      const newIndex = iScrollContainer.currentPage.pageX;
+      // landing on new tab
+      if (selectedIndex !== newIndex) {
+        return selectedIndexStream.next(newIndex);
+      }
+    });
+
+    return mountDisposable = selectedIndexStream.do(function(index) {
+      loadedIndices.push(index);
+      if (iScrollContainer.pages?.[index]) {
+        iScrollContainer.goToPage(index, 0, transitionTime);
+      }
+      if (!hideTabBar) {
+        $$selector = document.querySelector('.z-tabs-bar .selector');
+        return updateSelectorPosition();
+      }
+    }).subscribe();
+  };
+
+  if (tabs == null) { tabs = [{$el: ''}]; }
+  const x = iScrollContainer?.x || (-1 * selectedIndex * (windowSize?.width || 0));
+
+  vDomKey = `${vDomKey}-tabs-${tabs?.length}`;
+  if (isBarFixed == null) { isBarFixed = true; }
+  if (isBarFlat == null) { isBarFlat = true; }
+
+  return z('.z-tabs', {
+    rel: $$ref,
+    className: classKebab({isBarFixed}),
+    key: vDomKey,
+    style: {
+      maxWidth: `${windowSize.width}px`
+    }
+  },
+    z('.content',
+      !hideTabBar ?
+        z('.tabs-bar',
+          z($tabsBar, {
+            selectedIndexStream,
+            isFixed: isBarFixed,
+            isFlat: isBarFlat,
+            isArrow: isBarArrow,
+            tabWidth: barTabWidth,
+            tabHeight: barTabHeight,
+            color: barColor,
+            inactiveColor: barInactiveColor,
+            bgColor: barBgColor,
+            isPrimary,
+            items: tabs
+          })) : undefined,
+      z('.tabs-scroller', {
         key: vDomKey
       },
-        z '.tabs', {
-          style:
-            minWidth: "#{(100 * tabs.length)}%"
-            # v-dom sometimes changes up the DOM node we're using when the
-            # page changes, then back to this page. when that happens,
-            # translate x is 0 initially even though iscroll might realize
-            # it's actually something other than 0. since iscroll uses
-            # css transitions, it causes the page to swipe in, which looks bad
-            # This fixes that
-            "#{transformProperty}": "translate(#{x}px, 0px) translateZ(0px)"
-            # webkitTransform: "translate(#{x}px, 0px) translateZ(0px)"
+        z('.tabs', {
+          style: {
+            minWidth: `${(100 * tabs.length)}%`,
+            // v-dom sometimes changes up the DOM node we're using when the
+            // page changes, then back to this page. when that happens,
+            // translate x is 0 initially even though iscroll might realize
+            // it's actually something other than 0. since iscroll uses
+            // css transitions, it causes the page to swipe in, which looks bad
+            // This fixes that
+            [transformProperty]: `translate(${x}px, 0px) translateZ(0px)`
+          }
+            // webkitTransform: "translate(#{x}px, 0px) translateZ(0px)"
         },
-          _.map tabs, ({$el}, i) ->
-            z '.iscroll-tab', {
-              style:
-                width: "#{(100 / tabs.length)}%"
-            },
-              if not deferTabLoads or (
-                i is selectedIndex or loadedIndices.indexOf(i) isnt -1
-              )
-                $el
+          _.map(tabs, ({$el}, i) => z('.iscroll-tab', {
+            style: {
+              width: `${(100 / tabs.length)}%`
+            }
+          },
+            !deferTabLoads || (
+              (i === selectedIndex) || (loadedIndices.indexOf(i) !== -1)
+            ) ?
+              $el : undefined
+          ))
+        )
+      )
+    )
+  );
+};

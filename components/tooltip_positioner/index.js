@@ -1,95 +1,112 @@
-import {z, useContext, useEffect, useRef, useMemo, useStream} from 'zorium'
-import * as _ from 'lodash-es'
-import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
+let $tooltipPositioner;
+import {z, useContext, useEffect, useRef, useMemo, useStream} from 'zorium';
+import * as _ from 'lodash-es';
+import * as Rx from 'rxjs';
+import * as rx from 'rxjs/operators';
 
-import $tooltip from '../tooltip'
-import context from '../../context'
+import $tooltip from '../tooltip';
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-# this shows the main tooltip which is rendered in app.coffee
-# if we render it here, it has issues with iscroll (having a position: fixed
-# inside a transform)
+// this shows the main tooltip which is rendered in app.coffee
+// if we render it here, it has issues with iscroll (having a position: fixed
+// inside a transform)
 
-# FIXME: move this somewhere where it can be accessed by other ocmponents
-TOOLTIPS =
-  placeSearch:
+// FIXME: move this somewhere where it can be accessed by other ocmponents
+const TOOLTIPS = {
+  placeSearch: {
     prereqs: null
-  mapLayers:
+  },
+  mapLayers: {
     prereqs: ['placeSearch']
-  mapTypes:
+  },
+  mapTypes: {
     prereqs: ['mapLayers']
-  mapFilters:
+  },
+  mapFilters: {
     prereqs: ['mapTypes']
-  placeTooltip:
+  },
+  placeTooltip: {
     prereqs: null
-  itemGuides:
+  },
+  itemGuides: {
     prereqs: null
+  }
+};
 
-export default $tooltipPositioner = (props) ->
-  unless window? # could also return right away if cookie exists for perf
-    return
-  {model, isVisibleStream, offset, key, anchor, $title, $content,
-    zIndex} = props
-  {cookie, model} = useContext context
+export default $tooltipPositioner = function(props) {
+  let cookie, shouldBeShownStream;
+  if (typeof window === 'undefined' || window === null) { // could also return right away if cookie exists for perf
+    return;
+  }
+  let {model, isVisibleStream, offset, key, anchor, $title, $content,
+    zIndex} = props;
+  ({cookie, model} = useContext(context));
 
-  $$ref = useRef()
+  const $$ref = useRef();
 
-  {isVisibleStream, shouldBeShownStream} = useMemo ->
-    {
-      isVisibleStream: isVisibleStream or new Rx.BehaviorSubject false
-      shouldBeShownStream: cookie.getStream().pipe(
-        rx.map (cookies) ->
-          completed = cookies.completedTooltips?.split(',') or []
-          isCompleted = completed.indexOf(key) isnt -1
-          prereqs = TOOLTIPS[key]?.prereqs
-          not isCompleted and _.every prereqs, (prereq) ->
-            completed.indexOf(prereq) isnt -1
-        rx.publishReplay(1)
-        rx.refCount()
-      )
-    }
+  ({isVisibleStream, shouldBeShownStream} = useMemo(() => ({
+    isVisibleStream: isVisibleStream || new Rx.BehaviorSubject(false),
 
-  useEffect ->
-    isShown = false
-    disposable = shouldBeShownStream.subscribe (shouldBeShown) ->
-      # TODO: show main page tooltips when closing overlayPage?
-      # one option is to have model.tooltip store all visible tooltips
-      if shouldBeShown and not isShown
-        isShown = true
-        # despite having this, ios still calls this twice, hence the flag above
-        disposable?.unsubscribe()
-        setTimeout ->
-          checkIsReady = ->
-            if $$ref and $$ref.current.clientWidth
-              _.show $$ref
-            else
-              setTimeout checkIsReady, 100
-          checkIsReady()
-        , 0 # give time for re-render...
+    shouldBeShownStream: cookie.getStream().pipe(
+      rx.map(function(cookies) {
+        const completed = cookies.completedTooltips?.split(',') || [];
+        const isCompleted = completed.indexOf(key) !== -1;
+        const prereqs = TOOLTIPS[key]?.prereqs;
+        return !isCompleted && _.every(prereqs, prereq => completed.indexOf(prereq) !== -1);
+      }),
+      rx.publishReplay(1),
+      rx.refCount()
+    )
+  })));
 
-    return ->
-      disposable?.unsubscribe()
-      isShown = false
-      isVisible.next false
-  , []
+  useEffect(function() {
+    let isShown = false;
+    var disposable = shouldBeShownStream.subscribe(function(shouldBeShown) {
+      // TODO: show main page tooltips when closing overlayPage?
+      // one option is to have model.tooltip store all visible tooltips
+      if (shouldBeShown && !isShown) {
+        isShown = true;
+        // despite having this, ios still calls this twice, hence the flag above
+        disposable?.unsubscribe();
+        return setTimeout(function() {
+          var checkIsReady = function() {
+            if ($$ref && $$ref.current.clientWidth) {
+              return _.show($$ref);
+            } else {
+              return setTimeout(checkIsReady, 100);
+            }
+          };
+          return checkIsReady();
+        }
+        , 0);
+      }
+    }); // give time for re-render...
 
-  # FIXME: useref for parent to access? or stream/subject?
-  close = ->
-    $tooltip?.close()
+    return function() {
+      disposable?.unsubscribe();
+      isShown = false;
+      return isVisible.next(false);
+    };
+  }
+  , []);
 
-  _.show = ($$ref) ->
-    model.tooltip.set$ $z $tooltip, {
-      $$target: $$ref
-      key
-      anchor
-      offset
-      isVisible
-      zIndex
-      $title: $title
-      $content: $content
-    }
+  // FIXME: useref for parent to access? or stream/subject?
+  const close = () => $tooltip?.close();
 
-  z '.z-tooltip-positioner', {ref: $$ref, key: "tooltip-#{key}"}
+  _.show = $$ref => model.tooltip.set$($z($tooltip, {
+    $$target: $$ref,
+    key,
+    anchor,
+    offset,
+    isVisible,
+    zIndex,
+    $title,
+    $content
+  }));
+
+  return z('.z-tooltip-positioner', {ref: $$ref, key: `tooltip-${key}`});
+};

@@ -1,91 +1,130 @@
-# TODO: replace completely with $input
-import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
-import * as _ from 'lodash-es'
-import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
+// TODO: replace completely with $input
+let $input;
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium';
+import * as _ from 'lodash-es';
+import * as Rx from 'rxjs';
+import * as rx from 'rxjs/operators';
 
-import context from '../../context'
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $input = (props) ->
-  {valueStream, valueStreams, errorStream, isFocusedStream
-    colors, hintText = '', type = 'text', isFloating, isRounded,
-    isDisabled, isFullWidth,  autoCapitalize = true
-    height, isDark, isCentered, disableAutoComplete} = props
-  allColors = useContext(context).colors
+export default $input = function(props) {
+  let {
+        valueStream,
+        valueStreams,
+        errorStream,
+        isFocusedStream,
+        colors
+      } = props,
+      val = props.hintText,
+      hintText = val != null ? val : '',
+      val1 = props.type,
+      type = val1 != null ? val1 : 'text',
+      {
+        isFloating,
+        isRounded,
+        isDisabled,
+        isFullWidth
+      } = props,
+      val2 = props.autoCapitalize,
+      autoCapitalize = val2 != null ? val2 : true,
+      {
+        height,
+        isDark,
+        isCentered,
+        disableAutoComplete
+      } = props;
+  const allColors = useContext(context).colors;
 
-  {valueStream, errorStream, isFocusedStream} = useMemo ->
-    {
-      valueStream: valueStream or new Rx.BehaviorSubject ''
-      errorStream: errorStream or new Rx.BehaviorSubject null
-      isFocusedStream: isFocusedStream or new Rx.BehaviorSubject false
-    }
-  , []
+  ({valueStream, errorStream, isFocusedStream} = useMemo(() => ({
+    valueStream: valueStream || new Rx.BehaviorSubject(''),
+    errorStream: errorStream || new Rx.BehaviorSubject(null),
+    isFocusedStream: isFocusedStream || new Rx.BehaviorSubject(false)
+  })
+  , []));
 
-  {value, error, isFocused} = useStream ->
-    value: valueStreams?.pipe(rx.switchAll()) or valueStream
-    error: errorStream
+  const {value, error, isFocused} = useStream(() => ({
+    value: valueStreams?.pipe(rx.switchAll()) || valueStream,
+    error: errorStream,
     isFocused: isFocusedStream
+  }));
 
 
-  colors = _.defaults colors, {
-    c500: allColors.$bgColor
-    background: allColors.$bgColor
+  colors = _.defaults(colors, {
+    c500: allColors.$bgColor,
+    background: allColors.$bgColor,
     underline: allColors.$primaryMain
-  }
+  });
 
-  z '.z-input-old',
-    style:
-      height: height
+  return z('.z-input-old', {
+    style: {
+      height,
       minHeight: height
-    className: classKebab {
-      isDark
-      isFloating
-      isRounded
-      hasValue: type is 'date' or value isnt ''
-      isFocused
-      isDisabled
-      isCentered
-      isError: error?
-    }
-    # style:
-    #   backgroundColor: colors.background
-    z '.hint', {
-      style:
-        color: colors.ink
-      # style:
-      #   color: if isFocused and not error? \
-      #          then colors.c500 else null
     },
-      hintText
-    z 'input.input',
-      disabled: if isDisabled then true else undefined
-      autocomplete: if disableAutoComplete then 'off' else undefined
-      # hack to get chrome to not autofill
-      readonly: if disableAutoComplete then true else undefined
-      autocapitalize: if not autoCapitalize then 'off' else undefined
-      type: type
-      # FIXME?
-      style: "color: #{colors.ink};height: #{height};-webkit-text-fill-color:#{colors.ink} !important;-webkit-box-shadow: 0 0 0 30px #{colors.background} inset !important"
-      value: "#{value}" or ''
-      oninput: (e) ->
-        if valueStreams
-          valueStreams.next Rx.of e.target.value
-        else
-          valueStream.next e.target.value
-      onfocus: (e) ->
-        if disableAutoComplete
-          e.target.removeAttribute 'readonly' # hack to get chrome to not autofill
-        isFocusedStream.next true
-      onblur: (e) ->
-        isFocusedStream.next false
-    z '.underline-wrapper',
-      z '.underline',
-        style:
-          backgroundColor: if isFocused and not error? \
-                           then colors.underline or colors.c500 \
-                           else colors.ink
-    if error?
-      z '.error', error
+    className: classKebab({
+      isDark,
+      isFloating,
+      isRounded,
+      hasValue: (type === 'date') || (value !== ''),
+      isFocused,
+      isDisabled,
+      isCentered,
+      isError: (error != null)
+    })
+  },
+    // style:
+    //   backgroundColor: colors.background
+    z('.hint', {
+      style: {
+        color: colors.ink
+      }
+      // style:
+      //   color: if isFocused and not error? \
+      //          then colors.c500 else null
+    },
+      hintText),
+    z('input.input', {
+      disabled: isDisabled ? true : undefined,
+      autocomplete: disableAutoComplete ? 'off' : undefined,
+      // hack to get chrome to not autofill
+      readonly: disableAutoComplete ? true : undefined,
+      autocapitalize: !autoCapitalize ? 'off' : undefined,
+      type,
+      // FIXME?
+      style: `color: ${colors.ink};height: ${height};-webkit-text-fill-color:${colors.ink} !important;-webkit-box-shadow: 0 0 0 30px ${colors.background} inset !important`,
+      value: `${value}` || '',
+      oninput(e) {
+        if (valueStreams) {
+          return valueStreams.next(Rx.of(e.target.value));
+        } else {
+          return valueStream.next(e.target.value);
+        }
+      },
+      onfocus(e) {
+        if (disableAutoComplete) {
+          e.target.removeAttribute('readonly'); // hack to get chrome to not autofill
+        }
+        return isFocusedStream.next(true);
+      },
+      onblur(e) {
+        return isFocusedStream.next(false);
+      }
+    }
+    ),
+    z('.underline-wrapper',
+      z('.underline', {
+        style: {
+          backgroundColor: isFocused && (error == null) 
+                           ? colors.underline || colors.c500 
+                           : colors.ink
+        }
+      }
+      )
+    ),
+    (error != null) ?
+      z('.error', error) : undefined
+  );
+};

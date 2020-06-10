@@ -1,45 +1,61 @@
-import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
-import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
+let $togle;
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium';
+import * as Rx from 'rxjs';
+import * as rx from 'rxjs/operators';
 
-import context from '../../context'
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $togle = (props) ->
-  {isSelectedStreams, isSelectedStreams, onToggle, withText} = props
-  {lang} = useContext context
+export default $togle = function(props) {
+  let isSelectedStreams, onToggle, withText;
+  ({isSelectedStreams, isSelectedStreams, onToggle, withText} = props);
+  const {lang} = useContext(context);
 
-  {isSelectedStreams} = useMemo ->
-    unless isSelectedStreams
-      isSelectedStreams = new Rx.ReplaySubject 1
-      isSelectedStreams ?= Rx.of ''
-      isSelectedStreams.next isSelectedStream
-    {
-      isSelectedStreams
+  ({isSelectedStreams} = useMemo(function() {
+    if (!isSelectedStreams) {
+      isSelectedStreams = new Rx.ReplaySubject(1);
+      if (isSelectedStreams == null) { isSelectedStreams = Rx.of(''); }
+      isSelectedStreams.next(isSelectedStream);
     }
-  , []
+    return {
+      isSelectedStreams
+    };
+  }
+  , []));
 
-  {isSelected} = useStream ->
-    isSelected: isSelectedStreams.pipe rx.switchAll()
+  const {isSelected} = useStream(() => ({
+    isSelected: isSelectedStreams.pipe(rx.switchAll())
+  }));
 
-  toggle = ({onToggle} = {}) ->
-    if isSelected
-      isSelected.next not isSelected
-    else
-      isSelectedStreams.next Rx.of not isSelected
-    onToggle? not isSelected
+  const toggle = function(param) {
+    let onToggle;
+    if (param == null) { param = {}; }
+    ({onToggle} = param);
+    if (isSelected) {
+      isSelected.next(!isSelected);
+    } else {
+      isSelectedStreams.next(Rx.of(!isSelected));
+    }
+    return onToggle?.(!isSelected);
+  };
 
 
-  z '.z-toggle', {
-    className: classKebab {isSelected, withText}
-    onclick: -> toggle {onToggle}
+  return z('.z-toggle', {
+    className: classKebab({isSelected, withText}),
+    onclick() { return toggle({onToggle}); }
   },
-    z '.track',
-      if withText and isSelected
-        lang.get 'general.yes'
-      else if withText
-        lang.get 'general.no'
+    z('.track',
+      (() => {
+      if (withText && isSelected) {
+        return lang.get('general.yes');
+      } else if (withText) {
+        return lang.get('general.no');
+      }
+    })()
+    ),
 
-    z '.knob'
+    z('.knob'));
+};

@@ -1,48 +1,81 @@
-import {z, classKebab, useContext} from 'zorium'
+let $button;
+import {z, classKebab, useContext} from 'zorium';
 
-import $ripple from '../ripple'
-import $icon from '../icon'
-import context from '../../context'
+import $ripple from '../ripple';
+import $icon from '../icon';
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $button = (props) ->
-  {isPrimary, isSecondary, isFancy, isInverted, isDisabled, text,
-    isFullWidth = true, isOutline, onclick = (-> null), type = 'button', icon,
-    heightPx = 36, hasRipple = true} = props or {}
-  {colors} = useContext context
+export default $button = function(props) {
+  const obj = props || {},
+        {
+          isPrimary,
+          isSecondary,
+          isFancy,
+          isInverted,
+          isDisabled,
+          text
+        } = obj,
+        val = obj.isFullWidth,
+        isFullWidth = val != null ? val : true,
+        {
+          isOutline
+        } = obj,
+        val1 = obj.onclick,
+        onclick = val1 != null ? val1 : () => null,
+        val2 = obj.type,
+        type = val2 != null ? val2 : 'button',
+        {
+          icon
+        } = obj,
+        val3 = obj.heightPx,
+        heightPx = val3 != null ? val3 : 36,
+        val4 = obj.hasRipple,
+        hasRipple = val4 != null ? val4 : true;
+  const {colors} = useContext(context);
 
-  z '.z-button', {
-    className: classKebab {
-      isFullWidth
-      isOutline
-      isPrimary
-      isSecondary
-      isFancy
-      isInverted
+  return z('.z-button', {
+    className: classKebab({
+      isFullWidth,
+      isOutline,
+      isPrimary,
+      isSecondary,
+      isFancy,
+      isInverted,
       isDisabled
+    }),
+    onclick(e) {
+      if (!isDisabled) {
+        return onclick(e);
+      }
     }
-    onclick: (e) ->
-      unless isDisabled
-        onclick(e)
   },
 
-    z 'button.button', {
-      type: type
-      disabled: Boolean isDisabled
-      style:
-        # lineHeight: "#{heightPx}px"
-        minHeight: "#{heightPx}px"
+    z('button.button', {
+      type,
+      disabled: Boolean(isDisabled),
+      style: {
+        // lineHeight: "#{heightPx}px"
+        minHeight: `${heightPx}px`
+      }
     },
-      if icon
-        z '.icon',
-          z $icon,
-          icon: icon
-          color: if isPrimary \
-                 then colors.$primaryMainText \
-                 else colors.$primaryMain
-      text
-      if hasRipple
-        z $ripple,
-          color: if isPrimary then colors.$primaryMainText else colors.$bgText26
+      icon ?
+        z('.icon',
+          z($icon, {
+          icon,
+          color: isPrimary 
+                 ? colors.$primaryMainText 
+                 : colors.$primaryMain
+        }
+          )
+        ) : undefined,
+      text,
+      hasRipple ?
+        z($ripple,
+          {color: isPrimary ? colors.$primaryMainText : colors.$bgText26}) : undefined
+    )
+  );
+};

@@ -1,45 +1,57 @@
-import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
-import * as _ from 'lodash-es'
-import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
+let $tapTabs;
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium';
+import * as _ from 'lodash-es';
+import * as Rx from 'rxjs';
+import * as rx from 'rxjs/operators';
 
-import context from '../../context'
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $tapTabs = (props) ->
-  {selectedIndexStreams, selectedIndexStream, tabs, tabProps} = props
-  {router} = useContext context
+export default $tapTabs = function(props) {
+  let {selectedIndexStreams, selectedIndexStream, tabs, tabProps} = props;
+  const {router} = useContext(context);
 
-  {selectedIndexStream} = useMemo ->
-    {
-      selectedIndexStream: selectedIndexStream or new Rx.BehaviorSubject 0
-    }
-  , []
+  ({selectedIndexStream} = useMemo(() => ({
+    selectedIndexStream: selectedIndexStream || new Rx.BehaviorSubject(0)
+  })
+  , []));
 
-  {selectedIndex} = useStream ->
+  const {selectedIndex} = useStream(() => ({
     selectedIndex:
-      selectedIndexStreams?.pipe(rx.switchAll()) or selectedIndexStream
+      selectedIndexStreams?.pipe(rx.switchAll()) || selectedIndexStream
+  }));
 
-  z '.z-tap-tabs',
-    z '.menu',
-      z '.container',
-        _.map tabs, ({name, route}, i) ->
-          isSelected = selectedIndex is i
+  return z('.z-tap-tabs',
+    z('.menu',
+      z('.container',
+        _.map(tabs, function({name, route}, i) {
+          const isSelected = selectedIndex === i;
 
-          router.linkIfHref z '.tap-tab', {
-            className: classKebab {isSelected}
-            href: route
-            onclick: ->
-              if selectedIndexStreams
-                selectedIndexStreams.next Rx.of i
-              else
-                selectedIndexStream.next i
+          return router.linkIfHref(z('.tap-tab', {
+            className: classKebab({isSelected}),
+            href: route,
+            onclick() {
+              if (selectedIndexStreams) {
+                return selectedIndexStreams.next(Rx.of(i));
+              } else {
+                return selectedIndexStream.next(i);
+              }
+            }
           },
-            name
+            name)
+          );
+        })
+      )
+    ),
 
-    z '.current-tab',
-      z '.container',
-        if selectedIndex?
-          z tabs[selectedIndex].$el, tabProps
+    z('.current-tab',
+      z('.container',
+        (selectedIndex != null) ?
+          z(tabs[selectedIndex].$el, tabProps) : undefined
+      )
+    )
+  );
+};

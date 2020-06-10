@@ -1,187 +1,231 @@
-import {z, classKebab, useContext, useRef, useStream, useEffect, useMemo} from 'zorium'
-import * as rx from 'rxjs/operators'
+let $drawer, IScroll;
+import {z, classKebab, useContext, useRef, useStream, useEffect, useMemo} from 'zorium';
+import * as rx from 'rxjs/operators';
 
-import context from '../../context'
+import context from '../../context';
 
-if window?
-  IScroll = require 'iscroll/build/iscroll-lite-snap-zoom.js'
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  IScroll = require('iscroll/build/iscroll-lite-snap-zoom.js');
+  require('./index.styl');
+}
 
-MAX_OVERLAY_OPACITY = 0.5
+const MAX_OVERLAY_OPACITY = 0.5;
 
-# FIXME: store iScrollContainer in state??
+// FIXME: store iScrollContainer in state??
 
-export default $drawer = (props) ->
-  {isOpenStream, onOpen, onClose, side = 'left', key = 'nav', isStaticStream,
-    $content, hasAppBar} = props
-  {model, browser, config, colors} = useContext context
+export default $drawer = function(props) {
+  let transformProperty;
+  let {
+        isOpenStream,
+        onOpen,
+        onClose
+      } = props,
+      val = props.side,
+      side = val != null ? val : 'left',
+      val1 = props.key,
+      key = val1 != null ? val1 : 'nav',
+      {
+        isStaticStream,
+        $content,
+        hasAppBar
+      } = props;
+  const {model, browser, config, colors} = useContext(context);
 
 
-  $$ref = useRef()
+  const $$ref = useRef();
 
-  {transformProperty, isStaticStream} = useMemo ->
-    {
-      transformProperty: browser.getTransformProperty()
-      isStaticStream: isStatic or (browser.getBreakpoint().pipe(
-        rx.map (breakpoint) ->
-          breakpoint in ['desktop']
-        rx.publishReplay(1)
-        rx.refCount()
-      ))
+  ({transformProperty, isStaticStream} = useMemo(() => ({
+    transformProperty: browser.getTransformProperty(),
+
+    isStaticStream: isStatic || (browser.getBreakpoint().pipe(
+      rx.map(breakpoint => ['desktop'].includes(breakpoint)),
+      rx.publishReplay(1),
+      rx.refCount()
+    ))
+  })
+  , []));
+
+  var {isOpen, windowSize, appBarHeight,
+    drawerWidth, isStatic, breakpoint} = useStream(() => ({
+    isOpen: isOpenStream,
+    isStatic: isStaticStream,
+    windowSize: browser.getSize(),
+    breakpoint: browser.getBreakpoint(),
+    appBarHeight: browser.getAppBarHeightVal(),
+    drawerWidth: browser.getDrawerWidth()
+  }));
+
+  useEffect(function() {
+    const onStaticChange = isStatic => // sometimes get cannot get length of undefined for gotopage with this
+    setTimeout(function() {
+      if (!iScrollContainer && !isStatic) {
+        var checkIsReady = function() {
+          const $$container = $$ref;
+          if ($$container && $$container.clientWidth) {
+            return initIScroll($$container);
+          } else {
+            return setTimeout(checkIsReady, 1000);
+          }
+        };
+
+        return checkIsReady();
+      } else if (iScrollContainer && isStatic) {
+        open(0);
+        iScrollContainer?.destroy();
+        delete iScrollContainer;
+        return disposable?.unsubscribe();
+      }
+    }, 0);
+    const isStaticDisposable = isStaticStream.subscribe(onStaticChange);
+
+    return function() {
+      iScrollContainer?.destroy();
+      delete iScrollContainer;
+      disposable?.unsubscribe();
+      return isStaticDisposable?.unsubscribe();
+    };
+  }
+  , []);
+
+
+  const close = function(animationLengthMs) {
+    if (animationLengthMs == null) { animationLengthMs = 500; }
+    try {
+      if (side === 'right') {
+        return iScrollContainer.goToPage(0, 0, animationLengthMs);
+      } else {
+        return iScrollContainer.goToPage(1, 0, animationLengthMs);
+      }
+    } catch (err) {
+      return console.log('caught err', err);
     }
-  , []
+  };
 
-  {isOpen, windowSize, appBarHeight,
-    drawerWidth, isStatic, breakpoint} = useStream ->
-    {
-      isOpen: isOpenStream
-      isStatic: isStaticStream
-      windowSize: browser.getSize()
-      breakpoint: browser.getBreakpoint()
-      appBarHeight: browser.getAppBarHeightVal()
-      drawerWidth: browser.getDrawerWidth()
+  var open = function(animationLengthMs) {
+    if (animationLengthMs == null) { animationLengthMs = 500; }
+    try {
+      if (side === 'right') {
+        return iScrollContainer.goToPage(1, 0, animationLengthMs);
+      } else {
+        return iScrollContainer.goToPage(0, 0, animationLengthMs);
+      }
+    } catch (err) {
+      return console.log('caught err', err);
     }
+  };
 
-  useEffect ->
-    onStaticChange = (isStatic) ->
-      # sometimes get cannot get length of undefined for gotopage with this
-      setTimeout ->
-        if not iScrollContainer and not isStatic
-          checkIsReady = ->
-            $$container = $$ref
-            if $$container and $$container.clientWidth
-              initIScroll $$container
-            else
-              setTimeout checkIsReady, 1000
-
-          checkIsReady()
-        else if iScrollContainer and isStatic
-          open 0
-          iScrollContainer?.destroy()
-          delete iScrollContainer
-          disposable?.unsubscribe()
-      , 0
-    isStaticDisposable = isStaticStream.subscribe onStaticChange
-
-    return ->
-      iScrollContainer?.destroy()
-      delete iScrollContainer
-      disposable?.unsubscribe()
-      isStaticDisposable?.unsubscribe()
-  , []
-
-
-  close = (animationLengthMs = 500) ->
-    try
-      if side is 'right'
-        iScrollContainer.goToPage 0, 0, animationLengthMs
-      else
-        iScrollContainer.goToPage 1, 0, animationLengthMs
-    catch err
-      console.log 'caught err', err
-
-  open = (animationLengthMs = 500) ->
-    try
-      if side is 'right'
-        iScrollContainer.goToPage 1, 0, animationLengthMs
-      else
-        iScrollContainer.goToPage 0, 0, animationLengthMs
-    catch err
-      console.log 'caught err', err
-
-  initIScroll = ($$container) ->
-    iScrollContainer = new IScroll $$container, {
-      scrollX: true
-      scrollY: false
-      eventPassthrough: true
-      bounce: false
-      snap: '.tab'
+  var initIScroll = function($$container) {
+    const iScrollContainer = new IScroll($$container, {
+      scrollX: true,
+      scrollY: false,
+      eventPassthrough: true,
+      bounce: false,
+      snap: '.tab',
       deceleration: 0.002
+    });
+
+    const disposable = isOpenStream.subscribe(function(isOpen) {
+      if (isOpen) { open(); } else { close(); }
+      const $$overlay = $$ref.current.querySelector('.overlay-tab');
+      return updateOpacity();
+    });
+
+    let isScrolling = false;
+    iScrollContainer.on('scrollStart', function() {
+      isScrolling = true;
+      const $$overlay = $$ref.current.querySelector('.overlay-tab');
+      var update = function() {
+        updateOpacity();
+        if (isScrolling) {
+          return window.requestAnimationFrame(update);
+        }
+      };
+      update();
+      return updateOpacity();
+    });
+
+    return iScrollContainer.on('scrollEnd', function() {
+      isScrolling = false;
+
+      const openPage = side === 'right' ? 1 : 0;
+
+      const newIsOpen = iScrollContainer.currentPage.pageX === openPage;
+
+      // landing on new tab
+      if (newIsOpen && !isOpen) {
+        return onOpen();
+      } else if (!newIsOpen && isOpen) {
+        return onClose();
+      }
+    });
+  };
+
+
+  // the scroll listener in IScroll (iscroll-probe.js) is really slow
+  var updateOpacity = function() {
+    let opacity;
+    if (side === 'right') {
+      opacity = (-1 * iScrollContainer.x) / drawerWidth;
+    } else {
+      opacity = 1 + (iScrollContainer.x / drawerWidth);
     }
 
-    disposable = isOpenStream.subscribe (isOpen) ->
-      if isOpen then open() else close()
-      $$overlay = $$ref.current.querySelector '.overlay-tab'
-      updateOpacity()
+    return $$overlay.style.opacity = opacity * MAX_OVERLAY_OPACITY;
+  };
 
-    isScrolling = false
-    iScrollContainer.on 'scrollStart', ->
-      isScrolling = true
-      $$overlay = $$ref.current.querySelector '.overlay-tab'
-      update = ->
-        updateOpacity()
-        if isScrolling
-          window.requestAnimationFrame update
-      update()
-      updateOpacity()
+  // HACK: isStatic is null on first render for some reason
+  // FIXME: is this still the case w/ zorium 3?
+  if (isStatic == null) { isStatic = breakpoint === 'desktop'; }
 
-    iScrollContainer.on 'scrollEnd', ->
-      isScrolling = false
+  let {
+    height
+  } = windowSize;
+  if (hasAppBar && isStatic) {
+    height -= appBarHeight;
+  }
 
-      openPage = if side is 'right' then 1 else 0
+  const x = (side === 'right') || isStatic ? 0 : -drawerWidth;
 
-      newIsOpen = iScrollContainer.currentPage.pageX is openPage
-
-      # landing on new tab
-      if newIsOpen and not isOpen
-        onOpen()
-      else if not newIsOpen and isOpen
-        onClose()
-
-
-  # the scroll listener in IScroll (iscroll-probe.js) is really slow
-  updateOpacity = ->
-    if side is 'right'
-      opacity = -1 * iScrollContainer.x / drawerWidth
-    else
-      opacity = 1 + iScrollContainer.x / drawerWidth
-
-    $$overlay.style.opacity = opacity * MAX_OVERLAY_OPACITY
-
-  # HACK: isStatic is null on first render for some reason
-  # FIXME: is this still the case w/ zorium 3?
-  isStatic ?= breakpoint is 'desktop'
-
-  height = windowSize.height
-  if hasAppBar and isStatic
-    height -= appBarHeight
-
-  x = if side is 'right' or isStatic then 0 else -drawerWidth
-
-  $drawerTab =
-    z '.drawer-tab.tab',
-      z '.drawer', {
-        style:
-          width: "#{drawerWidth}px"
+  const $drawerTab =
+    z('.drawer-tab.tab',
+      z('.drawer', {
+        style: {
+          width: `${drawerWidth}px`
+        }
       },
-        $content
+        $content)
+    );
 
-  $overlayTab =
-    z '.overlay-tab.tab', {
-      onclick: ->
-        onClose()
+  const $overlayTab =
+    z('.overlay-tab.tab', {
+      onclick() {
+        return onClose();
+      }
     },
-      z '.grip'
+      z('.grip'));
 
-  z '.z-drawer', {
-    rel: $$ref
-    className: classKebab {isOpen, isStatic, isRight: side is 'right'}
-    key: "drawer-#{key}"
-    style:
-      display: if windowSize.width then 'block' else 'none'
-      height: "#{height}px"
-      width: if not isStatic \
-             then '100%' \
-             else "#{drawerWidth}px"
+  return z('.z-drawer', {
+    rel: $$ref,
+    className: classKebab({isOpen, isStatic, isRight: side === 'right'}),
+    key: `drawer-${key}`,
+    style: {
+      display: windowSize.width ? 'block' : 'none',
+      height: `${height}px`,
+      width: !isStatic 
+             ? '100%' 
+             : `${drawerWidth}px`
+    }
   },
-    z '.drawer-wrapper', {
-      style:
-        width: "#{drawerWidth + windowSize.width}px"
-        # make sure drawer is hidden before js laods
-        "#{transformProperty}":
-          "translate(#{x}px, 0px) translateZ(0px)"
+    z('.drawer-wrapper', {
+      style: {
+        width: `${drawerWidth + windowSize.width}px`,
+        // make sure drawer is hidden before js laods
+        [transformProperty]:
+          `translate(${x}px, 0px) translateZ(0px)`
+      }
     },
-      if side is 'right'
+      side === 'right' ?
         [$overlayTab, $drawerTab]
-      else
-        [$drawerTab, $overlayTab]
+      :
+        [$drawerTab, $overlayTab]));
+};

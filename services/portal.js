@@ -1,293 +1,383 @@
-import Fingerprint from 'fingerprintjs'
-import getUuidByString from 'uuid-by-string'
+let Portal, PortalGun;
+import Fingerprint from 'fingerprintjs';
+import getUuidByString from 'uuid-by-string';
 
-import Environment from '../services/environment'
-import PushService from '../services/push'
-import GetAppDialog from '../components/get_app_dialog'
+import Environment from '../services/environment';
+import PushService from '../services/push';
+import GetAppDialog from '../components/get_app_dialog';
 
-if window?
-  PortalGun = require('portal-gun').default
+if (typeof window !== 'undefined' && window !== null) {
+  PortalGun = require('portal-gun').default;
+}
 
-urlBase64ToUint8Array = (base64String) ->
-  padding = '='.repeat((4 - (base64String.length % 4)) % 4)
-  base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/')
-  rawData = window.atob(base64)
-  outputArray = new Uint8Array(rawData.length)
-  i = 0
-  while i < rawData.length
-    outputArray[i] = rawData.charCodeAt(i)
-    i += 1
-  outputArray
+const urlBase64ToUint8Array = function(base64String) {
+  const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+  const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  let i = 0;
+  while (i < rawData.length) {
+    outputArray[i] = rawData.charCodeAt(i);
+    i += 1;
+  }
+  return outputArray;
+};
 
-export default class Portal
-  constructor: ({@lang, @iosAppUrl, @googlePlayAppUrl}) ->
-    if window?
-      @portal = new PortalGun() # TODO: check isParentValid
+export default Portal = (function() {
+  Portal = class Portal {
+    static initClass() {
+  
+      this.prototype.PLATFORMS = {
+        APP: 'app',
+        WEB: 'web'
+      };
+    }
+    constructor({lang, iosAppUrl, googlePlayAppUrl}) {
+      this.setModels = this.setModels.bind(this);
+      this.call = this.call.bind(this);
+      this.callWithError = this.callWithError.bind(this);
+      this.listen = this.listen.bind(this);
+      this.authGetStatus = this.authGetStatus.bind(this);
+      this.shareAny = this.shareAny.bind(this);
+      this.getPlatform = this.getPlatform.bind(this);
+      this.appRate = this.appRate.bind(this);
+      this.appOnResume = this.appOnResume.bind(this);
+      this.appInstall = this.appInstall.bind(this);
+      this.twitterShare = this.twitterShare.bind(this);
+      this.deepLinkOnRoute = this.deepLinkOnRoute.bind(this);
+      this.facebookShare = this.facebookShare.bind(this);
+      this.handleRouteData = this.handleRouteData.bind(this);
+      this.lang = lang;
+      this.iosAppUrl = iosAppUrl;
+      this.googlePlayAppUrl = googlePlayAppUrl;
+      if (typeof window !== 'undefined' && window !== null) {
+        this.portal = new PortalGun(); // TODO: check isParentValid
 
-      @appResumeHandler = null
-
-  PLATFORMS:
-    APP: 'app'
-    WEB: 'web'
-
-  setModels: (props) =>
-    {@user, @installOverlay, @overlay} = props
-    null
-
-  call: (args...) =>
-    unless window?
-      # throw new Error 'Portal called server-side'
-      return console.log 'Portal called server-side'
-
-    @portal.call args...
-    .catch (err) ->
-      # if we don't catch, zorium freaks out if a portal call is in state
-      # (infinite errors on page load/route)
-      console.log 'missing portal call', args
-      unless err.message is 'Method not found'
-        console.log err
-      null
-
-  callWithError: (args...) =>
-    unless window?
-      # throw new Error 'Portal called server-side'
-      return console.log 'Portal called server-side'
-
-    @portal.call args...
-
-  listen: =>
-    unless window?
-      throw new Error 'Portal called server-side'
-
-    @portal.listen()
-
-    @portal.on 'auth.getStatus', @authGetStatus
-    @portal.on 'share.any', @shareAny
-    @portal.on 'env.getPlatform', @getPlatform
-    @portal.on 'app.install', @appInstall
-    @portal.on 'app.rate', @appRate
-    @portal.on 'app.getDeviceId', @appGetDeviceId
-
-    # fallbacks
-    @portal.on 'app.onResume', @appOnResume
-
-    # simulate app
-    @portal.on 'deepLink.onRoute', @deepLinkOnRoute
-
-    @portal.on 'permissions.check', @permissionsCheck
-    @portal.on 'permissions.request', @permissionsRequest
-
-    @portal.on 'top.onData', -> null
-    @portal.on 'top.getData', -> null
-    @portal.on 'push.register', @pushRegister
-
-    @portal.on 'twitter.share', @twitterShare
-    @portal.on 'facebook.share', @facebookShare
-
-    @portal.on 'networkInformation.onOnline', @networkInformationOnOnline
-    @portal.on 'networkInformation.onOffline', @networkInformationOnOffline
-    @portal.on 'networkInformation.onOnline', @networkInformationOnOnline
-
-
-    @portal.on 'browser.openWindow', ({url, target, options}) ->
-      window.open url, target, options
-
-
-  ###
-  @typedef AuthStatus
-  @property {String} accessToken
-  @property {String} userId
-  ###
-
-  ###
-  @returns {Promise<AuthStatus>}
-  ###
-  authGetStatus: =>
-    @model.user.getMe()
-    .take(1).toPromise()
-    .then (user) ->
-      accessToken: user.id # Temporary
-      userId: user.id
-
-  shareAny: ({text, imageUrl, url}) =>
-    ga? 'send', 'event', 'share_service', 'share_any'
-
-    if navigator.share
-      navigator.share {
-        title: text
-        url: url
+        this.appResumeHandler = null;
       }
-    else
-      @call 'facebook.share', {text, imageUrl, url}
-
-  getPlatform: ({gameKey} = {}) =>
-    userAgent = navigator.userAgent
-    switch
-      when Environment.isNativeApp(gameKey, {userAgent})
-        @PLATFORMS.APP
-      else
-        @PLATFORMS.WEB
-
-  isChrome: ->
-    navigator.userAgent.match /chrome/i
-
-  appRate: =>
-    ga? 'send', 'event', 'native', 'rate'
-
-    @call 'browser.openWindow',
-      url: if Environment.isIos() \
-           then @iosAppUrl \
-           else @googlePlayAppUrl
-      target: '_system'
-
-  appGetDeviceId: ->
-    getUuidByString "#{new Fingerprint().get()}"
-
-  appOnResume: (callback) =>
-    if @appResumeHandler
-      window.removeEventListener 'visibilitychange', @appResumeHandler
-
-    @appResumeHandler = ->
-      unless document.hidden
-        callback()
-
-    window.addEventListener 'visibilitychange', @appResumeHandler
-
-  appInstall: =>
-    iosAppUrl = @iosAppUrl
-    googlePlayAppUrl = @googlePlayAppUrl
-
-    if Environment.isAndroid() and @isChrome() and false # FIXME
-      if @installOverlay.prompt
-        prompt = @installOverlay.prompt
-        @installOverlay.setPrompt null
-      else
-        @installOverlay.open()
-
-    else if Environment.isIos()
-      @call 'browser.openWindow',
-        url: iosAppUrl
-        target: '_system'
-
-    else if Environment.isAndroid()
-      @call 'browser.openWindow',
-        url: googlePlayAppUrl
-        target: '_system'
-
-    else
-      @overlay.open new GetAppDialog {
-        model: {@lang, @overlay, portal: this}
-        onClose: =>
-          @overlay.close()
-      }
-
-  permissionsCheck: ({permissions}) ->
-    console.log 'webcheck'
-    Promise.resolve _.reduce permissions, (obj, permission) ->
-      obj[permission] = true
-      obj
-    , {}
-
-  permissionsRequest: ({permissions}) ->
-    console.log 'webreq'
-    Promise.resolve true
-
-
-  twitterShare: ({text}) =>
-    @call 'browser.openWindow', {
-      url: "https://twitter.com/intent/tweet?text=#{encodeURIComponent text}"
-      target: '_system'
     }
 
-  deepLinkOnRoute: (fn) =>
-    window.onRoute = (path) ->
-      fn {path: path.replace('browser://', '/')}
-
-  # facebookLogin: =>
-  #   new Promise (resolve) =>
-  #     FB.getLoginStatus (response) =>
-  #       if response.status is 'connected'
-  #         resolve {
-  #           status: response.status
-  #           facebookAccessToken: response.authResponse.accessToken
-  #           id: response.authResponse.userID
-  #         }
-  #       else
-  #         FB.login (response) ->
-  #           resolve {
-  #             status: response.status
-  #             facebookAccessToken: response.authResponse.accessToken
-  #             id: response.authResponse.userID
-  #           }
-
-  facebookShare: ({url}) =>
-    @call 'browser.openWindow', {
-      url:
-        "https://www.facebook.com/sharer/sharer.php?u=#{encodeURIComponent url}"
-      target: '_system'
+    setModels(props) {
+      ({user: this.user, installOverlay: this.installOverlay, overlay: this.overlay} = props);
+      return null;
     }
 
-  pushRegister: ->
-    null
-    # PushService.registerWeb()
-    # navigator.serviceWorker.ready.then (serviceWorkerRegistration) =>
-    #   serviceWorkerRegistration.pushManager.subscribe {
-    #     userVisibleOnly: true,
-    #     applicationServerKey: urlBase64ToUint8Array config.VAPID_PUBLIC_KEY
-    #   }
-    #   .then (subscription) ->
-    #     subscriptionToken = JSON.stringify subscription
-    #     {tokenStr: subscriptionToken, sourceType: 'web'}
-    #   .catch (err) =>
-    #     serviceWorkerRegistration.pushManager.getSubscription()
-    #     .then (subscription) ->
-    #       subscription.unsubscribe()
-    #     .then =>
-    #       unless isSecondAttempt
-    #         @pushRegister true
-    #     .catch (err) ->
-    #       console.log err
-
-  networkInformationOnOnline: (fn) ->
-    window.addEventListener 'online', fn
-
-  networkInformationOnOffline: (fn) ->
-    window.addEventListener 'offline', fn
-
-  handleRouteData: (data, {model, router, notificationStream}) =>
-    data ?= {}
-    {path, query, source, _isPush, _original, _isDeepLink} = data
-
-    if _isDeepLink
-      return router.goPath path
-
-    # ios fcm for now. TODO: figure out how to get it a better way
-    if not path and typeof _original?.additionalData?.path is 'string'
-      path = JSON.parse _original.additionalData.path
-
-    if query?.accessToken?
-      model.auth.setAccessToken query.accessToken
-
-    if _isPush and _original?.additionalData?.foreground
-      model.exoid.invalidateAll()
-      if Environment.isIos() and Environment.isNativeApp()
-        @call 'push.setBadgeNumber', {number: 0}
-
-      notificationStream.next {
-        title: _original?.additionalData?.title or _original.title
-        message: _original?.additionalData?.message or _original.message
-        type: _original?.additionalData?.type
-        data: {path}
+    call(...args) {
+      if (typeof window === 'undefined' || window === null) {
+        // throw new Error 'Portal called server-side'
+        return console.log('Portal called server-side');
       }
-    else if path?
-      ga? 'send', 'event', 'hit_from_share', 'hit', JSON.stringify path
-      if path?.key
-        router.go path.key, path.params
-      else if typeof path is 'string'
-        router.goPath path # from deeplinks
-    # else
-    #   router.go()
 
-    if data.logEvent
-      {category, action, label} = data.logEvent
-      ga? 'send', 'event', category, action, label
+      return this.portal.call(...Array.from(args || []))
+      .catch(function(err) {
+        // if we don't catch, zorium freaks out if a portal call is in state
+        // (infinite errors on page load/route)
+        console.log('missing portal call', args);
+        if (err.message !== 'Method not found') {
+          console.log(err);
+        }
+        return null;
+      });
+    }
+
+    callWithError(...args) {
+      if (typeof window === 'undefined' || window === null) {
+        // throw new Error 'Portal called server-side'
+        return console.log('Portal called server-side');
+      }
+
+      return this.portal.call(...Array.from(args || []));
+    }
+
+    listen() {
+      if (typeof window === 'undefined' || window === null) {
+        throw new Error('Portal called server-side');
+      }
+
+      this.portal.listen();
+
+      this.portal.on('auth.getStatus', this.authGetStatus);
+      this.portal.on('share.any', this.shareAny);
+      this.portal.on('env.getPlatform', this.getPlatform);
+      this.portal.on('app.install', this.appInstall);
+      this.portal.on('app.rate', this.appRate);
+      this.portal.on('app.getDeviceId', this.appGetDeviceId);
+
+      // fallbacks
+      this.portal.on('app.onResume', this.appOnResume);
+
+      // simulate app
+      this.portal.on('deepLink.onRoute', this.deepLinkOnRoute);
+
+      this.portal.on('permissions.check', this.permissionsCheck);
+      this.portal.on('permissions.request', this.permissionsRequest);
+
+      this.portal.on('top.onData', () => null);
+      this.portal.on('top.getData', () => null);
+      this.portal.on('push.register', this.pushRegister);
+
+      this.portal.on('twitter.share', this.twitterShare);
+      this.portal.on('facebook.share', this.facebookShare);
+
+      this.portal.on('networkInformation.onOnline', this.networkInformationOnOnline);
+      this.portal.on('networkInformation.onOffline', this.networkInformationOnOffline);
+      this.portal.on('networkInformation.onOnline', this.networkInformationOnOnline);
+
+
+      return this.portal.on('browser.openWindow', ({url, target, options}) => window.open(url, target, options));
+    }
+
+
+    /*
+    @typedef AuthStatus
+    @property {String} accessToken
+    @property {String} userId
+    */
+
+    /*
+    @returns {Promise<AuthStatus>}
+    */
+    authGetStatus() {
+      return this.model.user.getMe()
+      .take(1).toPromise()
+      .then(user => ({
+        // Temporary
+        accessToken: user.id,
+
+        userId: user.id
+      }));
+    }
+
+    shareAny({text, imageUrl, url}) {
+      ga?.('send', 'event', 'share_service', 'share_any');
+
+      if (navigator.share) {
+        return navigator.share({
+          title: text,
+          url
+        });
+      } else {
+        return this.call('facebook.share', {text, imageUrl, url});
+      }
+    }
+
+    getPlatform(param) {
+      if (param == null) { param = {}; }
+      const {gameKey} = param;
+      const {
+        userAgent
+      } = navigator;
+      switch (false) {
+        case !Environment.isNativeApp(gameKey, {userAgent}):
+          return this.PLATFORMS.APP;
+        default:
+          return this.PLATFORMS.WEB;
+      }
+    }
+
+    isChrome() {
+      return navigator.userAgent.match(/chrome/i);
+    }
+
+    appRate() {
+      ga?.('send', 'event', 'native', 'rate');
+
+      return this.call('browser.openWindow', {
+        url: Environment.isIos() 
+             ? this.iosAppUrl 
+             : this.googlePlayAppUrl,
+        target: '_system'
+      }
+      );
+    }
+
+    appGetDeviceId() {
+      return getUuidByString(`${new Fingerprint().get()}`);
+    }
+
+    appOnResume(callback) {
+      if (this.appResumeHandler) {
+        window.removeEventListener('visibilitychange', this.appResumeHandler);
+      }
+
+      this.appResumeHandler = function() {
+        if (!document.hidden) {
+          return callback();
+        }
+      };
+
+      return window.addEventListener('visibilitychange', this.appResumeHandler);
+    }
+
+    appInstall() {
+      const {
+        iosAppUrl
+      } = this;
+      const {
+        googlePlayAppUrl
+      } = this;
+
+      if (Environment.isAndroid() && this.isChrome() && false) { // FIXME
+        if (this.installOverlay.prompt) {
+          const {
+            prompt
+          } = this.installOverlay;
+          return this.installOverlay.setPrompt(null);
+        } else {
+          return this.installOverlay.open();
+        }
+
+      } else if (Environment.isIos()) {
+        return this.call('browser.openWindow', {
+          url: iosAppUrl,
+          target: '_system'
+        }
+        );
+
+      } else if (Environment.isAndroid()) {
+        return this.call('browser.openWindow', {
+          url: googlePlayAppUrl,
+          target: '_system'
+        }
+        );
+
+      } else {
+        return this.overlay.open(new GetAppDialog({
+          model: {lang: this.lang, overlay: this.overlay, portal: this},
+          onClose: () => {
+            return this.overlay.close();
+          }
+        }));
+      }
+    }
+
+    permissionsCheck({permissions}) {
+      console.log('webcheck');
+      return Promise.resolve(_.reduce(permissions, function(obj, permission) {
+        obj[permission] = true;
+        return obj;
+      }
+      , {}));
+    }
+
+    permissionsRequest({permissions}) {
+      console.log('webreq');
+      return Promise.resolve(true);
+    }
+
+
+    twitterShare({text}) {
+      return this.call('browser.openWindow', {
+        url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
+        target: '_system'
+      });
+    }
+
+    deepLinkOnRoute(fn) {
+      return window.onRoute = path => fn({path: path.replace('browser://', '/')});
+    }
+
+    // facebookLogin: =>
+    //   new Promise (resolve) =>
+    //     FB.getLoginStatus (response) =>
+    //       if response.status is 'connected'
+    //         resolve {
+    //           status: response.status
+    //           facebookAccessToken: response.authResponse.accessToken
+    //           id: response.authResponse.userID
+    //         }
+    //       else
+    //         FB.login (response) ->
+    //           resolve {
+    //             status: response.status
+    //             facebookAccessToken: response.authResponse.accessToken
+    //             id: response.authResponse.userID
+    //           }
+
+    facebookShare({url}) {
+      return this.call('browser.openWindow', {
+        url:
+          `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+        target: '_system'
+      });
+    }
+
+    pushRegister() {
+      return null;
+    }
+      // PushService.registerWeb()
+      // navigator.serviceWorker.ready.then (serviceWorkerRegistration) =>
+      //   serviceWorkerRegistration.pushManager.subscribe {
+      //     userVisibleOnly: true,
+      //     applicationServerKey: urlBase64ToUint8Array config.VAPID_PUBLIC_KEY
+      //   }
+      //   .then (subscription) ->
+      //     subscriptionToken = JSON.stringify subscription
+      //     {tokenStr: subscriptionToken, sourceType: 'web'}
+      //   .catch (err) =>
+      //     serviceWorkerRegistration.pushManager.getSubscription()
+      //     .then (subscription) ->
+      //       subscription.unsubscribe()
+      //     .then =>
+      //       unless isSecondAttempt
+      //         @pushRegister true
+      //     .catch (err) ->
+      //       console.log err
+
+    networkInformationOnOnline(fn) {
+      return window.addEventListener('online', fn);
+    }
+
+    networkInformationOnOffline(fn) {
+      return window.addEventListener('offline', fn);
+    }
+
+    handleRouteData(data, {model, router, notificationStream}) {
+      if (data == null) { data = {}; }
+      let {path, query, source, _isPush, _original, _isDeepLink} = data;
+
+      if (_isDeepLink) {
+        return router.goPath(path);
+      }
+
+      // ios fcm for now. TODO: figure out how to get it a better way
+      if (!path && (typeof _original?.additionalData?.path === 'string')) {
+        path = JSON.parse(_original.additionalData.path);
+      }
+
+      if (query?.accessToken != null) {
+        model.auth.setAccessToken(query.accessToken);
+      }
+
+      if (_isPush && _original?.additionalData?.foreground) {
+        model.exoid.invalidateAll();
+        if (Environment.isIos() && Environment.isNativeApp()) {
+          this.call('push.setBadgeNumber', {number: 0});
+        }
+
+        notificationStream.next({
+          title: _original?.additionalData?.title || _original.title,
+          message: _original?.additionalData?.message || _original.message,
+          type: _original?.additionalData?.type,
+          data: {path}
+        });
+      } else if (path != null) {
+        ga?.('send', 'event', 'hit_from_share', 'hit', JSON.stringify(path));
+        if (path?.key) {
+          router.go(path.key, path.params);
+        } else if (typeof path === 'string') {
+          router.goPath(path); // from deeplinks
+        }
+      }
+      // else
+      //   router.go()
+
+      if (data.logEvent) {
+        const {category, action, label} = data.logEvent;
+        return ga?.('send', 'event', category, action, label);
+      }
+    }
+  };
+  Portal.initClass();
+  return Portal;
+})();

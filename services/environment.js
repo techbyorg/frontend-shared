@@ -1,72 +1,106 @@
-import * as _ from 'lodash-es'
+import * as _ from 'lodash-es';
 
-class Environment
-  setAppKey: (@appKey) -> null
+class Environment {
+  constructor() {
+    this.getPlatform = this.getPlatform.bind(this);
+  }
 
-  isMobile: ({userAgent} = {}) ->
-    userAgent ?= navigator?.userAgent
-    ///
-      Mobile
-    | iP(hone|od|ad)
-    | Android
-    | BlackBerry
-    | IEMobile
-    | Kindle
-    | NetFront
-    | Silk-Accelerated
-    | (hpw|web)OS
-    | Fennec
-    | Minimo
-    | Opera\ M(obi|ini)
-    | Blazer
-    | Dolfin
-    | Dolphin
-    | Skyfire
-    | Zune
-    ///.test userAgent
+  setAppKey(appKey) { this.appKey = appKey; return null; }
 
-  isAndroid: ({userAgent} = {}) ->
-    userAgent ?= navigator?.userAgent
-    _.includes userAgent, 'Android'
+  isMobile(param) {
+    if (param == null) { param = {}; }
+    let {userAgent} = param;
+    if (userAgent == null) { userAgent = navigator?.userAgent; }
+    return new RegExp(`\
+Mobile\
+|iP(hone|od|ad)\
+|Android\
+|BlackBerry\
+|IEMobile\
+|Kindle\
+|NetFront\
+|Silk-Accelerated\
+|(hpw|web)OS\
+|Fennec\
+|Minimo\
+|Opera M(obi|ini)\
+|Blazer\
+|Dolfin\
+|Dolphin\
+|Skyfire\
+|Zune\
+`).test(userAgent);
+  }
 
-  isIos: ({userAgent} = {}) ->
-    userAgent ?= navigator?.userAgent
-    Boolean userAgent?.match /iP(hone|od|ad)/g
+  isAndroid(param) {
+    if (param == null) { param = {}; }
+    let {userAgent} = param;
+    if (userAgent == null) { userAgent = navigator?.userAgent; }
+    return _.includes(userAgent, 'Android');
+  }
 
-  isNativeApp: ({userAgent} = {}) ->
-    userAgent ?= navigator?.userAgent
-    _.includes(userAgent?.toLowerCase(), " #{@appKey}/")
+  isIos(param) {
+    if (param == null) { param = {}; }
+    let {userAgent} = param;
+    if (userAgent == null) { userAgent = navigator?.userAgent; }
+    return Boolean(userAgent?.match(/iP(hone|od|ad)/g));
+  }
 
-  isMainApp: ({userAgent} = {}) ->
-    userAgent ?= navigator?.userAgent
-    _.includes(userAgent?.toLowerCase(), " #{@appKey}/#{@appKey}")
+  isNativeApp(param) {
+    if (param == null) { param = {}; }
+    let {userAgent} = param;
+    if (userAgent == null) { userAgent = navigator?.userAgent; }
+    return _.includes(userAgent?.toLowerCase(), ` ${this.appKey}/`);
+  }
 
-  isEntityApp: (entityAppKey, {userAgent} = {}) ->
-    userAgent ?= navigator?.userAgent
-    Boolean entityAppKey and
-      _.includes(userAgent?.toLowerCase(), " #{@appKey}/#{entityAppKey}/")
+  isMainApp(param) {
+    if (param == null) { param = {}; }
+    let {userAgent} = param;
+    if (userAgent == null) { userAgent = navigator?.userAgent; }
+    return _.includes(userAgent?.toLowerCase(), ` ${this.appKey}/${this.appKey}`);
+  }
 
-  getAppKey: ({userAgent} = {}) ->
-    userAgent ?= navigator?.userAgent
-    matches = userAgent.match /techby\/([a-zA-Z0-9-]+)/
-    matches?[1] or 'browser'
+  isEntityApp(entityAppKey, param) {
+    if (param == null) { param = {}; }
+    let {userAgent} = param;
+    if (userAgent == null) { userAgent = navigator?.userAgent; }
+    return Boolean(entityAppKey &&
+      _.includes(userAgent?.toLowerCase(), ` ${this.appKey}/${entityAppKey}/`)
+    );
+  }
 
-  hasPushSupport: ->
-    Promise.resolve Boolean window?.PushManager
+  getAppKey(param) {
+    if (param == null) { param = {}; }
+    let {userAgent} = param;
+    if (userAgent == null) { userAgent = navigator?.userAgent; }
+    const matches = userAgent.match(/techby\/([a-zA-Z0-9-]+)/);
+    return matches?.[1] || 'browser';
+  }
 
-  getAppVersion: ({userAgent} = {}) ->
-    userAgent ?= navigator?.userAgent
-    regex = new RegExp("(#{@appKey})\/(?:[a-zA-Z0-9]+/)?([0-9\.]+)")
-    matches = userAgent.match(regex)
-    matches?[2]
+  hasPushSupport() {
+    return Promise.resolve(Boolean(window?.PushManager));
+  }
 
-  getPlatform: ({userAgent} = {}) =>
-    userAgent ?= navigator?.userAgent
+  getAppVersion(param) {
+    if (param == null) { param = {}; }
+    let {userAgent} = param;
+    if (userAgent == null) { userAgent = navigator?.userAgent; }
+    const regex = new RegExp(`(${this.appKey})\/(?:[a-zA-Z0-9]+/)?([0-9\.]+)`);
+    const matches = userAgent.match(regex);
+    return matches?.[2];
+  }
 
-    isApp = @isNativeApp @appKey, {userAgent}
+  getPlatform(param) {
+    if (param == null) { param = {}; }
+    let {userAgent} = param;
+    if (userAgent == null) { userAgent = navigator?.userAgent; }
 
-    if isApp and @isIos({userAgent}) then 'ios'
-    else if isApp and @isAndroid({userAgent}) then 'android'
-    else 'web'
+    const isApp = this.isNativeApp(this.appKey, {userAgent});
 
-export default new Environment()
+    if (isApp && this.isIos({userAgent})) { return 'ios';
+    } else if (isApp && this.isAndroid({userAgent})) { return 'android';
+    } else { return 'web'; }
+  }
+}
+
+export default new Environment();

@@ -1,67 +1,72 @@
-import {z, classKebab, useContext, useMemo, useStream} from 'zorium'
-import * as _ from 'lodash-es'
-import * as Rx from 'rxjs'
+let $slideSteps;
+import {z, classKebab, useContext, useMemo, useStream} from 'zorium';
+import * as _ from 'lodash-es';
+import * as Rx from 'rxjs';
 
-import $tabs from '../tabs'
-import $icon from '../icon'
-import context from '../../context'
+import $tabs from '../tabs';
+import $icon from '../icon';
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $slideSteps = ({onSkip, onDone, steps, doneText}) ->
-  {lang} = useContext context
+export default $slideSteps = function({onSkip, onDone, steps, doneText}) {
+  const {lang} = useContext(context);
 
-  {selectedIndexStream} = useMemo ->
-    {
-      selectedIndexStream: new Rx.BehaviorSubject 0
-    }
-  , []
+  const {selectedIndexStream} = useMemo(() => ({
+    selectedIndexStream: new Rx.BehaviorSubject(0)
+  })
+  , []);
 
-  {selectedIndex} = useStream ->
+  const {selectedIndex} = useStream(() => ({
     selectedIndex: selectedIndexStream
+  }));
 
-  z '.p-slide-steps',
-    z $tabs, {
-      selectedIndex
-      hideTabBar: true
-      isBarFixed: false
-      tabs: _.map steps, ({$content}, i) ->
-        {
-          $menuText: "#{i}"
-          $el: $content
-        }
-    }
+  return z('.p-slide-steps',
+    z($tabs, {
+      selectedIndex,
+      hideTabBar: true,
+      isBarFixed: false,
+      tabs: _.map(steps, ({$content}, i) => ({
+        $menuText: `${i}`,
+        $el: $content
+      }))
+    }),
 
-    z '.bottom-bar', [
-      if selectedIndex is 0 and onSkip
-        z '.text', {
+    z('.bottom-bar', [
+      (selectedIndex === 0) && onSkip ?
+        z('.text', {
           onclick: onSkip
         },
-          lang.get 'general.skip'
-      else if selectedIndex
-        z '.text', {
-          onclick: ->
-            selectedIndex.next Math.max(selectedIndex - 1, 0)
+          lang.get('general.skip'))
+      : selectedIndex ?
+        z('.text', {
+          onclick() {
+            return selectedIndex.next(Math.max(selectedIndex - 1, 0));
+          }
         },
-          lang.get 'general.back'
-      else
-        z '.text'
-      z '.step-counter',
-        _.map steps, (step, i) ->
-          isActive = i is selectedIndex
-          z '.step-dot',
-            className: classKebab {isActive}
-      if selectedIndex < steps?.length - 1
-        z '.text', {
-          onclick: ->
-            selectedIndex.next \
-              Math.min(selectedIndex + 1, steps?.length - 1)
+          lang.get('general.back'))
+      :
+        z('.text'),
+      z('.step-counter',
+        _.map(steps, function(step, i) {
+          const isActive = i === selectedIndex;
+          return z('.step-dot',
+            {className: classKebab({isActive})});
+      })),
+      selectedIndex < (steps?.length - 1) ?
+        z('.text', {
+          onclick() {
+            return selectedIndex.next( 
+              Math.min(selectedIndex + 1, steps?.length - 1));
+          }
         },
-          lang.get 'general.next'
-      else
-        z '.text', {
+          lang.get('general.next'))
+      :
+        z('.text', {
           onclick: onDone
         },
-          doneText or lang.get 'general.gotIt'
-    ]
+          doneText || lang.get('general.gotIt'))
+    ]));
+};

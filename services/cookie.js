@@ -1,38 +1,54 @@
-import * as Rx from 'rxjs'
+import * as Rx from 'rxjs';
 
-COOKIE_DURATION_MS = 365 * 24 * 3600 * 1000 # 1 year
+const COOKIE_DURATION_MS = 365 * 24 * 3600 * 1000; // 1 year
 
-class Cookie
-  constructor: ({initialCookies, @setCookie, @host}) ->
-    @cookies = initialCookies or {}
-    @stream = new Rx.BehaviorSubject @cookies
+class Cookie {
+  constructor({initialCookies, setCookie, host}) {
+    this.getCookieOpts = this.getCookieOpts.bind(this);
+    this.set = this.set.bind(this);
+    this.get = this.get.bind(this);
+    this.getStream = this.getStream.bind(this);
+    this.setCookie = setCookie;
+    this.host = host;
+    this.cookies = initialCookies || {};
+    this.stream = new Rx.BehaviorSubject(this.cookies);
+  }
 
-  getCookieOpts: (key, {ttlMs, host}) =>
-    ttlMs ?= COOKIE_DURATION_MS
-    host ?= @host
-    hostname = host.split(':')[0]
+  getCookieOpts(key, {ttlMs, host}) {
+    if (ttlMs == null) { ttlMs = COOKIE_DURATION_MS; }
+    if (host == null) { ({
+      host
+    } = this); }
+    const hostname = host.split(':')[0];
 
-    console.log 'set', hostname
+    console.log('set', hostname);
 
-    {
-      path: '/'
-      expires: new Date(Date.now() + ttlMs)
-      # Set cookie for subdomains
-      domain: if hostname is 'localhost' then hostname else '.' + hostname
-    }
+    return {
+      path: '/',
+      expires: new Date(Date.now() + ttlMs),
+      // Set cookie for subdomains
+      domain: hostname === 'localhost' ? hostname : '.' + hostname
+    };
+  }
 
-  set: (key, value, {ttlMs, host} = {}) =>
-    ttlMs ?= COOKIE_DURATION_MS
-    @cookies[key] = value
-    @stream.next @cookies
-    options = @getCookieOpts key, {ttlMs, host}
-    @setCookie key, value, options
+  set(key, value, param) {
+    if (param == null) { param = {}; }
+    let {ttlMs, host} = param;
+    if (ttlMs == null) { ttlMs = COOKIE_DURATION_MS; }
+    this.cookies[key] = value;
+    this.stream.next(this.cookies);
+    const options = this.getCookieOpts(key, {ttlMs, host});
+    return this.setCookie(key, value, options);
+  }
 
-  get: (key) =>
-    @cookies[key]
+  get(key) {
+    return this.cookies[key];
+  }
 
-  getStream: =>
-    @stream
+  getStream() {
+    return this.stream;
+  }
+}
 
 
-export default Cookie
+export default Cookie;

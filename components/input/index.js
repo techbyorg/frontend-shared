@@ -1,25 +1,34 @@
-import {z, classKebab, useRef, useLayoutEffect, useStream} from 'zorium'
+let $searchInput;
+import {z, classKebab, useRef, useLayoutEffect, useStream} from 'zorium';
 
-import $icon from '../icon'
+import $icon from '../icon';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $searchInput = ({icon, placeholder, valueStream}) ->
-  {value} = useStream ->
+export default $searchInput = function({icon, placeholder, valueStream}) {
+  const {value} = useStream(() => ({
     value: valueStream
+  }));
 
-  z '.z-input', {
-    className: classKebab {hasIcon: icon}
+  return z('.z-input', {
+    className: classKebab({hasIcon: icon})
   },
-    z 'input.input',
-      placeholder: placeholder
-      value: value
-      oninput: (e) ->
-        valueStream.next e.target.value
-    if icon
-      z '.icon',
-        z $icon,
-          icon: icon
+    z('input.input', {
+      placeholder,
+      value,
+      oninput(e) {
+        return valueStream.next(e.target.value);
+      }
+    }
+    ),
+    icon ?
+      z('.icon',
+        z($icon,
+          {icon})
+      ) : undefined
+  );
+};
 
 

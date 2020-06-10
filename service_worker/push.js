@@ -1,73 +1,83 @@
-import RouterService from '../services/router'
-import Language from '../services/language'
+import RouterService from '../services/router';
+import Language from '../services/language';
 
-router = new RouterService {
-  router: null
+const router = new RouterService({
+  router: null,
   lang: new Language()
-}
+});
 
-export default class Push
-  constructor: ({@cdnUrl, @host}) -> null
+export default class Push {
+  constructor({cdnUrl, host}) { this.listen = this.listen.bind(this);   this.cdnUrl = cdnUrl; this.host = host; null; }
 
-  listen: =>
-    self.addEventListener 'push', @onPush
+  listen() {
+    self.addEventListener('push', this.onPush);
 
-    self.addEventListener 'notificationclick', @onNotificationClick
+    return self.addEventListener('notificationclick', this.onNotificationClick);
+  }
 
-  onPush: (e) ->
-    console.log 'PUSH', e
-    message = if e.data then e.data.json() else {}
-    console.log message
-    if message.data?.title
-      message = message.data
-      message.data = try
-        JSON.parse message.data
-      catch error
-        {}
+  onPush(e) {
+    let path;
+    console.log('PUSH', e);
+    let message = e.data ? e.data.json() : {};
+    console.log(message);
+    if (message.data?.title) {
+      message = message.data;
+      message.data = (() => { try {
+        return JSON.parse(message.data);
+      } catch (error) {
+        return {};
+      } })();
+    }
 
-    if message.data?.path
-      path = router.get message.data.path.key, message.data.path.params
-    else
-      path = ''
+    if (message.data?.path) {
+      path = router.get(message.data.path.key, message.data.path.params);
+    } else {
+      path = '';
+    }
 
-    e.waitUntil(
-      clients.matchAll {
-        includeUncontrolled: true
+    return e.waitUntil(
+      clients.matchAll({
+        includeUncontrolled: true,
         type: 'window'
-      }
-      .then (activeClients) ->
-        isFocused = activeClients?.some (client) ->
-          client.focused
+      })
+      .then(function(activeClients) {
+        const isFocused = activeClients?.some(client => client.focused);
 
-        if not isFocused or (
-          contextId and contextId isnt message.data?.contextId
-        )
-          self.registration.showNotification 'TechBy',
-            icon: if message.icon \
-                  then message.icon \
-                  else "#{@cdnUrl}/android-chrome-192x192.png"
-            title: message.title
-            body: message.body
-            tag: message.data?.path
-            vibrate: [200, 100, 200]
-            data: _.defaults {
-              url: "https://#{@host}#{path}"
+        if (!isFocused || (
+          contextId && (contextId !== message.data?.contextId)
+        )) {
+          return self.registration.showNotification('TechBy', {
+            icon: message.icon 
+                  ? message.icon 
+                  : `${this.cdnUrl}/android-chrome-192x192.png`,
+            title: message.title,
+            body: message.body,
+            tag: message.data?.path,
+            vibrate: [200, 100, 200],
+            data: _.defaults({
+              url: `https://${this.host}${path}`,
               path: message.data?.path
-            }, message.data or {}
-    )
+            }, message.data || {})
+          });
+        }})
+    );
+  }
 
-  onNotificationClick: (e) ->
-    e.notification.close()
+  onNotificationClick(e) {
+    e.notification.close();
 
-    e.waitUntil(
-      clients.matchAll {
-        includeUncontrolled: true
+    return e.waitUntil(
+      clients.matchAll({
+        includeUncontrolled: true,
         type: 'window'
-      }
-      .then (activeClients) ->
-        if activeClients.length > 0
-          activeClients[0].focus()
-          onPushFn? e.notification.data
-        else
-          clients.openWindow e.notification.data.url
-    )
+      })
+      .then(function(activeClients) {
+        if (activeClients.length > 0) {
+          activeClients[0].focus();
+          return onPushFn?.(e.notification.data);
+        } else {
+          return clients.openWindow(e.notification.data.url);
+        }})
+    );
+  }
+}

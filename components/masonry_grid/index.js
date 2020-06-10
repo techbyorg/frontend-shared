@@ -1,35 +1,41 @@
-import {z, useContext, useStream} from 'zorium'
-import * as _ from 'lodash-es'
+let $masonryGrid;
+import {z, useContext, useStream} from 'zorium';
+import * as _ from 'lodash-es';
 
-import context from '../../context'
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $masonryGrid = ({$elements, columnCounts}) ->
-  {browser} = useContext context
+export default $masonryGrid = function({$elements, columnCounts}) {
+  let $columns;
+  const {browser} = useContext(context);
 
-  {breakpoint} = useStream ->
+  const {breakpoint} = useStream(() => ({
     breakpoint: browser.getBreakpoint()
+  }));
 
-  columnCount = columnCounts[breakpoint or 'mobile'] or columnCounts['mobile']
-  if columnCount is 1
-    $columns = [$elements]
-  else
-    $columns = _.map _.range(columnCount), (columnIndex) ->
-      _.filter $elements, (element, i) ->
-        i % columnCount is columnIndex
+  const columnCount = columnCounts[breakpoint || 'mobile'] || columnCounts['mobile'];
+  if (columnCount === 1) {
+    $columns = [$elements];
+  } else {
+    $columns = _.map(_.range(columnCount), columnIndex => _.filter($elements, (element, i) => (i % columnCount) === columnIndex));
+  }
 
-  z '.z-masonry-grid', {
-    style:
-      columnCount: columnCount
+  return z('.z-masonry-grid', {
+    style: {
+      columnCount,
       webkitColumnCount: columnCount
+    }
   },
-    _.map $columns, ($els) ->
-      z '.column', {
-        style:
-          width: "#{100 / columnCount}%"
-      },
-        _.map $els, ($el) ->
-          z '.row',
-            $el
+    _.map($columns, $els => z('.column', {
+      style: {
+        width: `${100 / columnCount}%`
+      }
+    },
+      _.map($els, $el => z('.row',
+        $el))
+    ))
+  );
+};

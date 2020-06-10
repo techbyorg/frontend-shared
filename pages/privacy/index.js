@@ -1,21 +1,24 @@
-import {z, useContext} from 'zorium'
+let $privacyPage;
+import {z, useContext} from 'zorium';
 
-import $appBar from '../../components/app_bar'
-import $buttonBack from '../../components/button_back'
-import $privacy from '../../components/privacy'
-import context from '../../context'
+import $appBar from '../../components/app_bar';
+import $buttonBack from '../../components/button_back';
+import $privacy from '../../components/privacy';
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $privacyPage = ->
-  {lang, colors} = useContext context
+export default $privacyPage = function() {
+  const {lang, colors} = useContext(context);
 
-  z '.p-privacy',
-    z $appBar, {
-      title: lang.get 'privacyPage.title'
-      $topLeftButton: z $buttonBack, {
+  return z('.p-privacy',
+    z($appBar, {
+      title: lang.get('privacyPage.title'),
+      $topLeftButton: z($buttonBack, {
         color: colors.$header500Icon
-      }
-    }
-    z $privacy
+      })
+    }),
+    z($privacy));
+};

@@ -1,24 +1,36 @@
-export default class Time
-  constructor: ({@auth}) ->
-    @serverTime = Date.now()
-    @timeInterval = setInterval =>
-      @serverTime += 1000
-    , 1000
+export default class Time {
+  constructor({auth}) {
+    this.updateServerTime = this.updateServerTime.bind(this);
+    this.getServerTime = this.getServerTime.bind(this);
+    this.dispose = this.dispose.bind(this);
+    this.auth = auth;
+    this.serverTime = Date.now();
+    this.timeInterval = setInterval(() => {
+      return this.serverTime += 1000;
+    }
+    , 1000);
 
-    setTimeout =>
-      @updateServerTime()
-    , 100
+    setTimeout(() => {
+      return this.updateServerTime();
+    }
+    , 100);
+  }
 
-  updateServerTime: =>
-    @auth.call
-      query: 'query Time { time }'
-    .then ({data}) =>
-      @serverTime = Date.parse data.time.now
+  updateServerTime() {
+    return this.auth.call({
+      query: 'query Time { time }'})
+    .then(({data}) => {
+      return this.serverTime = Date.parse(data.time.now);
+    });
+  }
 
-  getServerTime: =>
-    @serverTime
+  getServerTime() {
+    return this.serverTime;
+  }
 
-  dispose: =>
-    clearInterval @timeInterval
+  dispose() {
+    return clearInterval(this.timeInterval);
+  }
 
-  getCurrentSeason: -> 'spring' # TODO
+  getCurrentSeason() { return 'spring'; } // TODO
+}

@@ -1,68 +1,83 @@
-import {z, classKebab, createPortal, useContext, useEffect, useMemo, useRef} from 'zorium'
+let $dialog;
+import {z, classKebab, createPortal, useContext, useEffect, useMemo, useRef} from 'zorium';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-import $button from '../button'
-import $icon from '../icon'
-import {closeIconPath} from '../icon/paths'
-import context from '../../context'
+import $button from '../button';
+import $icon from '../icon';
+import {closeIconPath} from '../icon/paths';
+import context from '../../context';
 
-CLOSE_DELAY_MS = 450 # 0.45s for animation
+const CLOSE_DELAY_MS = 450; // 0.45s for animation
 
-export default $dialog = (props) ->
-  {onClose, $content = '', $title, $actions, isWide} = props
-  {colors} = useContext context
+export default $dialog = function(props) {
+  const {
+          onClose
+        } = props,
+        val = props.$content,
+        $content = val != null ? val : '',
+        {
+          $title,
+          $actions,
+          isWide
+        } = props;
+  const {colors} = useContext(context);
 
-  $$ref = useRef()
+  const $$ref = useRef();
 
-  {$$overlays} = useMemo ->
-    {
-      $$overlays: document?.getElementById 'overlays-portal'
+  const {$$overlays} = useMemo(() => ({
+    $$overlays: document?.getElementById('overlays-portal')
+  })
+  , []);
+
+  useEffect(function() {
+    setTimeout((() => $$ref.current.classList.add('is-mounted')), 0);
+    window.addEventListener('keydown', keyListener);
+
+    return () => window.removeEventListener('keydown', keyListener);
+  }
+  , []);
+
+  const close = function() {
+    $$ref.current.classList.remove('is-mounted');
+    return setTimeout(() => onClose()
+    , CLOSE_DELAY_MS);
+  };
+
+  var keyListener = function(e) {
+    if ((e.key === 'Escape') || (e.key === 'Esc') || (e.keyCode === 27)) {
+      e.preventDefault();
+      return close();
     }
-  , []
+  };
 
-  useEffect ->
-    setTimeout (-> $$ref.current.classList.add 'is-mounted'), 0
-    window.addEventListener 'keydown', keyListener
-
-    return ->
-      window.removeEventListener 'keydown', keyListener
-  , []
-
-  close = ->
-    $$ref.current.classList.remove 'is-mounted'
-    setTimeout ->
-      onClose()
-    , CLOSE_DELAY_MS
-
-  keyListener = (e) ->
-    if (e.key == 'Escape' or e.key == 'Esc' or e.keyCode == 27)
-      e.preventDefault()
-      close()
-
-  createPortal(
-    z '.z-dialog', {
-      ref: $$ref
-      className: classKebab {isWide}
+  return createPortal(
+    z('.z-dialog', {
+      ref: $$ref,
+      className: classKebab({isWide})
     },
-      z '.backdrop', {
+      z('.backdrop', {
         onclick: close
-      }
+      }),
 
-      z '.dialog',
-        if $title
-          z '.title',
-            $title
-            z '.close',
-              z $icon, {
-                icon: closeIconPath
-                color: colors.$bgText26
+      z('.dialog',
+        $title ?
+          z('.title',
+            $title,
+            z('.close',
+              z($icon, {
+                icon: closeIconPath,
+                color: colors.$bgText26,
                 onclick: close
-              }
-        z '.content',
-          $content
-        if $actions
-          z '.actions', $actions
+              }))) : undefined,
+        z('.content',
+          $content),
+        $actions ?
+          z('.actions', $actions) : undefined
+      )
+    ),
     $$overlays
-  )
+  );
+};

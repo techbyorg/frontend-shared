@@ -1,3 +1,4 @@
-import {createContext} from 'zorium'
+let SharedContext;
+import {createContext} from 'zorium';
 
-export default SharedContext = createContext()
+export default SharedContext = createContext();

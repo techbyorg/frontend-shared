@@ -1,93 +1,110 @@
-import {z, classKebab, useEffect, useRef, useStream} from 'zorium'
-import * as _ from 'lodash-es'
+let $tabsBar;
+import {z, classKebab, useEffect, useRef, useStream} from 'zorium';
+import * as _ from 'lodash-es';
 
-import colors from '../../colors'
+import colors from '../../colors';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $tabsBar = (props) ->
-  {selectedIndexStream, items, bgColor, color, isPrimary, inactiveColor,
-    underlineColor, isFixed, isFlat, isArrow, tabWidth, tabHeight} = props
+export default $tabsBar = function(props) {
+  let {selectedIndexStream, items, bgColor, color, isPrimary, inactiveColor,
+    underlineColor, isFixed, isFlat, isArrow, tabWidth, tabHeight} = props;
 
-  $$ref = useRef()
+  const $$ref = useRef();
 
-  useEffect ->
-    $$ref.current.addEventListener 'touchmove', onTouchMove
+  useEffect(function() {
+    $$ref.current.addEventListener('touchmove', onTouchMove);
 
-    return ->
-      $$ref?.current.removeEventListener 'touchmove', onTouchMove
-  , []
+    return () => $$ref?.current.removeEventListener('touchmove', onTouchMove);
+  }
+  , []);
 
-  {selectedIndex} = useStream ->
+  const {selectedIndex} = useStream(() => ({
     selectedIndex: selectedIndexStream
+  }));
 
-  onTouchMove = (e) ->
-    e.preventDefault()
+  var onTouchMove = e => e.preventDefault();
 
-  bgColor ?= if isPrimary then colors.$primaryMain else colors.$bgColor
-  inactiveColor ?= if isPrimary \
-                   then colors.$primaryMainText54 \
-                   else colors.$bgText54
-  color ?= if isPrimary \
-           then colors.$primaryMainText \
-           else colors.$bgText
-  underlineColor ?= if isPrimary \
-                    then colors.$primaryMainText \
-                    else colors.$primaryMain
+  if (bgColor == null) { bgColor = isPrimary ? colors.$primaryMain : colors.$bgColor; }
+  if (inactiveColor == null) { inactiveColor = isPrimary 
+                   ? colors.$primaryMainText54 
+                   : colors.$bgText54; }
+  if (color == null) { color = isPrimary 
+           ? colors.$primaryMainText 
+           : colors.$bgText; }
+  if (underlineColor == null) { underlineColor = isPrimary 
+                    ? colors.$primaryMainText 
+                    : colors.$primaryMain; }
 
-  isFullWidth = not tabWidth
+  const isFullWidth = !tabWidth;
 
-  z '.z-tabs-bar', {
-    ref: $$ref
-    className: classKebab {isFixed, isArrow, isFlat, isFullWidth}
-    style:
+  return z('.z-tabs-bar', {
+    ref: $$ref,
+    className: classKebab({isFixed, isArrow, isFlat, isFullWidth}),
+    style: {
       background: bgColor
+    }
   },
-    z '.bar', {
-      style:
-        background: bgColor
-        height: if tabHeight then "#{tabHeight}px"
-        width: if isFullWidth \
-               then '100%' \
-               else "#{tabWidth * items.length}px"
+    z('.bar', {
+      style: {
+        background: bgColor,
+        height: tabHeight ? `${tabHeight}px` : undefined,
+        width: isFullWidth 
+               ? '100%' 
+               : `${tabWidth * items.length}px`
+      }
     },
-        z '.selector',
-          key: 'selector'
-          style:
-            background: underlineColor
-            width: "#{100 / items.length}%"
-        _.map items, (item, i) ->
-          hasIcon = Boolean item.$menuIcon
-          hasText = Boolean item.$menuText
-          hasNotification = item.hasNotification
-          isSelected = i is selectedIndex
+        z('.selector', {
+          key: 'selector',
+          style: {
+            background: underlineColor,
+            width: `${100 / items.length}%`
+          }
+        }
+        ),
+        _.map(items, function(item, i) {
+          const hasIcon = Boolean(item.$menuIcon);
+          const hasText = Boolean(item.$menuText);
+          const {
+            hasNotification
+          } = item;
+          const isSelected = i === selectedIndex;
 
-          z '.tab',
-            key: i
-            slug: item.slug
-            className: classKebab {hasIcon, hasText, isSelected}
-            style: if tabWidth then {width: "#{tabWidth}px"} else null
+          return z('.tab', {
+            key: i,
+            slug: item.slug,
+            className: classKebab({hasIcon, hasText, isSelected}),
+            style: tabWidth ? {width: `${tabWidth}px`} : null,
 
-            onclick: (e) ->
-              e.preventDefault()
-              e.stopPropagation()
-              selectedIndexStream.next(i)
-            if hasIcon
-              z '.icon',
-                z item.$menuIcon,
-                  color: if isSelected then color else inactiveColor
+            onclick(e) {
+              e.preventDefault();
+              e.stopPropagation();
+              return selectedIndexStream.next(i);
+            }
+          },
+            hasIcon ?
+              z('.icon',
+                z(item.$menuIcon, {
+                  color: isSelected ? color : inactiveColor,
                   icon: item.menuIconName
-            item.$after
-            if hasText
-              z '.text', {
-                style:
-                  color: if isSelected then color else inactiveColor
+                }
+                )
+              ) : undefined,
+            item.$after,
+            hasText ?
+              z('.text', {
+                style: {
+                  color: isSelected ? color : inactiveColor
+                }
               },
-               item.$menuText
+               item.$menuText) : undefined,
 
-             z '.notification', {
-               className: classKebab {
+             z('.notification', {
+               className: classKebab({
                  isVisible: hasNotification
-               }
-             }
+               })
+             }));
+      })));
+};

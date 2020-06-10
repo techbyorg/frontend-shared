@@ -1,45 +1,55 @@
-import {z, classKebab, useContext, useEffect, useStream} from 'zorium'
-import * as _ from 'lodash-es'
+let $tooltip;
+import {z, classKebab, useContext, useEffect, useStream} from 'zorium';
+import * as _ from 'lodash-es';
 
-import $icon from '../icon'
-import {closeIconPath} from '../icon/paths'
-import context from '../../context'
+import $icon from '../icon';
+import {closeIconPath} from '../icon/paths';
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-# FIXME: use $positionedOverlay
-export default $tooltip = (props) ->
-  {$$target, key, anchor, offset, isVisibleStream, zIndex
-    $title, $content} = props
-  {cookie, colors} = useContext context
+// FIXME: use $positionedOverlay
+export default $tooltip = function(props) {
+  const {$$target, key, anchor, offset, isVisibleStream, zIndex,
+    $title, $content} = props;
+  const {cookie, colors} = useContext(context);
 
-  close = ->
-    completedTooltips = try
-      cookie.get('completedTooltips').split(',')
-    catch error
-      []
-    completedTooltips ?= []
-    cookie.set 'completedTooltips', _.uniq(
-      completedTooltips.concat [key]
+  const close = function() {
+    let completedTooltips = (() => { try {
+      return cookie.get('completedTooltips').split(',');
+    } catch (error) {
+      return [];
+    } })();
+    if (completedTooltips == null) { completedTooltips = []; }
+    cookie.set('completedTooltips', _.uniq(
+      completedTooltips.concat([key])
     ).join(',')
-    $positionedOverlay.close()
+    );
+    $positionedOverlay.close();
 
-    isVisibleStream.next false
-  z ".z-tooltip.anchor-#{anchor}", {
-    ref: $$target
-    className: classKebab {isVisible}
-    style: style
+    return isVisibleStream.next(false);
+  };
+  return z(`.z-tooltip.anchor-${anchor}`, {
+    ref: $$target,
+    className: classKebab({isVisible}),
+    style
   },
-    z $positionedOverlay,
+    z($positionedOverlay, {
       $content: [
-        z '.close',
-          z $icon,
-            icon: closeIconPath
-            size: '16px'
-            color: colors.$bgText54
+        z('.close',
+          z($icon, {
+            icon: closeIconPath,
+            size: '16px',
+            color: colors.$bgText54,
             onclick: close
-        z '.content',
-          z '.title', $title
-          $content
+          }
+          )
+        ),
+        z('.content',
+          z('.title', $title),
+          $content)
       ]
+    }));
+};

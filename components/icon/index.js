@@ -1,56 +1,61 @@
-import {z, classKebab, useContext} from 'zorium'
+let $icon;
+import {z, classKebab, useContext} from 'zorium';
 
-import context from '../../context'
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $icon = (props) ->
-  {icon, size, isAlignedTop, isAlignedLeft, isAlignedRight,
+export default $icon = function(props) {
+  let {icon, size, isAlignedTop, isAlignedLeft, isAlignedRight,
     isAlignedBottom, isTouchTarget, color, onclick, onmousedown,
     viewBox, heightRatio, hasRipple,
-    touchHeight, touchWidth} = props
-  {colors} = useContext context
+    touchHeight, touchWidth} = props;
+  const {colors} = useContext(context);
 
-  size ?= '24px'
-  viewBox ?= 24
-  heightRatio ?= 1
-  touchWidth ?= '48px'
-  touchHeight ?= '48px'
-  isClickable = Boolean onclick or onmousedown
+  if (size == null) { size = '24px'; }
+  if (viewBox == null) { viewBox = 24; }
+  if (heightRatio == null) { heightRatio = 1; }
+  if (touchWidth == null) { touchWidth = '48px'; }
+  if (touchHeight == null) { touchHeight = '48px'; }
+  const isClickable = Boolean(onclick || onmousedown);
 
-  tag = if hasRipple then 'a' else 'div'
+  const tag = hasRipple ? 'a' : 'div';
 
-  z "#{tag}.z-icon", {
-    className: classKebab {
+  return z(`${tag}.z-icon`, {
+    className: classKebab({
       isAlignedTop, isAlignedLeft, isAlignedRight,
-      isAlignedBottom, isTouchTarget, isClickable
-      hasRippleWhite: hasRipple and color isnt colors.$header500Icon
-      hasRippleHeader: hasRipple and color is colors.$header500Icon
+      isAlignedBottom, isTouchTarget, isClickable,
+      hasRippleWhite: hasRipple && (color !== colors.$header500Icon),
+      hasRippleHeader: hasRipple && (color === colors.$header500Icon)
+    }),
+    tabindex: hasRipple ? {tabindex: 0} : undefined,
+    onclick,
+    onmousedown,
+    style: {
+      minWidth: isTouchTarget ? touchWidth : '100%',
+      minHeight: isTouchTarget ? touchHeight : '100%',
+      width: size,
+      height: size?.indexOf?.('%') !== -1 
+              ? `${parseInt(size) * heightRatio}%` 
+              : `${parseInt(size) * heightRatio}px`
     }
-    tabindex: if hasRipple then tabindex: 0 else undefined
-    onclick: onclick
-    onmousedown: onmousedown
-    style:
-      minWidth: if isTouchTarget then touchWidth else '100%'
-      minHeight: if isTouchTarget then touchHeight else '100%'
-      width: size
-      height: if size?.indexOf?('%') isnt -1 \
-              then "#{parseInt(size) * heightRatio}%" \
-              else "#{parseInt(size) * heightRatio}px"
   },
-    z 'svg', {
-      namespace: 'http://www.w3.org/2000/svg'
-      viewBox: "0 0 #{viewBox} #{viewBox * heightRatio}"
-      style:
-        width: size
-        height: if size?.indexOf?('%') isnt -1 \
-                then "#{parseInt(size) * heightRatio}%" \
-                else "#{parseInt(size) * heightRatio}px"
-    },
-      z 'path', {
-        namespace: 'http://www.w3.org/2000/svg'
-        d: icon
-        fill: color
-        'fill-rule': 'evenodd'
+    z('svg', {
+      namespace: 'http://www.w3.org/2000/svg',
+      viewBox: `0 0 ${viewBox} ${viewBox * heightRatio}`,
+      style: {
+        width: size,
+        height: size?.indexOf?.('%') !== -1 
+                ? `${parseInt(size) * heightRatio}%` 
+                : `${parseInt(size) * heightRatio}px`
       }
+    },
+      z('path', {
+        namespace: 'http://www.w3.org/2000/svg',
+        d: icon,
+        fill: color,
+        'fill-rule': 'evenodd'
+      })));
+};

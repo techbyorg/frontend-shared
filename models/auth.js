@@ -1,167 +1,216 @@
-import * as _ from 'lodash-es'
-import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
+import * as _ from 'lodash-es';
+import * as Rx from 'rxjs';
+import * as rx from 'rxjs/operators';
 
-import Environment from '../services/environment'
-import sharedConfig from '../shared_config'
+import Environment from '../services/environment';
+import sharedConfig from '../shared_config';
 
-export default class Auth
-  constructor: (options) ->
-    {@exoid, @pushToken, @lang, @cookie, @userAgent,
-      @portal, @authCookie, @host} = options
+export default class Auth {
+  constructor(options) {
+    this.setAccessToken = this.setAccessToken.bind(this);
+    this.logout = this.logout.bind(this);
+    this.join = this.join.bind(this);
+    this.resetPassword = this.resetPassword.bind(this);
+    this.afterLogin = this.afterLogin.bind(this);
+    this.login = this.login.bind(this);
+    this.loginLink = this.loginLink.bind(this);
+    this.stream = this.stream.bind(this);
+    this.call = this.call.bind(this);
+    ({exoid: this.exoid, pushToken: this.pushToken, lang: this.lang, cookie: this.cookie, userAgent: this.userAgent,
+      portal: this.portal, authCookie: this.authCookie, host: this.host} = options);
 
-    @waitValidAuthCookie = Rx.defer =>
-      accessToken = @cookie.get @authCookie
-      language = @lang.getLanguageStr()
-      (if accessToken
-        @exoid.getCached 'graphql',
-          query: '''
-            query Query { me { id, name, data { bio } } }
-          '''.trim()
-        .then (user) =>
-          if user?
-            return {data: userLoginAnon: {accessToken}}
-          @exoid.stream 'graphql',
-            query: '''
-              query Query { me { id, name, data { bio } } }
-            '''.trim()
-          .pipe(rx.take(1)).toPromise()
-          .then ->
-            return {data: userLoginAnon: {accessToken}}
-        .catch =>
-          @exoid.call 'graphql',
-            # FIXME: cleanup all this duplication
-            query: '''
-              mutation LoginAnon {
-                userLoginAnon {
-                  accessToken
-                }
-              }
-            '''
-      else
-        @exoid.call 'graphql',
-          query: '''
-            mutation LoginAnon {
-              userLoginAnon {
-                accessToken
-              }
-            }
-          ''')
-      .then ({data}) =>
-        accessToken = data?.userLoginAnon.accessToken
-        if accessToken and accessToken isnt 'undefined'
-          @setAccessToken data?.userLoginAnon.accessToken
-    .pipe rx.publishReplay(1), rx.refCount()
+    this.waitValidAuthCookie = Rx.defer(() => {
+      let accessToken = this.cookie.get(this.authCookie);
+      const language = this.lang.getLanguageStr();
+      return (accessToken ?
+        this.exoid.getCached('graphql', {
+          query: `\
+query Query { me { id, name, data { bio } } }\
+`.trim()
+        }).then(user => {
+          if (user != null) {
+            return {data: {userLoginAnon: {accessToken}}};
+          }
+          return this.exoid.stream('graphql', {
+            query: `\
+query Query { me { id, name, data { bio } } }\
+`.trim()
+          }).pipe(rx.take(1)).toPromise()
+          .then(() => ({
+            data: {userLoginAnon: {accessToken}}
+          }));
+        })
+        .catch(() => {
+          return this.exoid.call('graphql', {
+            // FIXME: cleanup all this duplication
+            query: `\
+mutation LoginAnon {
+  userLoginAnon {
+    accessToken
+  }
+}\
+`
+          }
+          );
+        })
+      :
+        this.exoid.call('graphql', {
+          query: `\
+mutation LoginAnon {
+  userLoginAnon {
+    accessToken
+  }
+}\
+`
+        }))
+      .then(({data}) => {
+        accessToken = data?.userLoginAnon.accessToken;
+        if (accessToken && (accessToken !== 'undefined')) {
+          return this.setAccessToken(data?.userLoginAnon.accessToken);
+        }
+      });
+  }).pipe(rx.publishReplay(1), rx.refCount());
+  }
 
-  setAccessToken: (accessToken) =>
-    domain = if sharedConfig.ENV is sharedConfig.ENVS.DEV \
-             then sharedConfig.HOST \
-             else _.takeRight(@host.split('.'), 2).join '.'
-    @cookie.set @authCookie, accessToken, {
-      # top level domain
+  setAccessToken(accessToken) {
+    const domain = sharedConfig.ENV === sharedConfig.ENVS.DEV 
+             ? sharedConfig.HOST 
+             : _.takeRight(this.host.split('.'), 2).join('.');
+    return this.cookie.set(this.authCookie, accessToken, {
+      // top level domain
       host: domain
+    });
+  }
+
+  logout() {
+    this.setAccessToken('');
+    const language = this.lang.getLanguageStr();
+    return this.exoid.call('graphql', {
+      query: `\
+mutation LoginAnon {
+  userLoginAnon {
+    accessToken
+  }
+}\
+`
+    }).then(({data}) => {
+      this.setAccessToken(data?.userLoginAnon.accessToken);
+      return this.exoid.invalidateAll();
+    });
+  }
+
+  join(param) {
+    if (param == null) { param = {}; }
+    const {name, email, password} = param;
+    console.log('FIXME');
+    return Promise.resolve(null);
+  }
+    // @exoid.call 'auth.join', {name, email, password}
+    // .then ({accessToken}) =>
+    //   @setAccessToken accessToken
+    //   @exoid.invalidateAll()
+
+  resetPassword(param) {
+    if (param == null) { param = {}; }
+    const {email} = param;
+    console.log('FIXME');
+    return Promise.resolve(null);
+  }
+    // @exoid.call 'auth.resetPassword', {email}
+
+  afterLogin({accessToken}) {
+    this.setAccessToken(accessToken);
+    this.exoid.invalidateAll();
+    let pushToken = this.pushToken.getValue();
+    if (pushToken) {
+      if (pushToken == null) { pushToken = 'none'; }
+      return this.portal.call('app.getDeviceId')
+      .catch(() => null)
+      .then(deviceId => {
+        const sourceType = Environment.isAndroid() 
+                     ? 'android' 
+                     : 'ios-fcm';
+        return console.log('FIXME: tokens');
+    }).catch(() => null);
+    }
+  }
+
+  login(param) {
+    if (param == null) { param = {}; }
+    const {email, password} = param;
+    return this.exoid.call('graphql', {
+      query: `\
+mutation UserLoginEmail($email: String!, $password: String!) {
+  userLoginEmail(email: $email, password: $password) {
+    accessToken
+  }
+}\
+`,
+      variables: {email, password}
+    })
+    .then(this.afterLogin);
+  }
+
+  loginLink(param) {
+    if (param == null) { param = {}; }
+    const {userId, tokenStr} = param;
+    return this.exoid.call('graphql', {
+      query: `\
+mutation UserLoginLink($userId: ID!, $tokenStr: String!) {
+  userLoginLink(userId: $userId, tokenStr: $tokenStr) {
+    accessToken
+  }
+}\
+`,
+      variables: {userId, tokenStr}
+    })
+    .then(this.afterLogin);
+  }
+
+  stream({query, variables, pull}, options) {
+    if (options == null) { options = {}; }
+    if (!query) {
+      console.warn('missing', arguments[0]);
     }
 
-  logout: =>
-    @setAccessToken ''
-    language = @lang.getLanguageStr()
-    @exoid.call 'graphql',
-      query: '''
-        mutation LoginAnon {
-          userLoginAnon {
-            accessToken
-          }
-        }
-      '''
-    .then ({data}) =>
-      @setAccessToken data?.userLoginAnon.accessToken
-      @exoid.invalidateAll()
-
-  join: ({name, email, password} = {}) =>
-    console.log 'FIXME'
-    Promise.resolve null
-    # @exoid.call 'auth.join', {name, email, password}
-    # .then ({accessToken}) =>
-    #   @setAccessToken accessToken
-    #   @exoid.invalidateAll()
-
-  resetPassword: ({email} = {}) =>
-    console.log 'FIXME'
-    Promise.resolve null
-    # @exoid.call 'auth.resetPassword', {email}
-
-  afterLogin: ({accessToken}) =>
-    @setAccessToken accessToken
-    @exoid.invalidateAll()
-    pushToken = @pushToken.getValue()
-    if pushToken
-      pushToken ?= 'none'
-      @portal.call 'app.getDeviceId'
-      .catch -> null
-      .then (deviceId) =>
-        sourceType = if Environment.isAndroid() \
-                     then 'android' \
-                     else 'ios-fcm'
-        console.log 'FIXME: tokens'
-        # @call 'pushTokens.upsert', {tokenStr: pushToken, sourceType, deviceId}
-      .catch -> null
-
-  login: ({email, password} = {}) =>
-    @exoid.call 'graphql',
-      query: '''
-        mutation UserLoginEmail($email: String!, $password: String!) {
-          userLoginEmail(email: $email, password: $password) {
-            accessToken
-          }
-        }
-      '''
-      variables: {email, password}
-    .then @afterLogin
-
-  loginLink: ({userId, tokenStr} = {}) =>
-    @exoid.call 'graphql',
-      query: '''
-        mutation UserLoginLink($userId: ID!, $tokenStr: String!) {
-          userLoginLink(userId: $userId, tokenStr: $tokenStr) {
-            accessToken
-          }
-        }
-      '''
-      variables: {userId, tokenStr}
-    .then @afterLogin
-
-  stream: ({query, variables, pull}, options = {}) =>
-    unless query
-      console.warn 'missing', arguments[0]
-
-    start = Date.now()
-    options = _.pick options, [
-      'isErrorable', 'clientChangesStream', 'ignoreCache', 'initialSortFn'
+    const start = Date.now();
+    options = _.pick(options, [
+      'isErrorable', 'clientChangesStream', 'ignoreCache', 'initialSortFn',
       'isStreamed', 'limit'
-    ]
-    @waitValidAuthCookie
-    .pipe rx.switchMap =>
-      stream = @exoid.stream 'graphql', {query, variables}, options
-      if pull
-        stream.pipe rx.map ({data}) ->
-          data[pull]
-      else
-        stream
+    ]);
+    return this.waitValidAuthCookie
+    .pipe(rx.switchMap(() => {
+      const stream = this.exoid.stream('graphql', {query, variables}, options);
+      if (pull) {
+        return stream.pipe(rx.map(({data}) => data[pull]));
+      } else {
+        return stream;
+      }
+    })
+    );
+  }
 
-  call: ({query, variables}, options = {}) =>
-    {invalidateAll, invalidateSingle, additionalDataStream} = options
+  call({query, variables}, options) {
+    if (options == null) { options = {}; }
+    const {invalidateAll, invalidateSingle, additionalDataStream} = options;
 
-    unless query
-      console.warn 'missing', arguments[0]
+    if (!query) {
+      console.warn('missing', arguments[0]);
+    }
 
-    @waitValidAuthCookie.pipe(rx.take(1)).toPromise()
-    .then =>
-      @exoid.call 'graphql', {query, variables}, {additionalDataStream}
-    .then (response) =>
-      if invalidateAll
-        console.log 'Invalidating all'
-        @exoid.invalidateAll()
-      else if invalidateSingle
-        console.log 'Invalidating single', invalidateSingle
-        @exoid.invalidate invalidateSingle.path, invalidateSingle.body
-      response
+    return this.waitValidAuthCookie.pipe(rx.take(1)).toPromise()
+    .then(() => {
+      return this.exoid.call('graphql', {query, variables}, {additionalDataStream});
+  })
+    .then(response => {
+      if (invalidateAll) {
+        console.log('Invalidating all');
+        this.exoid.invalidateAll();
+      } else if (invalidateSingle) {
+        console.log('Invalidating single', invalidateSingle);
+        this.exoid.invalidate(invalidateSingle.path, invalidateSingle.body);
+      }
+      return response;
+    });
+  }
+}

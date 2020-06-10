@@ -1,118 +1,142 @@
-import semverCompare from 'semver-compare'
-import * as _ from 'lodash-es'
+import semverCompare from 'semver-compare';
+import * as _ from 'lodash-es';
 
-ONE_MINUTE_S = 60
-ONE_HOUR_S = 3600
-ONE_DAY_S = 3600 * 24
-ONE_WEEK_S = 3600 * 24 * 7
+const ONE_MINUTE_S = 60;
+const ONE_HOUR_S = 3600;
+const ONE_DAY_S = 3600 * 24;
+const ONE_WEEK_S = 3600 * 24 * 7;
 
-class DateService
-  constructor: ->
-    @setLocale 'en'
+class DateService {
+  constructor() {
+    this.setLang = this.setLang.bind(this);
+    this.formatSeconds = this.formatSeconds.bind(this);
+    this.fromNowSeconds = this.fromNowSeconds.bind(this);
+    this.fromNow = this.fromNow.bind(this);
+    this.setLocale('en');
+  }
 
-  setLang: (@lang) => null
+  setLang(lang) { this.lang = lang; return null; }
 
-  format: (date, format) ->
-    unless date instanceof Date
-      date = new Date date
-    # TODO: only thing that uses this so far uses yyyy-mm-dd format and MMM Do
-    if format is 'MMM D'
-      MMM = @lang.get("months.#{date.getMonth()}").substring(0, 3)
-      D = date.getDate()
-      "#{MMM} #{D}"
-    else if format is 'MMM D, h:mm a'
-      MMM = @lang.get("months.#{date.getMonth()}").substring(0, 3)
-      D = date.getDate()
-      hours = date.getHours()
-      h = hours % 12
-      if h is 0
-        h = 12
-      mm = _.padStart date.getMinutes(), 2, '0'
-      a = if hours > 12 then 'pm' else 'am'
-      "#{MMM} #{D}, #{h}:#{mm} #{a}"
-    else if format is 'MMMM yyyy'
-      MMMM = @lang.get("months.#{date.getMonth()}")
-      yyyy = date.getFullYear()
-      "#{MMMM} #{yyyy}"
-    else if format is 'MMM yyyy'
-      MMM = @lang.get("months.#{date.getMonth()}").substring(0, 3)
-      yyyy = date.getFullYear()
-      "#{MMM} #{yyyy}"
-    else
-      yyyy = date.getFullYear()
-      mm = date.getMonth() + 1
-      if mm < 10
-        mm = "0#{mm}"
-      dd = date.getDate()
-      if dd < 10
-        dd = "0#{dd}"
-      "#{yyyy}-#{mm}-#{dd}"
+  format(date, format) {
+    let D, mm, MMM, yyyy;
+    if (!(date instanceof Date)) {
+      date = new Date(date);
+    }
+    // TODO: only thing that uses this so far uses yyyy-mm-dd format and MMM Do
+    if (format === 'MMM D') {
+      MMM = this.lang.get(`months.${date.getMonth()}`).substring(0, 3);
+      D = date.getDate();
+      return `${MMM} ${D}`;
+    } else if (format === 'MMM D, h:mm a') {
+      MMM = this.lang.get(`months.${date.getMonth()}`).substring(0, 3);
+      D = date.getDate();
+      const hours = date.getHours();
+      let h = hours % 12;
+      if (h === 0) {
+        h = 12;
+      }
+      mm = _.padStart(date.getMinutes(), 2, '0');
+      const a = hours > 12 ? 'pm' : 'am';
+      return `${MMM} ${D}, ${h}:${mm} ${a}`;
+    } else if (format === 'MMMM yyyy') {
+      const MMMM = this.lang.get(`months.${date.getMonth()}`);
+      yyyy = date.getFullYear();
+      return `${MMMM} ${yyyy}`;
+    } else if (format === 'MMM yyyy') {
+      MMM = this.lang.get(`months.${date.getMonth()}`).substring(0, 3);
+      yyyy = date.getFullYear();
+      return `${MMM} ${yyyy}`;
+    } else {
+      yyyy = date.getFullYear();
+      mm = date.getMonth() + 1;
+      if (mm < 10) {
+        mm = `0${mm}`;
+      }
+      let dd = date.getDate();
+      if (dd < 10) {
+        dd = `0${dd}`;
+      }
+      return `${yyyy}-${mm}-${dd}`;
+    }
+  }
 
-  formatDuration: (duration) ->
-    # https://stackoverflow.com/a/30134889
-    match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/)
-    match = match.slice(1).map((x) ->
-      return x?.replace(/\D/, '')
-    )
-    hours = _.padStart parseInt(match[0]) or 0, 2, '0'
-    minutes = _.padStart parseInt(match[1]) or 0, 2, '0'
-    seconds = _.padStart parseInt(match[2]) or 0, 2, '0'
-    if hours isnt '00'
-      "#{hours}:#{minutes}:#{seconds}"
-    else if minutes isnt '00'
-      "#{minutes}:#{seconds}"
-    else
-      "00:#{seconds}"
+  formatDuration(duration) {
+    // https://stackoverflow.com/a/30134889
+    let match = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+    match = match.slice(1).map(x => x?.replace(/\D/, ''));
+    const hours = _.padStart(parseInt(match[0]) || 0, 2, '0');
+    const minutes = _.padStart(parseInt(match[1]) || 0, 2, '0');
+    const seconds = _.padStart(parseInt(match[2]) || 0, 2, '0');
+    if (hours !== '00') {
+      return `${hours}:${minutes}:${seconds}`;
+    } else if (minutes !== '00') {
+      return `${minutes}:${seconds}`;
+    } else {
+      return `00:${seconds}`;
+    }
+  }
 
-  formatSeconds: (seconds, precision = 0) =>
-    if seconds < ONE_MINUTE_S
-      divisor = 1
-      str = @lang.get 'time.secondShorthand'
-    else if seconds < ONE_HOUR_S
-      divisor = ONE_MINUTE_S
-      str = @lang.get 'time.minuteShorthand'
-    else if seconds <= ONE_DAY_S
-      divisor = ONE_HOUR_S
-      str = @lang.get 'time.hourShorthand'
-    else if seconds <= ONE_WEEK_S
-      divisor = ONE_DAY_S
-      str = @lang.get 'time.dayShorthand'
-    return +parseFloat(seconds / divisor).toFixed(precision) + str
+  formatSeconds(seconds, precision) {
+    let divisor, str;
+    if (precision == null) { precision = 0; }
+    if (seconds < ONE_MINUTE_S) {
+      divisor = 1;
+      str = this.lang.get('time.secondShorthand');
+    } else if (seconds < ONE_HOUR_S) {
+      divisor = ONE_MINUTE_S;
+      str = this.lang.get('time.minuteShorthand');
+    } else if (seconds <= ONE_DAY_S) {
+      divisor = ONE_HOUR_S;
+      str = this.lang.get('time.hourShorthand');
+    } else if (seconds <= ONE_WEEK_S) {
+      divisor = ONE_DAY_S;
+      str = this.lang.get('time.dayShorthand');
+    }
+    return +parseFloat(seconds / divisor).toFixed(precision) + str;
+  }
 
-  fromNowSeconds: (seconds) =>
-    if isNaN seconds
-      '...'
-    else if seconds < 30
-      @lang.get 'time.justNow'
-    else if seconds < ONE_MINUTE_S
-      return parseInt(seconds) + @lang.get 'time.secondShorthand'
-    else if seconds < ONE_HOUR_S
-      return parseInt(seconds / ONE_MINUTE_S) + @lang.get 'time.minuteShorthand'
-    else if seconds <= ONE_DAY_S
-      return parseInt(seconds / ONE_HOUR_S) + @lang.get 'time.hourShorthand'
-    else if seconds <= ONE_WEEK_S
-      return parseInt(seconds / ONE_DAY_S) + @lang.get 'time.dayShorthand'
-    else
-      return parseInt(seconds / ONE_WEEK_S) + @lang.get 'time.weekShorthand'
+  fromNowSeconds(seconds) {
+    if (isNaN(seconds)) {
+      return '...';
+    } else if (seconds < 30) {
+      return this.lang.get('time.justNow');
+    } else if (seconds < ONE_MINUTE_S) {
+      return parseInt(seconds) + this.lang.get('time.secondShorthand');
+    } else if (seconds < ONE_HOUR_S) {
+      return parseInt(seconds / ONE_MINUTE_S) + this.lang.get('time.minuteShorthand');
+    } else if (seconds <= ONE_DAY_S) {
+      return parseInt(seconds / ONE_HOUR_S) + this.lang.get('time.hourShorthand');
+    } else if (seconds <= ONE_WEEK_S) {
+      return parseInt(seconds / ONE_DAY_S) + this.lang.get('time.dayShorthand');
+    } else {
+      return parseInt(seconds / ONE_WEEK_S) + this.lang.get('time.weekShorthand');
+    }
+  }
 
-  fromNow: (date) =>
-    unless date instanceof Date
-      date = new Date date
-    seconds = Math.abs (Date.now() - date.getTime()) / 1000
-    @fromNowSeconds seconds
+  fromNow(date) {
+    if (!(date instanceof Date)) {
+      date = new Date(date);
+    }
+    const seconds = Math.abs((Date.now() - date.getTime()) / 1000);
+    return this.fromNowSeconds(seconds);
+  }
 
-  setLocale: (locale) ->
-    null
-    # @langocaleFile = if window?
-    #   window?.dateLocales?[locale]
-    # else
-    #   require("date-fns/locale/#{locale}")
+  setLocale(locale) {
+    return null;
+  }
+    // @langocaleFile = if window?
+    //   window?.dateLocales?[locale]
+    // else
+    //   require("date-fns/locale/#{locale}")
 
-  getLocalDateFromStr: (str) ->
-    if str
-      arr = str.split '-'
-      new Date arr[0], arr[1] - 1, arr[2]
-    else
-      null
+  getLocalDateFromStr(str) {
+    if (str) {
+      const arr = str.split('-');
+      return new Date(arr[0], arr[1] - 1, arr[2]);
+    } else {
+      return null;
+    }
+  }
+}
 
-export default new DateService()
+export default new DateService();

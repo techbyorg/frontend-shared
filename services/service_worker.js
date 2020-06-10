@@ -1,68 +1,90 @@
-import PushService from './push'
-import Environment from './environment'
+import PushService from './push';
+import Environment from './environment';
 
-if window?
-  PortalGun = require 'portal-gun'
+if (typeof window !== 'undefined' && window !== null) {
+  const PortalGun = require('portal-gun');
+}
 
-class ServiceWorkerService
-  register: ({model, lang, onError}) =>
-    try
-      console.log 'registering service worker...'
-      navigator.serviceWorker?.register '/service_worker.js'
-      .then (registration) =>
-        console.log 'service worker registered'
-        PushService.setFirebaseServiceWorker registration
+class ServiceWorkerService {
+  constructor() {
+    this.register = this.register.bind(this);
+    this.handleUpdate = this.handleUpdate.bind(this);
+  }
 
-        @hasActiveServiceWorker = Boolean registration.active
+  register({model, lang, onError}) {
+    try {
+      console.log('registering service worker...');
+      return navigator.serviceWorker?.register('/service_worker.js')
+      .then(registration => {
+        console.log('service worker registered');
+        PushService.setFirebaseServiceWorker(registration);
 
-        @listenForWaitingServiceWorker registration, (registration) =>
-          @handleUpdate registration, {model, lang}
-      .catch (err) ->
-        console.log 'sw promise err', err
-        onError? err
+        this.hasActiveServiceWorker = Boolean(registration.active);
 
-    catch err
-      console.log 'sw err', err
+        return this.listenForWaitingServiceWorker(registration, registration => {
+          return this.handleUpdate(registration, {model, lang});
+      });
+    })
+      .catch(function(err) {
+        console.log('sw promise err', err);
+        return onError?.(err);
+      });
 
-  handleUpdate: (registration, {model, lang}) =>
-    if @hasActiveServiceWorker
-      model.statusBar.open {
-        text: lang.get 'status.newVersion'
-        type: 'snack'
-        action:
-          icon: 'refresh'
-          onclick: ->
-            window.location.reload()
-      }
-    # PushService.setFirebaseServiceWorker registration
+    } catch (error) {
+      const err = error;
+      return console.log('sw err', err);
+    }
+  }
 
-    # TODO: portal is no longer connected at this point... need to reconnect
-    # to new service worker
-    # portal.updateServiceWorker registration
-    #
-    # portal.call 'cache.getVersion'
-    # .then (version) ->
-    #   if version isnt '|HASH|' # replaced by gulp build
-    #     model.statusBar.open {
-    #       text: lang.get 'status.newVersion'
-    #     }
+  handleUpdate(registration, {model, lang}) {
+    if (this.hasActiveServiceWorker) {
+      return model.statusBar.open({
+        text: lang.get('status.newVersion'),
+        type: 'snack',
+        action: {
+          icon: 'refresh',
+          onclick() {
+            return window.location.reload();
+          }
+        }
+      });
+    }
+  }
+    // PushService.setFirebaseServiceWorker registration
 
-  # https://redfin.engineering/how-to-fix-the-refresh-button-when-using-service-workers-a8e27af6df68
-  ###
+    // TODO: portal is no longer connected at this point... need to reconnect
+    // to new service worker
+    // portal.updateServiceWorker registration
+    //
+    // portal.call 'cache.getVersion'
+    // .then (version) ->
+    //   if version isnt '|HASH|' # replaced by gulp build
+    //     model.statusBar.open {
+    //       text: lang.get 'status.newVersion'
+    //     }
+
+  // https://redfin.engineering/how-to-fix-the-refresh-button-when-using-service-workers-a8e27af6df68
+  /*
   could detect service worker changes here, then request refresh
-  ###
-  listenForWaitingServiceWorker: (reg, callback) ->
-    awaitStateChange = ->
-      reg.installing.addEventListener 'statechange', ->
-        if this.state is 'installed'
-          callback reg
+  */
+  listenForWaitingServiceWorker(reg, callback) {
+    const awaitStateChange = () => reg.installing.addEventListener('statechange', function() {
+      if (this.state === 'installed') {
+        return callback(reg);
+      }
+    });
 
-    unless reg
-      return
-    if reg.waiting
-      return callback(reg)
-    if reg.installing
-      awaitStateChange()
-    reg.addEventListener 'updatefound', awaitStateChange
+    if (!reg) {
+      return;
+    }
+    if (reg.waiting) {
+      return callback(reg);
+    }
+    if (reg.installing) {
+      awaitStateChange();
+    }
+    return reg.addEventListener('updatefound', awaitStateChange);
+  }
+}
 
-export default new ServiceWorkerService()
+export default new ServiceWorkerService();

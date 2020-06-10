@@ -1,67 +1,78 @@
-import {z, useContext, useEffect, useMemo, useStream} from 'zorium'
-import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
+let $verifyEmailPage;
+import {z, useContext, useEffect, useMemo, useStream} from 'zorium';
+import * as Rx from 'rxjs';
+import * as rx from 'rxjs/operators';
 
-import Spinner from '../../components/spinner'
-import Button from '../../components/button'
-import context from '../../context'
+import Spinner from '../../components/spinner';
+import Button from '../../components/button';
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $verifyEmailPage = ({model, requestsStream, router}) ->
-  {model, browser, lang, router} = useContext context
+export default $verifyEmailPage = function({model, requestsStream, router}) {
+  let browser, lang;
+  ({model, browser, lang, router} = useContext(context));
 
-  useEffect ->
-    if window?
+  useEffect(function() {
+    let disposable;
+    if (typeof window !== 'undefined' && window !== null) {
       disposable = requestsStream.pipe(
-        rx.switchMap ({req, route}) ->
-          Rx.fromPromise model.user.verifyEmail({
-            userId: route.params.userId
-            tokenStr: route.params.tokenStr
-          }).then ->
-            isVerifiedStream.next true
-          .catchError (err) ->
-            console.log err
-            errorStream.next 'There was an error verifying your email!'
-            Rx.of null
+        rx.switchMap(({req, route}) => Rx.fromPromise(model.user.verifyEmail({
+          userId: route.params.userId,
+          tokenStr: route.params.tokenStr
+        }).then(() => isVerifiedStream.next(true))).catchError(function(err) {
+          console.log(err);
+          errorStream.next('There was an error verifying your email!');
+          return Rx.of(null);
+        })),
 
         rx.take(1)
-      ).subscribe()
-
-    return ->
-      disposable?.unsubscribe()
-  , []
-
-  {isVerifiedStream, errorStream} = useMemo ->
-    {
-      isVerifiedStream: new Rx.BehaviorSubject false
-      errorStream: new Rx.BehaviorSubject null
+      ).subscribe();
     }
-  , []
 
-  {windowSize, isVerified, error} = useStream ->
-    windowSize: browser.getSize()
-    isVerified: isVerifiedStream
+    return () => disposable?.unsubscribe();
+  }
+  , []);
+
+  var {isVerifiedStream, errorStream} = useMemo(() => ({
+    isVerifiedStream: new Rx.BehaviorSubject(false),
+    errorStream: new Rx.BehaviorSubject(null)
+  })
+  , []);
+
+  const {windowSize, isVerified, error} = useStream(() => ({
+    windowSize: browser.getSize(),
+    isVerified: isVerifiedStream,
     error: errorStream
+  }));
 
-  z '.p-verify-email', {
-    style:
-      height: "#{windowSize.height}px"
+  return z('.p-verify-email', {
+    style: {
+      height: `${windowSize.height}px`
+    }
   },
-    if isVerified or error
-      z '.is-verified',
-        error or lang.get 'verifyEmail.isVerified'
-        z '.home',
-          z $button,
-            text: lang.get 'verifyEmail.tapHome'
-            onclick: ->
-              router.go 'home'
-    else
+    isVerified || error ?
+      z('.is-verified',
+        error || lang.get('verifyEmail.isVerified'),
+        z('.home',
+          z($button, {
+            text: lang.get('verifyEmail.tapHome'),
+            onclick() {
+              return router.go('home');
+            }
+          }
+          )
+        )
+      )
+    :
       [
-        z $spinner
-        z '.loading', 'Loading...'
-        router.link z 'a.stuck', {
-          href: router.get 'home'
-        }, 'Stuck? Tap to go home'
-      ]
+        z($spinner),
+        z('.loading', 'Loading...'),
+        router.link(z('a.stuck', {
+          href: router.get('home')
+        }, 'Stuck? Tap to go home')
+        )
+      ]);
+};

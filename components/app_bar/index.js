@@ -1,53 +1,77 @@
-import {z, classKebab, useContext} from 'zorium'
+let $appBar;
+import {z, classKebab, useContext} from 'zorium';
 
-import context from '../../context'
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $appBar = (props) ->
-  {$topLeftButton, $topRightButton, title, bgColor, color, isRaised, isPrimary
-    isSecondary, isFullWidth, hasLogo, isContained = true} = props
-  {colors} = useContext context
+export default $appBar = function(props) {
+  let {
+        $topLeftButton,
+        $topRightButton,
+        title,
+        bgColor,
+        color,
+        isRaised,
+        isPrimary,
+        isSecondary,
+        isFullWidth,
+        hasLogo
+      } = props,
+      val = props.isContained,
+      isContained = val != null ? val : true;
+  const {colors} = useContext(context);
 
-  if isPrimary
-    color ?= colors.$primaryMainText
-    bgColor ?= colors.$primaryMain
-  else if isSecondary
-    color ?= colors.$secondaryMainText
-    bgColor ?= colors.$secondaryMain
-  else
-    color ?= colors.$header500Text
-    bgColor ?= colors.$header500
+  if (isPrimary) {
+    if (color == null) { color = colors.$primaryMainText; }
+    if (bgColor == null) { bgColor = colors.$primaryMain; }
+  } else if (isSecondary) {
+    if (color == null) { color = colors.$secondaryMainText; }
+    if (bgColor == null) { bgColor = colors.$secondaryMain; }
+  } else {
+    if (color == null) { color = colors.$header500Text; }
+    if (bgColor == null) { bgColor = colors.$header500; }
+  }
 
-  z 'header.z-app-bar', {
-    className: classKebab {isRaised, isContained, hasLogo}
+  return z('header.z-app-bar', {
+    className: classKebab({isRaised, isContained, hasLogo})
   },
-    z '.bar', {
-      style:
+    z('.bar', {
+      style: {
         backgroundColor: bgColor
+      }
     },
-      z '.top',
-        if $topLeftButton
-          z '.top-left-button', {
-            style:
-              color: color
+      z('.top',
+        $topLeftButton ?
+          z('.top-left-button', {
+            style: {
+              color
+            }
           },
-            $topLeftButton
-        z 'h1.title', {
-          style:
-            color: color
+            $topLeftButton) : undefined,
+        z('h1.title', {
+          style: {
+            color
+          }
         },
-          if hasLogo
+          hasLogo ?
             [
-              # z '.icon'
-              z '.span.logo-tech', 'Fundraise'
-              z '.span.logo-by', 'byTechBy'
+              // z '.icon'
+              z('.span.logo-tech', 'Fundraise'),
+              z('.span.logo-by', 'byTechBy')
             ]
-          else
+          :
             title
-        z '.top-right-button', {
-          style:
-            color: color
+        ),
+        z('.top-right-button', {
+          style: {
+            color
+          }
         },
-          $topRightButton
+          $topRightButton)
+      )
+    )
+  );
+};

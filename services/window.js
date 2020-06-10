@@ -1,143 +1,193 @@
-import * as _ from 'lodash-es'
-import * as Rx from 'rxjs'
+let uuid;
+import * as _ from 'lodash-es';
+import * as Rx from 'rxjs';
 
-if window?
-  uuid = require 'uuid'
+if (typeof window !== 'undefined' && window !== null) {
+  uuid = require('uuid');
+}
 
-DRAWER_RIGHT_PADDING = 56
-# DRAWER_MAX_WIDTH = 336
-DRAWER_MAX_WIDTH = 72
-GRID_WIDTH = 1280
+const DRAWER_RIGHT_PADDING = 56;
+// DRAWER_MAX_WIDTH = 336
+const DRAWER_MAX_WIDTH = 72;
+const GRID_WIDTH = 1280;
 
-export default class Window
-  constructor: ({@cookie, @userAgent}) ->
-    @isPaused = false
+export default class Window {
+  constructor({cookie, userAgent}) {
+    this.updateSize = this.updateSize.bind(this);
+    this.getSizeVal = this.getSizeVal.bind(this);
+    this.getBreakpointVal = this.getBreakpointVal.bind(this);
+    this.getDrawerWidthVal = this.getDrawerWidthVal.bind(this);
+    this.getAppBarHeightVal = this.getAppBarHeightVal.bind(this);
+    this.getUserAgent = this.getUserAgent.bind(this);
+    this.getSize = this.getSize.bind(this);
+    this.getDrawerWidth = this.getDrawerWidth.bind(this);
+    this.getBreakpoint = this.getBreakpoint.bind(this);
+    this.getAppBarHeight = this.getAppBarHeight.bind(this);
+    this.pauseResizing = this.pauseResizing.bind(this);
+    this.resumeResizing = this.resumeResizing.bind(this);
+    this.resume = this.resume.bind(this);
+    this.onResume = this.onResume.bind(this);
+    this.cookie = cookie;
+    this.userAgent = userAgent;
+    this.isPaused = false;
 
-    @size = new Rx.BehaviorSubject @getSizeVal()
-    @breakpoint = new Rx.BehaviorSubject @getBreakpointVal()
-    @drawerWidth = new Rx.BehaviorSubject @getDrawerWidthVal()
-    @appBarHeight = new Rx.BehaviorSubject @getAppBarHeightVal()
-    @resumeFns = {}
-    window?.addEventListener 'resize', @updateSize
+    this.size = new Rx.BehaviorSubject(this.getSizeVal());
+    this.breakpoint = new Rx.BehaviorSubject(this.getBreakpointVal());
+    this.drawerWidth = new Rx.BehaviorSubject(this.getDrawerWidthVal());
+    this.appBarHeight = new Rx.BehaviorSubject(this.getAppBarHeightVal());
+    this.resumeFns = {};
+    window?.addEventListener('resize', this.updateSize);
+  }
 
-  updateSize: (ignoreBreakpoint) =>
-    oldSize = @size.getValue()
-    newSize = @getSizeVal()
-    oldBreakpoint = @breakpoint.getValue()
-    newBreakpoint = @getBreakpointVal()
-    # don't want to update if not necessary. particularly because there can be
-    # breakpoint-specific routes in app.coffee, and those listen to @breakpoint
-    unless @isPaused
-      if oldSize isnt newSize
-        @size.next newSize
-      if oldBreakpoint isnt newBreakpoint
-        @breakpoint.next newBreakpoint
+  updateSize(ignoreBreakpoint) {
+    const oldSize = this.size.getValue();
+    const newSize = this.getSizeVal();
+    const oldBreakpoint = this.breakpoint.getValue();
+    const newBreakpoint = this.getBreakpointVal();
+    // don't want to update if not necessary. particularly because there can be
+    // breakpoint-specific routes in app.coffee, and those listen to @breakpoint
+    if (!this.isPaused) {
+      if (oldSize !== newSize) {
+        this.size.next(newSize);
+      }
+      if (oldBreakpoint !== newBreakpoint) {
+        return this.breakpoint.next(newBreakpoint);
+      }
+    }
+  }
 
-  getSizeVal: =>
-    resolution = @cookie.get 'resolution'
-    if window?
-      # WARNING: causes reflows, so don't call this too often
-      width = window.innerWidth
-      height = window.innerHeight
-      @cookie.set('resolution', "#{width}x#{height}")
-    else if resolution
-      arr = resolution.split 'x'
-      width = parseInt arr[0]
-      height = parseInt arr[1]
-    else
-      width = undefined
-      height = 732
-
-    {
-      contentWidth:
-        if width >= 768
-        then Math.min GRID_WIDTH, width - DRAWER_MAX_WIDTH
-        else width
-      width: width
-      height: height
-      appBarHeight: if width >= 768 then 64 else 56
+  getSizeVal() {
+    let height, width;
+    const resolution = this.cookie.get('resolution');
+    if (typeof window !== 'undefined' && window !== null) {
+      // WARNING: causes reflows, so don't call this too often
+      width = window.innerWidth;
+      height = window.innerHeight;
+      this.cookie.set('resolution', `${width}x${height}`);
+    } else if (resolution) {
+      const arr = resolution.split('x');
+      width = parseInt(arr[0]);
+      height = parseInt(arr[1]);
+    } else {
+      width = undefined;
+      height = 732;
     }
 
-  getBreakpointVal: =>
-    {width} = @getSizeVal()
-    if width >= 1280
-      'desktop'
-    else if width >= 768
-      'tablet'
-    else
-      'mobile'
+    return {
+      contentWidth:
+        width >= 768
+        ? Math.min(GRID_WIDTH, width - DRAWER_MAX_WIDTH)
+        : width,
+      width,
+      height,
+      appBarHeight: width >= 768 ? 64 : 56
+    };
+  }
 
-  getDrawerWidthVal: =>
-    {width} = @getSizeVal()
-    Math.min(
-      width - DRAWER_RIGHT_PADDING
+  getBreakpointVal() {
+    const {width} = this.getSizeVal();
+    if (width >= 1280) {
+      return 'desktop';
+    } else if (width >= 768) {
+      return 'tablet';
+    } else {
+      return 'mobile';
+    }
+  }
+
+  getDrawerWidthVal() {
+    const {width} = this.getSizeVal();
+    return Math.min(
+      width - DRAWER_RIGHT_PADDING,
       DRAWER_MAX_WIDTH
-    )
+    );
+  }
 
-  getAppBarHeightVal: =>
-    {width} = @getSizeVal()
-    if width >= 768 then 64 else 56
+  getAppBarHeightVal() {
+    const {width} = this.getSizeVal();
+    if (width >= 768) { return 64; } else { return 56; }
+  }
 
-  getUserAgent: =>
-    @userAgent
+  getUserAgent() {
+    return this.userAgent;
+  }
 
-  getSize: =>
-    @size
+  getSize() {
+    return this.size;
+  }
 
-  getDrawerWidth: =>
-    @drawerWidth
+  getDrawerWidth() {
+    return this.drawerWidth;
+  }
 
-  getBreakpoint: =>
-    @breakpoint
+  getBreakpoint() {
+    return this.breakpoint;
+  }
 
-  getAppBarHeight: =>
-    @appBarHeight
+  getAppBarHeight() {
+    return this.appBarHeight;
+  }
 
-  getTransformProperty: ->
-    if window?
-      _elementStyle = document.createElement('div').style
-      _vendor = do ->
-        vendors = [
-          't'
-          'webkitT'
-          'MozT'
-          'msT'
+  getTransformProperty() {
+    if (typeof window !== 'undefined' && window !== null) {
+      const _elementStyle = document.createElement('div').style;
+      const _vendor = (function() {
+        const vendors = [
+          't',
+          'webkitT',
+          'MozT',
+          'msT',
           'OT'
-        ]
-        transform = undefined
-        i = 0
-        l = vendors.length
-        while i < l
-          transform = vendors[i] + 'ransform'
-          if transform of _elementStyle
-            return vendors[i].substr(0, vendors[i].length - 1)
-          i += 1
-        false
+        ];
+        let transform = undefined;
+        let i = 0;
+        const l = vendors.length;
+        while (i < l) {
+          transform = vendors[i] + 'ransform';
+          if (transform in _elementStyle) {
+            return vendors[i].substr(0, vendors[i].length - 1);
+          }
+          i += 1;
+        }
+        return false;
+      })();
 
-      _prefixStyle = (style) ->
-        if _vendor is false
-          return false
-        if _vendor is ''
-          return style
-        _vendor + style.charAt(0).toUpperCase() + style.substr(1)
+      const _prefixStyle = function(style) {
+        if (_vendor === false) {
+          return false;
+        }
+        if (_vendor === '') {
+          return style;
+        }
+        return _vendor + style.charAt(0).toUpperCase() + style.substr(1);
+      };
 
-      _prefixStyle 'transform'
-    else
-      'transform' # should probably use userAgent to get more accurate
+      return _prefixStyle('transform');
+    } else {
+      return 'transform'; // should probably use userAgent to get more accurate
+    }
+  }
 
-  pauseResizing: =>
-    @isPaused = true
+  pauseResizing() {
+    return this.isPaused = true;
+  }
 
-  resumeResizing: =>
-    @isPaused = false
-    @updateSize()
+  resumeResizing() {
+    this.isPaused = false;
+    return this.updateSize();
+  }
 
-  resume: =>
-    _.forEach @resumeFns, (fn) ->
-      fn()
+  resume() {
+    return _.forEach(this.resumeFns, fn => fn());
+  }
 
-  onResume: (fn) =>
-    id = uuid.v4()
-    @resumeFns[id] = fn
-    unsubscribe: =>
-      delete @resumeFns[id]
+  onResume(fn) {
+    const id = uuid.v4();
+    this.resumeFns[id] = fn;
+    return {
+      unsubscribe: () => {
+        return delete this.resumeFns[id];
+      }
+    };
+  }
+}

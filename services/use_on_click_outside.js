@@ -1,21 +1,28 @@
-import {useEffect} from 'zorium'
-import * as _ from 'lodash-es'
+let useOnClickOutside;
+import {useEffect} from 'zorium';
+import * as _ from 'lodash-es';
 
-export default useOnClickOutside = ($$refs, handler) ->
-  unless _.isArray $$refs
-    $$refs = [$$refs]
+export default useOnClickOutside = function($$refs, handler) {
+  if (!_.isArray($$refs)) {
+    $$refs = [$$refs];
+  }
 
-  useEffect ->
-    listener = (e) ->
-      isInTarget = _.some $$refs, ($$ref) -> $$ref.current?.contains e.target
-      unless isInTarget
-        handler e
+  return useEffect(function() {
+    const listener = function(e) {
+      const isInTarget = _.some($$refs, $$ref => $$ref.current?.contains(e.target));
+      if (!isInTarget) {
+        return handler(e);
+      }
+    };
 
-    document.addEventListener 'mousedown', listener
-    document.addEventListener 'touchstart', listener
+    document.addEventListener('mousedown', listener);
+    document.addEventListener('touchstart', listener);
 
-    return ->
-      document.removeEventListener 'mousedown', listener
-      document.removeEventListener 'touchstart', listener
+    return function() {
+      document.removeEventListener('mousedown', listener);
+      return document.removeEventListener('touchstart', listener);
+    };
+  }
 
-  , [$$refs] # could add handler here, but would need to useCallback on all passed
+  , [$$refs]); // could add handler here, but would need to useCallback on all passed
+};

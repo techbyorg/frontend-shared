@@ -1,44 +1,48 @@
-import {z, createPortal, useRef, useMemo, useEffect} from 'zorium'
+let $sheet;
+import {z, createPortal, useRef, useMemo, useEffect} from 'zorium';
 
-import $icon from '../icon'
-import $button from '../button'
+import $icon from '../icon';
+import $button from '../button';
 
-CLOSE_DELAY_MS = 450 # 0.45s for animation
+const CLOSE_DELAY_MS = 450; // 0.45s for animation
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $sheet = (props) ->
-  {onClose, $content, $actions} = props
+export default $sheet = function(props) {
+  const {onClose, $content, $actions} = props;
 
-  $$ref = useRef()
+  const $$ref = useRef();
 
-  {$$overlays} = useMemo ->
-    {
-      $$overlays: document?.getElementById 'overlays-portal'
-    }
-  , []
+  const {$$overlays} = useMemo(() => ({
+    $$overlays: document?.getElementById('overlays-portal')
+  })
+  , []);
 
-  useEffect ->
-    setTimeout (-> $$ref.current?.classList.add 'is-mounted'), 0
-  , []
+  useEffect(() => setTimeout((() => $$ref.current?.classList.add('is-mounted')), 0)
+  , []);
 
-  close = ->
-    $$ref.current?.classList.remove 'is-mounted'
-    setTimeout ->
-      onClose()
-    , CLOSE_DELAY_MS
+  const close = function() {
+    $$ref.current?.classList.remove('is-mounted');
+    return setTimeout(() => onClose()
+    , CLOSE_DELAY_MS);
+  };
 
-  createPortal(
-    z '.z-sheet', {
+  return createPortal(
+    z('.z-sheet', {
       ref: $$ref
     },
-      z '.backdrop',
-        onclick: close
-      z '.sheet',
-        z '.inner',
-          $content
-          if $actions
-            z '.actions', $actions
+      z('.backdrop',
+        {onclick: close}),
+      z('.sheet',
+        z('.inner',
+          $content,
+          $actions ?
+            z('.actions', $actions) : undefined
+        )
+      )
+    ),
   $$overlays
-  )
+  );
+};

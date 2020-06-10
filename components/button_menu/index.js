@@ -1,25 +1,40 @@
-import {z, useContext} from 'zorium'
+let $buttonMenu;
+import {z, useContext} from 'zorium';
 
-import $icon from '../icon'
-import {menuIconPath} from '../icon/paths'
-import context from '../../context'
+import $icon from '../icon';
+import {menuIconPath} from '../icon/paths';
+import context from '../../context';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $buttonMenu = ({color, onclick, isAlignedLeft = true}) ->
-  {model, colors} = useContext context
+export default $buttonMenu = function(...args) {
+  const obj = args[0],
+        {
+          color,
+          onclick
+        } = obj,
+        val = obj.isAlignedLeft,
+        isAlignedLeft = val != null ? val : true;
+  const {model, colors} = useContext(context);
 
-  z '.z-button-menu',
-    z $icon,
-      isAlignedLeft: isAlignedLeft
-      icon: menuIconPath
-      color: color or colors.$header500Icon
-      hasRipple: true
-      isTouchTarget: true
-      onclick: (e) ->
-        e.preventDefault()
-        if onclick
-          onclick()
-        else
-          model.drawer.open()
+  return z('.z-button-menu',
+    z($icon, {
+      isAlignedLeft,
+      icon: menuIconPath,
+      color: color || colors.$header500Icon,
+      hasRipple: true,
+      isTouchTarget: true,
+      onclick(e) {
+        e.preventDefault();
+        if (onclick) {
+          return onclick();
+        } else {
+          return model.drawer.open();
+        }
+      }
+    }
+    )
+  );
+};

@@ -1,12 +1,14 @@
-import {z} from 'zorium'
+let $tag;
+import {z} from 'zorium';
 
-if window?
-  require './index.styl'
+if (typeof window !== 'undefined' && window !== null) {
+  require('./index.styl');
+}
 
-export default $tag = ({tag}) ->
-  z '.z-tag', {
-    style:
-      background: tag.background
-      color: tag.color
-  },
-    tag.text
+export default $tag = ({tag}) => z('.z-tag', {
+  style: {
+    background: tag.background,
+    color: tag.color
+  }
+},
+  tag.text);
