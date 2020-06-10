@@ -47,8 +47,15 @@ class RouterService
     console.log 'gott', path, routeKey
     @goPath path, options
 
-  getFund: (fund) =>
-    @get 'fundByEin', {slug: _.kebabCase(fund?.name), ein: fund?.ein}
+  # FIXME: this should be in fundraise repo, not frontend-shared
+  getFund: (fund, tab) =>
+    if tab
+      @get 'fundByEinWithTab', {
+        tab, slug: _.kebabCase(fund?.name), ein: fund?.ein
+      }
+    else
+      @get 'fundByEin', {slug: _.kebabCase(fund?.name), ein: fund?.ein}
+
   goFund: (fund) =>
     @goPath @getFund fund
 
@@ -217,6 +224,13 @@ class RouterService
       if isSimpleClick e
         e.preventDefault()
         @openLink node.props.href, node.props.target
+
+    return node
+
+  linkIfHref: (node) =>
+    if node.props.href
+      node.type = 'A'
+      @link node
 
     return node
 

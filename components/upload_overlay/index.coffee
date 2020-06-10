@@ -20,7 +20,7 @@ export default $uploadOverlay = ({isMulti, onSelect}) ->
       # accept: '.jpg, .jpeg, .png'
 
       # doesn't work on android currently. https://github.com/apache/cordova-android/issues/621
-      multiple: if isMulti then true else undefined
+      multiple: Boolean isMulti
       onchange: (e) ->
         e?.preventDefault()
         $$imageInput = document.getElementById('image')

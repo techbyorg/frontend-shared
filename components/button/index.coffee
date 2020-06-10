@@ -30,7 +30,7 @@ export default $button = (props) ->
 
     z 'button.button', {
       type: type
-      disabled: if isDisabled then true else undefined
+      disabled: Boolean isDisabled
       style:
         # lineHeight: "#{heightPx}px"
         minHeight: "#{heightPx}px"
