@@ -43,10 +43,10 @@ export default function $dropdown (props) {
   , []));
 
   ({ value, selectedOption, isOpen, options } = useStream(function () {
-    _.valueStream = valueStreams?.pipe(rx.switchAll()) || valueStream
+    valueStream = valueStreams?.pipe(rx.switchAll()) || valueStream
     return {
-      value: _.valueStream,
-      selectedOption: _.valueStream.pipe(rx.map(value => _.find(options, { value: `${value}` }))),
+      value: valueStream,
+      selectedOption: valueStream.pipe(rx.map(value => _.find(options, { value: `${value}` }))),
       error: errorStream,
       isOpen: isOpenStream,
       options
@@ -84,7 +84,7 @@ export default function $dropdown (props) {
     onclick: toggle
   },
   z('.text',
-        currentText || selectedOption?.text),
+    currentText || selectedOption?.text),
   z('.arrow',
     z($icon, {
       icon: chevronDownIconPath,

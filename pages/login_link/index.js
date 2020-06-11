@@ -26,7 +26,7 @@ export default function $loginLinkPage ({ requestsStream, serverData }) {
           .pipe(rx.switchMap(function ({ data }) {
             let path = data?.loginLink?.data?.path || { key: 'home' }
             // this can fail. if link is expired, won't login
-            return Rx.fromPromise(model.auth.loginLink({
+            return Rx.from(model.auth.loginLink({
               userId: route.params.userId,
               tokenStr: route.params.tokenStr
             }).then(function () {

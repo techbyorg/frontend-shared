@@ -21,7 +21,7 @@ export default function $unsubscribeEmailPage ({ requestsStream }) {
     let disposable
     if (typeof window !== 'undefined' && window !== null) {
       disposable = requestsStream.pipe(
-        rx.switchMap(({ req, route }) => Rx.fromPromise(model.user.unsubscribeEmail({
+        rx.switchMap(({ req, route }) => Rx.from(model.user.unsubscribeEmail({
           userId: route.params.userId,
           tokenStr: route.params.tokenStr
         }).then(() => isUnsubscribedStream.next(true))).catchError(function (err) {

@@ -14,7 +14,7 @@ import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
-// this shows the main tooltip which is rendered in app.coffee
+// this shows the main tooltip which is rendered in app.js
 // if we render it here, it has issues with iscroll (having a position: fixed
 // inside a transform)
 

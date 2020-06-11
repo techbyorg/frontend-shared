@@ -22,7 +22,7 @@ export default function $verifyEmailPage ({ model, requestsStream, router }) {
     let disposable
     if (typeof window !== 'undefined' && window !== null) {
       disposable = requestsStream.pipe(
-        rx.switchMap(({ req, route }) => Rx.fromPromise(model.user.verifyEmail({
+        rx.switchMap(({ req, route }) => Rx.from(model.user.verifyEmail({
           userId: route.params.userId,
           tokenStr: route.params.tokenStr
         }).then(() => isVerifiedStream.next(true))).catchError(function (err) {

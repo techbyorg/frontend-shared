@@ -17,8 +17,8 @@ export default function $masonryGrid ({ $elements, columnCounts }) {
     breakpoint: browser.getBreakpoint()
   }))
 
-  let $columns
   const columnCount = columnCounts[breakpoint || 'mobile'] || columnCounts.mobile
+  let $columns
   if (columnCount === 1) {
     $columns = [$elements]
   } else {
