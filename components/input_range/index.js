@@ -9,13 +9,10 @@ import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import context from '../../context'
-let $inputRange
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $inputRange = function (props) {
+export default function $inputRange (props) {
   let {
     valueStream, valueStreams, minValue, maxValue, onChange,
     hideInfo, step

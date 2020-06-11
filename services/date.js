@@ -129,8 +129,8 @@ class DateService {
   setLocale (locale) {
     return null
   }
-  // @langocaleFile = if window?
-  //   window?.dateLocales?[locale]
+  // @langocaleFile = if globalThis?.window?
+  //   globalThis?.window?.dateLocales?[locale]
   // else
   //   require("date-fns/locale/#{locale}")
 

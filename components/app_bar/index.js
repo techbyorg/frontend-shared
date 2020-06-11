@@ -6,13 +6,10 @@
 import { z, classKebab, useContext } from 'zorium'
 
 import context from '../../context'
-let $appBar
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $appBar = function (props) {
+export default function $appBar (props) {
   let {
     $topLeftButton,
     $topRightButton,

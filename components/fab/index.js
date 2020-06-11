@@ -9,13 +9,10 @@ import * as _ from 'lodash-es'
 import $icon from '../icon'
 import $ripple from '../ripple'
 import context from '../../context'
-let $fab
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $fab = function (props) {
+export default function $fab (props) {
   const {
     icon,
     colors,

@@ -9,9 +9,8 @@ import * as _ from 'lodash-es'
 
 import $textaea from '../textarea'
 import context from '../../context'
-let $primaryTextarea
 
-export default $primaryTextarea = function (opts) {
+export default function $primaryTextarea (opts) {
   const { colors } = useContext(context)
 
   return z('.z-primary-textarea',

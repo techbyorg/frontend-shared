@@ -11,13 +11,10 @@ import * as rx from 'rxjs/operators'
 import Spinner from '../../components/spinner'
 import Button from '../../components/button'
 import context from '../../context'
-let $verifyEmailPage
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $verifyEmailPage = function ({ model, requestsStream, router }) {
+export default function $verifyEmailPage ({ model, requestsStream, router }) {
   let browser, lang;
   ({ model, browser, lang, router } = useContext(context))
 

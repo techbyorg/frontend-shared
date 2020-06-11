@@ -10,13 +10,10 @@ import $appBar from '../../components/app_bar'
 import $buttonBack from '../../components/button_back'
 import $privacy from '../../components/privacy'
 import context from '../../context'
-let $tosPage
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $tosPage = function () {
+export default function $tosPage () {
   const { lang, colors } = useContext(context)
 
   return z('.p-tos',

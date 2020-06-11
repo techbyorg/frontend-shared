@@ -1,9 +1,0 @@
-===== /home/austin/dev/tech-by/frontend-shared/models/overlay.coffee
-AddVariableDeclarationsStage failed to parse: Invalid left-hand side in assignment expression (98:11)
-   96 |     }
-   97 | 
->  98 |     return document?.body.style.overflow = 'auto';
-      |            ^
-   99 |   }
-  100 | };
-

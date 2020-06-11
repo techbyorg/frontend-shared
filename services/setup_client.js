@@ -71,7 +71,7 @@ export default setup = function ({ $app, Lang, Model, colors, config }) {
   if (!Array.from(config.LANGUAGES).includes(language)) {
     language = 'en'
   }
-  const userAgent = navigator?.userAgent
+  const userAgent = globalThis?.navigator?.userAgent
   const cookie = new CookieService({
     initialCookies,
     host: config.HOST,

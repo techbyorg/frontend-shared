@@ -11,13 +11,10 @@ import * as rx from 'rxjs/operators'
 import $icon from '../icon'
 import { checkIconPath } from '../icon/paths'
 import context from '../../context'
-let $checkbox
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $checkbox = function (props) {
+export default function $checkbox (props) {
   let errorStream
   let { valueStream, valueStreams, isDisabled, colors, onChange } = props
   const allColors = useContext(context).colors;

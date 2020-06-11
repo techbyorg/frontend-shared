@@ -10,13 +10,10 @@ import * as Rx from 'rxjs'
 import $tabs from '../tabs'
 import $icon from '../icon'
 import context from '../../context'
-let $slideSteps
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $slideSteps = function ({ onSkip, onDone, steps, doneText }) {
+export default function $slideSteps ({ onSkip, onDone, steps, doneText }) {
   const { lang } = useContext(context)
 
   const { selectedIndexStream } = useMemo(() => ({

@@ -13,13 +13,10 @@ import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import $checkbox from '../checkbox'
-let $dropdownMultiple
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $dropdownMultiple = function (props) {
+export default function $dropdownMultiple (props) {
   let error, isOpen, isOpenStream, options, value
   let {
     valueStreams,

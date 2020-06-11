@@ -7,20 +7,17 @@ import { z, useContext, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 
 import context from '../../context'
-let $masonryGrid
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $masonryGrid = function ({ $elements, columnCounts }) {
-  let $columns
+export default function $masonryGrid ({ $elements, columnCounts }) {
   const { browser } = useContext(context)
 
   const { breakpoint } = useStream(() => ({
     breakpoint: browser.getBreakpoint()
   }))
 
+  let $columns
   const columnCount = columnCounts[breakpoint || 'mobile'] || columnCounts.mobile
   if (columnCount === 1) {
     $columns = [$elements]

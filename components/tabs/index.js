@@ -12,7 +12,7 @@ import * as Rx from 'rxjs'
 
 import $tabsBar from '../../components/tabs_bar'
 import context from '../../context'
-let $tabs, IScroll
+let IScroll
 
 if (typeof window !== 'undefined' && window !== null) {
   IScroll = require('iscroll/build/iscroll-lite-snap-zoom.js')
@@ -22,7 +22,7 @@ if (typeof window !== 'undefined' && window !== null) {
 const TRANSITION_TIME_MS = 500 // 0.5s
 
 // FIXME: i don't think this will actually unsub mountDisposable?
-export default $tabs = function (props) {
+export default function $tabs (props) {
   let hideTabBar, isPaused, isPausedStream, selectedIndex
   let {
     selectedIndexStream, hideTabBarStream,

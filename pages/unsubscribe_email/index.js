@@ -11,13 +11,10 @@ import * as rx from 'rxjs/operators'
 import Spinner from '../../components/spinner'
 import Button from '../../components/button'
 import context from '../../context'
-let $unsubscribeEmailPage
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $unsubscribeEmailPage = function ({ requestsStream }) {
+export default function $unsubscribeEmailPage ({ requestsStream }) {
   const { model, browser, lang, router } = useContext
 
   useEffect(function () {

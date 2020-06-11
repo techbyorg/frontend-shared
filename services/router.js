@@ -73,7 +73,7 @@ class RouterService {
     }
 
     if (!ignoreHistory) {
-      this.history.push(path || window?.location.pathname)
+      this.history.push(path || globalThis?.window?.location.pathname)
     }
 
     if ((this.history[0] === '/') || (this.history[0] === this.get('home')) || reset) {

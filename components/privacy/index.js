@@ -4,13 +4,10 @@
 // TODO: This file was created by bulk-decaffeinate.
 // Fix any style issues and re-enable lint.
 import { z } from 'zorium'
-let $privacy
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $privacy = () => // coffeelint: disable=max_line_length
+export default function $privacy () {
   z('.z-privacy', z('h5', 'App Visitors'), z('p',
   `\
 Like most app operators, TechBy collects non-personally-identifying information of the sort that web browsers and servers typically make available,
@@ -82,3 +79,4 @@ your acceptance of such change.\
 `
   ))
 // coffeelint: enable=max_line_length
+}

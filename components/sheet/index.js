@@ -7,21 +7,18 @@ import { z, createPortal, useRef, useMemo, useEffect } from 'zorium'
 
 import $icon from '../icon'
 import $button from '../button'
-let $sheet
 
 const CLOSE_DELAY_MS = 450 // 0.45s for animation
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $sheet = function (props) {
+export default function $sheet (props) {
   const { onClose, $content, $actions } = props
 
   const $$ref = useRef()
 
   const { $$overlays } = useMemo(() => ({
-    $$overlays: document?.getElementById('overlays-portal')
+    $$overlays: globalThis?.document?.getElementById('overlays-portal')
   })
   , [])
 

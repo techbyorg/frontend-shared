@@ -8,13 +8,10 @@ import * as Rx from 'rxjs'
 
 import useOnClickOutside from '../../services/use_on_click_outside'
 import context from '../../context'
-let $positionedOverlay
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $positionedOverlay = function (props) {
+export default function $positionedOverlay (props) {
   let size, transform
   let {
     $$targetRef, hasBackdrop, onClose, anchor, offset, fillTargetWidth,
@@ -29,7 +26,7 @@ export default $positionedOverlay = function (props) {
   }
 
   const { $$overlays, anchorStream, transformStream, sizeStream } = useMemo(() => ({
-    $$overlays: $$parentRef?.current || document?.getElementById('overlays-portal'),
+    $$overlays: $$parentRef?.current || globalThis?.document?.getElementById('overlays-portal'),
     anchorStream: new Rx.BehaviorSubject(anchor),
     transformStream: new Rx.BehaviorSubject(null),
     sizeStream: new Rx.BehaviorSubject(null)

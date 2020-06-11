@@ -8,13 +8,10 @@ import { z, useContext } from 'zorium'
 import $button from '../button'
 import $dialog from '../dialog'
 import context from '../../context'
-let $getAppDialog
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $getAppDialog = function ({ onClose }) {
+export default function $getAppDialog ({ onClose }) {
   const { config, lang, portal } = useContext(context)
 
   const iosAppUrl = config.IOS_APP_URL

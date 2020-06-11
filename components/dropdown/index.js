@@ -13,13 +13,10 @@ import $icon from '../icon'
 import $positionedOverlay from '../positioned_overlay'
 import { chevronDownIconPath } from '../icon/paths'
 import context from '../../context'
-let $dropdown
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $dropdown = function (props) {
+export default function $dropdown (props) {
   let isOpen, isOpenStream, selectedOption, selectedOptionStream, value
   let {
     valueStreams,

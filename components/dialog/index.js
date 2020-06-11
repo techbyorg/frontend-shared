@@ -9,15 +9,12 @@ import $button from '../button'
 import $icon from '../icon'
 import { closeIconPath } from '../icon/paths'
 import context from '../../context'
-let $dialog
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
 const CLOSE_DELAY_MS = 450 // 0.45s for animation
 
-export default $dialog = function (props) {
+export default function $dialog (props) {
   const {
     onClose
   } = props
@@ -33,7 +30,7 @@ export default $dialog = function (props) {
   const $$ref = useRef()
 
   const { $$overlays } = useMemo(() => ({
-    $$overlays: document?.getElementById('overlays-portal')
+    $$overlays: globalThis?.document?.getElementById('overlays-portal')
   })
   , [])
 

@@ -10,13 +10,10 @@ import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import context from '../../context'
-let $input
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $input = function (props) {
+export default function $input (props) {
   let {
     valueStream,
     valueStreams,

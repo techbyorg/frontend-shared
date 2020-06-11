@@ -6,13 +6,10 @@
 import { z, classKebab, useRef, useLayoutEffect, useStream } from 'zorium'
 
 import $icon from '../icon'
-let $searchInput
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $searchInput = function ({ icon, placeholder, valueStream }) {
+export default function $searchInput ({ icon, placeholder, valueStream }) {
   const { value } = useStream(() => ({
     value: valueStream
   }))

@@ -8,13 +8,10 @@ import { z, classKebab, useContext } from 'zorium'
 import $ripple from '../ripple'
 import $icon from '../icon'
 import context from '../../context'
-let $button
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $button = function (props) {
+export default function $button (props) {
   const obj = props || {}
   const {
     isPrimary,

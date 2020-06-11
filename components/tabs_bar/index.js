@@ -7,13 +7,10 @@ import { z, classKebab, useEffect, useRef, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 
 import colors from '../../colors'
-let $tabsBar
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $tabsBar = function (props) {
+export default function $tabsBar (props) {
   let {
     selectedIndexStream, items, bgColor, color, isPrimary, inactiveColor,
     underlineColor, isFixed, isFlat, isArrow, tabWidth, tabHeight

@@ -5,13 +5,10 @@
 // Fix any style issues and re-enable lint.
 import { z } from 'zorium'
 import * as _ from 'lodash-es'
-let $uploadOverlay
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $uploadOverlay = function ({ isMulti, onSelect }) {
+export default function $uploadOverlay ({ isMulti, onSelect }) {
   const readFile = file => new Promise(function (resolve, reject) {
     const reader = new FileReader()
     reader.onload = e => resolve(e.target.result)

@@ -9,13 +9,10 @@ import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import context from '../../context'
-let $tapTabs
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $tapTabs = function (props) {
+export default function $tapTabs (props) {
   let { selectedIndexStreams, selectedIndexStream, tabs, tabProps } = props
   const { router } = useContext(context);
 

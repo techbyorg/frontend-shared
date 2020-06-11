@@ -12,13 +12,10 @@ import $icon from '../icon'
 import $spinner from '../spinner'
 import DateService from '../../services/date'
 import context from '../../context'
-let $notifications
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $notifications = function () {
+export default function $notifications () {
   const { model, router, colors } = useContext(context)
 
   useEffect(() => beforeUnmount

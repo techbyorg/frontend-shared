@@ -16,10 +16,9 @@ import $bottomBar from './components/bottom_bar'
 import Environment from './services/environment'
 import useMeta from './services/use_meta'
 import GlobalContext from './context'
-let $app
 
 // TODO: clean this up a bit
-export default $app = function (props) {
+export default function $app (props) {
   let $overlayPage, $page, hasBottomBar, hash
   let {
     routes, requestsStream, serverData, model, router, portal,

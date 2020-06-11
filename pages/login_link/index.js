@@ -9,13 +9,10 @@ import * as rx from 'rxjs/operators'
 
 import $spinner from '../../components/spinner'
 import context from '../../context'
-let $loginLinkPage
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $loginLinkPage = function ({ requestsStream, serverData }) {
+export default function $loginLinkPage ({ requestsStream, serverData }) {
   const { model, router, browser } = useContext(context)
 
   useEffect(function () {

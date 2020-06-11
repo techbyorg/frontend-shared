@@ -11,9 +11,8 @@ import $sheet from '../sheet'
 import { notificationsIconPath } from '../icon/paths'
 import PushService from '../../services/push'
 import context from '../../context'
-let $pushNotificationSheet
 
-export default $pushNotificationSheet = function () {
+export default function $pushNotificationSheet () {
   const { model, lang, colors } = useContext(context)
 
   return z('.z-push-notifications-sheet',

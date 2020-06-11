@@ -8,15 +8,12 @@ import * as _ from 'lodash-es'
 
 import $tag from '../tag'
 import useRefSize from '../../services/use_ref_size'
-let $tags
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
 const TAG_WIDTH = 150
 
-export default $tags = function (props) {
+export default function $tags (props) {
   let $$ref, tagChunks
   let {
     fitToContent,

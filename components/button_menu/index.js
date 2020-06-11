@@ -8,13 +8,10 @@ import { z, useContext } from 'zorium'
 import $icon from '../icon'
 import { menuIconPath } from '../icon/paths'
 import context from '../../context'
-let $buttonMenu
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $buttonMenu = function (...args) {
+export default function $buttonMenu (...args) {
   const obj = args[0]
   const {
     color,

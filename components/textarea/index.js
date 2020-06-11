@@ -11,15 +11,12 @@ import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import context from '../../context'
-let $textarea
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
 const DEFAULT_TEXTAREA_HEIGHT = 59
 
-export default $textarea = function (props) {
+export default function $textarea (props) {
   let textareaHeightStream
   let {
     valueStream,

@@ -9,11 +9,8 @@ import { z, classKebab, useContext, useRef, useMemo } from 'zorium'
 
 import Environment from '../../services/environment'
 import context from '../../context'
-let $ripple
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
 // adding to DOM directly is actually a little faster in this case
 // than doing a full re-render. ideally zorium would just diff the relevant
@@ -23,7 +20,7 @@ if (typeof window !== 'undefined' && window !== null) {
 
 const ANIMATION_TIME_MS = 350
 
-export default $ripple = function ({ color, isCircle, isCenter, onComplete, fadeIn }) {
+export default function $ripple ({ color, isCircle, isCenter, onComplete, fadeIn }) {
   const { colors } = useContext(context)
   let $$ref = useRef()
 

@@ -6,13 +6,10 @@
 import { z, classKebab, useContext } from 'zorium'
 
 import context from '../../context'
-let $icon
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $icon = function (props) {
+export default function $icon (props) {
   let {
     icon, size, isAlignedTop, isAlignedLeft, isAlignedRight,
     isAlignedBottom, isTouchTarget, color, onclick, onmousedown,

@@ -16,7 +16,7 @@ class Environment {
   isMobile (param) {
     if (param == null) { param = {} }
     let { userAgent } = param
-    if (userAgent == null) { userAgent = navigator?.userAgent }
+    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
     return new RegExp('\
 Mobile\
 |iP(hone|od|ad)\
@@ -41,35 +41,35 @@ Mobile\
   isAndroid (param) {
     if (param == null) { param = {} }
     let { userAgent } = param
-    if (userAgent == null) { userAgent = navigator?.userAgent }
+    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
     return _.includes(userAgent, 'Android')
   }
 
   isIos (param) {
     if (param == null) { param = {} }
     let { userAgent } = param
-    if (userAgent == null) { userAgent = navigator?.userAgent }
+    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
     return Boolean(userAgent?.match(/iP(hone|od|ad)/g))
   }
 
   isNativeApp (param) {
     if (param == null) { param = {} }
     let { userAgent } = param
-    if (userAgent == null) { userAgent = navigator?.userAgent }
+    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
     return _.includes(userAgent?.toLowerCase(), ` ${this.appKey}/`)
   }
 
   isMainApp (param) {
     if (param == null) { param = {} }
     let { userAgent } = param
-    if (userAgent == null) { userAgent = navigator?.userAgent }
+    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
     return _.includes(userAgent?.toLowerCase(), ` ${this.appKey}/${this.appKey}`)
   }
 
   isEntityApp (entityAppKey, param) {
     if (param == null) { param = {} }
     let { userAgent } = param
-    if (userAgent == null) { userAgent = navigator?.userAgent }
+    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
     return Boolean(entityAppKey &&
       _.includes(userAgent?.toLowerCase(), ` ${this.appKey}/${entityAppKey}/`)
     )
@@ -78,19 +78,19 @@ Mobile\
   getAppKey (param) {
     if (param == null) { param = {} }
     let { userAgent } = param
-    if (userAgent == null) { userAgent = navigator?.userAgent }
+    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
     const matches = userAgent.match(/techby\/([a-zA-Z0-9-]+)/)
     return matches?.[1] || 'browser'
   }
 
   hasPushSupport () {
-    return Promise.resolve(Boolean(window?.PushManager))
+    return Promise.resolve(Boolean(globalThis?.window?.PushManager))
   }
 
   getAppVersion (param) {
     if (param == null) { param = {} }
     let { userAgent } = param
-    if (userAgent == null) { userAgent = navigator?.userAgent }
+    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
     const regex = new RegExp(`(${this.appKey})\/(?:[a-zA-Z0-9]+/)?([0-9\.]+)`)
     const matches = userAgent.match(regex)
     return matches?.[2]
@@ -99,7 +99,7 @@ Mobile\
   getPlatform (param) {
     if (param == null) { param = {} }
     let { userAgent } = param
-    if (userAgent == null) { userAgent = navigator?.userAgent }
+    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
 
     const isApp = this.isNativeApp(this.appKey, { userAgent })
 

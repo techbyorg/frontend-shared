@@ -6,11 +6,9 @@
 // Fix any style issues and re-enable lint.
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
-let uuid
 
-if (typeof window !== 'undefined' && window !== null) {
-  uuid = require('uuid')
-}
+let uuid
+if (typeof window !== 'undefined') { uuid = require('uuid') }
 
 const DRAWER_RIGHT_PADDING = 56
 // DRAWER_MAX_WIDTH = 336
@@ -42,7 +40,7 @@ export default class Window {
     this.drawerWidth = new Rx.BehaviorSubject(this.getDrawerWidthVal())
     this.appBarHeight = new Rx.BehaviorSubject(this.getAppBarHeightVal())
     this.resumeFns = {}
-    window?.addEventListener('resize', this.updateSize)
+    globalThis?.window?.addEventListener('resize', this.updateSize)
   }
 
   updateSize (ignoreBreakpoint) {
@@ -65,7 +63,7 @@ export default class Window {
   getSizeVal () {
     let height, width
     const resolution = this.cookie.get('resolution')
-    if (typeof window !== 'undefined' && window !== null) {
+    if (typeof window !== 'undefined') {
       // WARNING: causes reflows, so don't call this too often
       width = window.innerWidth
       height = window.innerHeight
@@ -135,7 +133,7 @@ export default class Window {
   }
 
   getTransformProperty () {
-    if (typeof window !== 'undefined' && window !== null) {
+    if (typeof window !== 'undefined') {
       const _elementStyle = document.createElement('div').style
       const _vendor = (function () {
         const vendors = [

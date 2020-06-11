@@ -7,15 +7,12 @@ import { z, classKebab, useContext, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 
 import context from '../../context'
-let $stepBar
 
 console.log('why is this running')
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $stepBar = function (props) {
+export default function $stepBar (props) {
   let { stepStream, cancel, save, steps, isStepCompleted, isLoading } = props
   const { lang } = useContext(context)
 

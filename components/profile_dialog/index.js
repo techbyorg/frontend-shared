@@ -15,14 +15,11 @@ import $dialog from '../dialog'
 import $icon from '../icon'
 import { closeIconPath } from '../icon/paths'
 import context from '../../context'
-let $profileDialog
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
 // TODO: if using this with entity/groupStream, get it from context
-export default $profileDialog = function (props) {
+export default function $profileDialog (props) {
   const { userStreamy, entityUserStream, entityStream } = props
   const { model, router, browser, lang, colors } = useContext(context)
 

@@ -10,16 +10,13 @@ import * as Rx from 'rxjs'
 import $primaryInput from '../primary_input'
 import $button from '../button'
 import context from '../../context'
-let $signIn
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
 // FIXME: passing stream to child component causes 2 renders of child
 // since state updates in 2 places
 
-export default $signIn = function ({ modeStream }) {
+export default function $signIn ({ modeStream }) {
   let emailErrorStream, emailValueStream, hasErrorStream, isLoadingStream, nameErrorStream, nameValueStream, passwordErrorStream, passwordValueStream
   let e
   const { model, router, portal, lang, config } = useContext(context);

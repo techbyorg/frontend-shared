@@ -14,13 +14,10 @@ import $tos from '../tos'
 import { expandMoreIconPath } from '../icon/paths'
 import Environment from '../../services/environment'
 import context from '../../context'
-let $policies
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $policies = function ({ isIabStream, $dropdowns }) {
+export default function $policies ({ isIabStream, $dropdowns }) {
   const { lang, router, colors } = useContext(context)
 
   $dropdowns = [

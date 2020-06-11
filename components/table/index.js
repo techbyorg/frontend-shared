@@ -9,16 +9,13 @@ import * as _ from 'lodash-es'
 import $spinner from '../spinner'
 import Environment from '../../services/environment'
 import useRefSize from '../../services/use_ref_size'
-let $table
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
 // if it's lightweight enough, for long tables we could use
 // https://github.com/mckervinc/react-fluid-table
 // so i'm using same api to make for easy replacement
-export default $table = function (props) {
+export default function $table (props) {
   const { data, columns, onRowClick, mobileRowRenderer, breakpoint } = props
 
   function getStyle ({ width, isFlex }) {

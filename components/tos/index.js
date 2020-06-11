@@ -6,13 +6,10 @@
 import { z, useContext } from 'zorium'
 
 import context from '../../context'
-let $tos
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $tos = function () {
+export default function $tos () {
   const { router } = useContext(context)
 
   return z('.z-tos',

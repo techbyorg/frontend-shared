@@ -8,9 +8,8 @@ import { z, useContext } from 'zorium'
 import $icon from '../icon'
 import { backIconPath } from '../icon/paths'
 import context from '../../context'
-let $buttonBack
 
-export default $buttonBack = function (props) {
+export default function $buttonBack (props) {
   const {
     color,
     onclick,

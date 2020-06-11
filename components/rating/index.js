@@ -13,14 +13,11 @@ import * as rx from 'rxjs/operators'
 import Icon from '../icon'
 import { starIconPath, starHalfIconPath, starOutlineIconPath } from '../icon/paths'
 import context from '../../context'
-let $rating
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
 // set isInteractive to true if tapping on a star should fill up to that star
-export default $rating = function (props) {
+export default function $rating (props) {
   let ratingStream
   let {
     valueStream,

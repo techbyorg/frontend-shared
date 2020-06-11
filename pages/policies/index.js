@@ -6,13 +6,12 @@
 import { z } from 'zorium'
 
 import $policies from '../../components/policies'
-let $policiesPage
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
+if (typeof window !== 'undefined') { require('./index.styl') }
+
+export default function $policiesPage ({ requestsStream }) {
+  z('.p-policies',
+    z($policies, {
+      isIabStream: requestsStream.map(({ req }) => req.query.isIab)
+    }))
 }
-
-export default $policiesPage = ({ requestsStream }) => z('.p-policies',
-  z($policies, {
-    isIabStream: requestsStream.map(({ req }) => req.query.isIab)
-  }))

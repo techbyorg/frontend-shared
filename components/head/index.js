@@ -10,9 +10,8 @@ import * as _ from 'lodash-es'
 import Environment from '../../services/environment'
 import fontsCss from './fonts'
 import context from '../../context'
-let $head
 
-export default $head = function (props) {
+export default function $head (props) {
   const { serverData, metaHtml, lang, model, cookie, config, colors } = props
 
   const cssColors = colors.default
@@ -22,12 +21,12 @@ export default $head = function (props) {
   cssVariables
 
   const bundlePath = serverData?.bundlePath ||
-    document?.getElementById('bundle')?.src
+    globalThis?.document?.getElementById('bundle')?.src
   const bundleCssPath = serverData?.bundleCssPath ||
-    document?.getElementById('bundle-css')?.href
+    globalThis?.document?.getElementById('bundle-css')?.href
 
   // {modelSerialization} = useStream ->
-  //   modelSerialization: unless window?
+  //   modelSerialization: unless globalThis?.window?
   //     model.getSerializationStream()
 
   const modelSerialization = (typeof window === 'undefined' || window === null) && model.getSerialization()

@@ -17,7 +17,7 @@ class PushService {
 
   setFirebaseInfo (firebaseInfo) { this.firebaseInfo = firebaseInfo; return null }
   // constructor: ->
-  //   if window? and not Environment.isNativeApp()
+  //   if globalThis?.window? and not Environment.isNativeApp()
   //     @isReady = new Promise (@resolveReady) => null
   //     console.log 'firebase'
   //     @isFirebaseImported = Promise.all [

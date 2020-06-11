@@ -7,15 +7,14 @@ import { z } from 'zorium'
 
 import $appBar from '../../components/app_bar'
 import $signIn from '../../components/sign_in'
-let $signInPage
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
+if (typeof window !== 'undefined') { require('./index.styl') }
+
+export default function $signInPage () {
+  z('.p-sign-in', [
+    z($appBar, {
+      hasLogo: true
+      // $topLeftButton: z $buttonBack, {color: colors.$header500Icon}
+    }), z($signIn)
+  ])
 }
-
-export default $signInPage = () => z('.p-sign-in',
-  z($appBar, {
-    hasLogo: true
-    // $topLeftButton: z $buttonBack, {color: colors.$header500Icon}
-  }),
-  z($signIn))

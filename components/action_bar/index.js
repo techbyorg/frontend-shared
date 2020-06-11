@@ -11,13 +11,10 @@ import $appBar from '../app_bar'
 import $icon from '../icon'
 import { ellipsisIconPath } from '../icon/paths'
 import context from '../../context'
-let $actionBar
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $actionBar = function (props) {
+export default function $actionBar (props) {
   let color
   let { title, cancel, save, isSaving, isPrimary, isSecondary } = props
   const { lang, colors } = useContext(context)

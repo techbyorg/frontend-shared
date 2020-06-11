@@ -11,11 +11,8 @@ import * as rx from 'rxjs/operators'
 
 import $tooltip from '../tooltip'
 import context from '../../context'
-let $tooltipPositioner
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
 // this shows the main tooltip which is rendered in app.coffee
 // if we render it here, it has issues with iscroll (having a position: fixed
@@ -43,7 +40,7 @@ const TOOLTIPS = {
   }
 }
 
-export default $tooltipPositioner = function (props) {
+export default function $tooltipPositioner (props) {
   let cookie, shouldBeShownStream
   if (typeof window === 'undefined' || window === null) { // could also return right away if cookie exists for perf
     return

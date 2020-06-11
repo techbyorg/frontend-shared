@@ -9,14 +9,11 @@ import { z, useContext, useMemo, useStream } from 'zorium'
 import $button from '../button'
 import $dialog from '../dialog'
 import context from '../../context'
-let $requestRatingDialog
 Rx.BehaviorSubject = require('rxjs/BehaviorSubject').BehaviorSubject
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $requestRatingDialog = function ({ onClose }) {
+export default function $requestRatingDialog ({ onClose }) {
   const { model, portal, lang, colors } = useContext(context)
 
   const { isLoadingStream } = useMemo(() => ({

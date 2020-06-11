@@ -25,14 +25,11 @@ import $button from '../button'
 import $profileDialog from '../profile_dialog'
 import context from '../../context'
 import sharedConfig from '../shared_config'
-let $formattedText
 const supportsWebP = (typeof window !== 'undefined' && window !== null) && require('supports-webp')
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $formattedText = function (props) {
+export default function $formattedText (props) {
   let $el, $elStreamy, isExpanded, text
   const {
     textStreamy, imageWidth, model, router, skipImages, mentionedUsers,

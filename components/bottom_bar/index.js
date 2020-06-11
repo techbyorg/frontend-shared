@@ -10,13 +10,10 @@ import * as rx from 'rxjs/operators'
 
 import $icon from '../icon'
 import context from '../../context'
-let $bottomBar
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $bottomBar = function ({ requestsStream, isAbsolute }) {
+export default function $bottomBar ({ requestsStream, isAbsolute }) {
   let currentPath, me
   const { model, router, browser, lang, colors } = useContext(context)
 

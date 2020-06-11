@@ -11,13 +11,10 @@ import $icon from '../icon'
 import $inputOld from '../input_old'
 import { eyeIconPath, helpIconPath } from '../icon/paths'
 import context from '../../context'
-let $primaryInput
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $primaryInput = function (props) {
+export default function $primaryInput (props) {
   const allColors = useContext(context).colors
   const { isPasswordVisibleStream } = useMemo(() => ({
     isPasswordVisibleStream: new Rx.BehaviorSubject(false)

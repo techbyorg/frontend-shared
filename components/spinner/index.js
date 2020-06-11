@@ -7,15 +7,12 @@ import { z, useContext } from 'zorium'
 import * as _ from 'lodash-es'
 
 import context from '../../context'
-let $spinner
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
 const DEFAULT_SIZE = 50
 
-export default $spinner = function (...args) {
+export default function $spinner (...args) {
   const obj = args[0]; const val = obj.size; const size = val != null ? val : DEFAULT_SIZE
   const { colors } = useContext(context)
 

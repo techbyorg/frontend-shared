@@ -10,14 +10,11 @@ import * as _ from 'lodash-es'
 import $icon from '../icon'
 import { closeIconPath } from '../icon/paths'
 import context from '../../context'
-let $tooltip
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
 // FIXME: use $positionedOverlay
-export default $tooltip = function (props) {
+export default function $tooltip (props) {
   const {
     $$target, key, anchor, offset, isVisibleStream, zIndex,
     $title, $content

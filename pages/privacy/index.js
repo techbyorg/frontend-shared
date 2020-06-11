@@ -9,13 +9,10 @@ import $appBar from '../../components/app_bar'
 import $buttonBack from '../../components/button_back'
 import $privacy from '../../components/privacy'
 import context from '../../context'
-let $privacyPage
 
-if (typeof window !== 'undefined' && window !== null) {
-  require('./index.styl')
-}
+if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default $privacyPage = function () {
+export default function $privacyPage () {
   const { lang, colors } = useContext(context)
 
   return z('.p-privacy',
