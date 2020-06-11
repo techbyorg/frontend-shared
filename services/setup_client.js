@@ -148,7 +148,7 @@ export default setup = function ({ $app, Lang, Model, colors, config }) {
         action: {
           text: lang.get('general.yes'),
           onclick () {
-            ga?.('send', 'event', 'translate', 'click', language)
+            globalThis?.window?.ga?.('send', 'event', 'translate', 'click', language)
             return portal.call('browser.openWindow', {
               url: 'https://crowdin.com/project/FIXME', // FIXME
               target: '_system'
@@ -275,7 +275,7 @@ export default setup = function ({ $app, Lang, Model, colors, config }) {
           data: { path }
         })
       } else if (path != null) {
-        ga?.('send', 'event', 'hit_from_share', 'hit', JSON.stringify(path))
+        globalThis?.window?.ga?.('send', 'event', 'hit_from_share', 'hit', JSON.stringify(path))
         if (path?.key) {
           router.go(path.key, path.params)
         } else if (typeof path === 'string') {
@@ -287,7 +287,7 @@ export default setup = function ({ $app, Lang, Model, colors, config }) {
 
       if (data.logEvent) {
         const { category, action, label } = data.logEvent
-        return ga?.('send', 'event', category, action, label)
+        return globalThis?.window?.ga?.('send', 'event', category, action, label)
       }
     }
 
@@ -318,7 +318,7 @@ export default setup = function ({ $app, Lang, Model, colors, config }) {
         }
       }).then(() => requestsStream.pipe(rx.tap(function ({ path }) {
         if (typeof window !== 'undefined' && window !== null) {
-          return ga?.('send', 'pageview', path)
+          return globalThis?.window?.ga?.('send', 'pageview', path)
         }
       })).subscribe())
 

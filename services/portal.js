@@ -156,7 +156,7 @@ export default Portal = (function () {
     }
 
     shareAny ({ text, imageUrl, url }) {
-      ga?.('send', 'event', 'share_service', 'share_any')
+      globalThis?.window?.ga?.('send', 'event', 'share_service', 'share_any')
 
       if (navigator.share) {
         return navigator.share({
@@ -187,7 +187,7 @@ export default Portal = (function () {
     }
 
     appRate () {
-      ga?.('send', 'event', 'native', 'rate')
+      globalThis?.window?.ga?.('send', 'event', 'native', 'rate')
 
       return this.call('browser.openWindow', {
         url: Environment.isIos()
@@ -365,7 +365,7 @@ export default Portal = (function () {
           data: { path }
         })
       } else if (path != null) {
-        ga?.('send', 'event', 'hit_from_share', 'hit', JSON.stringify(path))
+        globalThis?.window?.ga?.('send', 'event', 'hit_from_share', 'hit', JSON.stringify(path))
         if (path?.key) {
           router.go(path.key, path.params)
         } else if (typeof path === 'string') {
@@ -377,7 +377,7 @@ export default Portal = (function () {
 
       if (data.logEvent) {
         const { category, action, label } = data.logEvent
-        return ga?.('send', 'event', category, action, label)
+        return globalThis?.window?.ga?.('send', 'event', category, action, label)
       }
     }
   }

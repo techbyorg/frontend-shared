@@ -52,7 +52,7 @@ export default function $requestRatingDialog ({ onClose }) {
             cText: colors.$secondaryMain
           },
           onclick () {
-              ga?.('send', 'event', 'requestRating', 'rate')
+              globalThis?.window?.ga?.('send', 'event', 'requestRating', 'rate')
               localStorage.hasSeenRequestRating = '1'
               isLoadingStream.next(true)
               return portal.call('app.rate')

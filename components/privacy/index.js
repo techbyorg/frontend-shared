@@ -8,7 +8,7 @@ import { z } from 'zorium'
 if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $privacy () {
-  z('.z-privacy', z('h5', 'App Visitors'), z('p',
+  return z('.z-privacy', z('h5', 'App Visitors'), z('p',
   `\
 Like most app operators, TechBy collects non-personally-identifying information of the sort that web browsers and servers typically make available,
 such as the browser type, language preference, referring site, and the date and time of each visitor request. TechBy's purpose in collecting
