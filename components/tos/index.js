@@ -193,4 +193,3 @@ upon and will inure to the benefit of the parties, their successors and permitte
     ])
   ])
 }
-// coffeelint: enable=max_line_length

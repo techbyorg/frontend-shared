@@ -4,16 +4,12 @@ import qs from 'qs-lite'
 import Environment from '../services/environment'
 import SemverService from '../services/semver'
 
-function ev (
-  // coffeelint: disable=missing_fat_arrows
-  fn
-) {
+function ev (fn) {
   return function (e) {
     const $$el = this
     return fn(e, $$el)
   }
 }
-// coffeelint: enable=missing_fat_arrows
 
 function isSimpleClick (e) {
   return !((e.which > 1) || e.shiftKey || e.altKey || e.metaKey || e.ctrlKey)

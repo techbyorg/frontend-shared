@@ -168,7 +168,7 @@ export default function $app (props) {
 
           // z $tooltip
 
-          // used in color.coffee to detect support
+          // used in color.js to detect support
           z('#css-variable-test', {
             style: {
               display: 'none',

@@ -170,7 +170,8 @@ export default class Model {
     // cache and the actual get (when user doesn't exist from exoid, but cookie gets user)
 
     return Rx.combineLatest(
-      requestsStream, (...vals) => vals)
+      requestsStream, (...vals) => vals
+    )
       .pipe(rx.take(1)).subscribe(responses => {
         responses = _.zipWith(responses, _.keys(cache), (response, req) => ({
           req,

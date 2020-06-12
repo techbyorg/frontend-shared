@@ -91,5 +91,4 @@ your acceptance of such change.\
 `
     )
   ])
-// coffeelint: enable=max_line_length
 }
