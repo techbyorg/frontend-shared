@@ -6,7 +6,7 @@ import $signIn from '../../components/sign_in'
 if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $signInPage () {
-  z('.p-sign-in', [
+  return z('.p-sign-in', [
     z($appBar, {
       hasLogo: true
       // $topLeftButton: z $buttonBack, {color: colors.$header500Icon}

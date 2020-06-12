@@ -15,6 +15,7 @@ export default function $verifyEmailPage ({ model, requestsStream, router }) {
     let disposable
     if (typeof window !== 'undefined' && window !== null) {
       disposable = requestsStream.pipe(
+<<<<<<< HEAD
         rx.switchMap(({ req, route }) =>
           Rx.fromPromise(model.user.verifyEmail({
             userId: route.params.userId,
@@ -25,6 +26,16 @@ export default function $verifyEmailPage ({ model, requestsStream, router }) {
             return Rx.of(null)
           })
         ),
+=======
+        rx.switchMap(({ req, route }) => Rx.from(model.user.verifyEmail({
+          userId: route.params.userId,
+          tokenStr: route.params.tokenStr
+        }).then(() => isVerifiedStream.next(true))).catchError(function (err) {
+          console.log(err)
+          errorStream.next('There was an error verifying your email!')
+          return Rx.of(null)
+        })),
+>>>>>>> f2795a82899721432510e55b8dd6b5c29a159da4
 
         rx.take(1)
       ).subscribe()

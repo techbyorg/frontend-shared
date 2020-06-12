@@ -43,7 +43,7 @@ export default class Window {
     const oldBreakpoint = this.breakpoint.getValue()
     const newBreakpoint = this.getBreakpointVal()
     // don't want to update if not necessary. particularly because there can be
-    // breakpoint-specific routes in app.coffee, and those listen to @breakpoint
+    // breakpoint-specific routes in app.js, and those listen to @breakpoint
     if (!this.isPaused) {
       if (oldSize !== newSize) {
         this.size.next(newSize)
