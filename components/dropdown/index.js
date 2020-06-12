@@ -1,9 +1,3 @@
-/* eslint-disable
-    no-undef,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { z, classKebab, useContext, useMemo, useRef, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
@@ -17,40 +11,32 @@ import context from '../../context'
 if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $dropdown (props) {
-  let isOpen, isOpenStream, selectedOption, selectedOptionStream, value
-  let {
-    valueStreams,
-    valueStream,
-    errorStream,
-    options,
-    $$parentRef,
-    isPrimary
+  const {
+    valueStreams, errorStream, options, $$parentRef, isPrimary,
+    anchor = 'top-left', isDisabled = false
   } = props
-  const val = props.anchor
-  const anchor = val != null ? val : 'top-left'
-  const val1 = props.isDisabled
-  const isDisabled = val1 != null ? val1 : false
   const { colors } = useContext(context)
 
-  const $$ref = useRef();
+  const $$ref = useRef()
 
-  ({ valueStream, selectedOptionStream, isOpenStream } = useMemo(() => ({
-    valueStream: valueStream || new Rx.ReplaySubject(1),
-    selectedOptionStream: valueStream,
-    isOpenStream: new Rx.BehaviorSubject(false)
-  })
-  , []));
-
-  ({ value, selectedOption, isOpen, options } = useStream(function () {
-    _.valueStream = valueStreams?.pipe(switchAll()) || valueStream
+  const { valueStream, isOpenStream } = useMemo(() => {
     return {
-      value: _.valueStream,
-      selectedOption: _.valueStream.pipe(rx.map(value => _.find(options, { value: `${value}` }))),
-      error: errorStream,
-      isOpen: isOpenStream,
-      options
+      valueStream: props.valueStream || new Rx.ReplaySubject(1),
+      isOpenStream: new Rx.BehaviorSubject(false)
     }
-  }))
+  }, [])
+
+  const { value, selectedOption, isOpen } = useStream(() => {
+    const _valueStream = valueStreams?.pipe(rx.switchAll()) || valueStream
+    return {
+      value: _valueStream,
+      selectedOption: _valueStream.pipe(rx.map((value) =>
+        _.find(options, { value: `${value}` }))
+      ),
+      error: errorStream,
+      isOpen: isOpenStream
+    }
+  })
 
   console.log('dropdown val', value)
 
@@ -70,57 +56,44 @@ export default function $dropdown (props) {
       hasValue: value !== '',
       isPrimary,
       isDisabled,
-      isOpen,
-      isError: (typeof error !== 'undefined' && error !== null)
+      isOpen
     })
-  },
-  z('.wrapper', {
-    onclick () {
-      return toggle()
-    }
-  }),
-  z('.current', {
-    onclick: toggle
-  },
-  z('.text',
-        selectedOption?.text),
-  z('.arrow',
-    z($icon, {
-      icon: chevronDownIconPath,
-      color: isPrimary
-        ? colors.$secondaryMainText
-        : colors.$bgText
-    }
-    )
-  )
-  ),
+  }, [
+    z('.wrapper', { onclick: () => { toggle() } }),
+    z('.current', { onclick: toggle }, [
+      z('.text', selectedOption?.text),
+      z('.arrow', [
+        z($icon, {
+          icon: chevronDownIconPath,
+          color: isPrimary
+            ? colors.$secondaryMainText
+            : colors.$bgText
+        })
+      ])
+    ]),
 
-  isOpen
-    ? z($positionedOverlay, {
-      onClose () {
-        return isOpenStream.next(false)
-      },
-      $$targetRef: $$ref,
-      fillTargetWidth: true,
-      anchor,
-      zIndex: 999,
-      $$parentRef,
-      $content:
+    isOpen &&
+      z($positionedOverlay, {
+        onClose () {
+          return isOpenStream.next(false)
+        },
+        $$targetRef: $$ref,
+        fillTargetWidth: true,
+        anchor,
+        zIndex: 999,
+        $$parentRef,
+        $content:
           z('.z-dropdown_options',
-            _.map(options, option => z('label.option', {
-              className: classKebab({ isSelected: `${value}` === option.value }),
-              onclick () {
-                setValue(option.value)
-                return toggle()
-              }
-            },
-            z('.text',
-              option.text)
-            ))
+            _.map(options, option =>
+              z('label.option', {
+                className: classKebab({ isSelected: `${value}` === option.value }),
+                onclick () {
+                  setValue(option.value)
+                  return toggle()
+                }
+              }, z('.text', option.text))
+            )
           )
-    }
-    ) : undefined,
-  (typeof error !== 'undefined' && error !== null)
-    ? z('.error', error) : undefined
-  )
+      })
+  ])
 }

@@ -1,8 +1,3 @@
-/* eslint-disable
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { z, useContext, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 
@@ -22,7 +17,11 @@ export default function $masonryGrid ({ $elements, columnCounts }) {
   if (columnCount === 1) {
     $columns = [$elements]
   } else {
-    $columns = _.map(_.range(columnCount), columnIndex => _.filter($elements, (element, i) => (i % columnCount) === columnIndex))
+    $columns = _.map(_.range(columnCount), (columnIndex) =>
+      _.filter($elements, (element, i) =>
+        (i % columnCount) === columnIndex
+      )
+    )
   }
 
   return z('.z-masonry-grid', {
@@ -30,14 +29,9 @@ export default function $masonryGrid ({ $elements, columnCounts }) {
       columnCount,
       webkitColumnCount: columnCount
     }
-  },
-  _.map($columns, $els => z('.column', {
-    style: {
-      width: `${100 / columnCount}%`
-    }
-  },
-  _.map($els, $el => z('.row',
-    $el))
+  }, _.map($columns, ($els) =>
+    z('.column', { style: { width: `${100 / columnCount}%` } },
+      _.map($els, ($el) => z('.row', $el))
+    )
   ))
-  )
 }

@@ -1,8 +1,3 @@
-/* eslint-disable
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { z, classKebab, useContext } from 'zorium'
 
 import context from '../../context'
@@ -10,19 +5,14 @@ import context from '../../context'
 if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $icon (props) {
-  let {
-    icon, size, isAlignedTop, isAlignedLeft, isAlignedRight,
+  const {
+    icon, isAlignedTop, isAlignedLeft, isAlignedRight,
     isAlignedBottom, isTouchTarget, color, onclick, onmousedown,
-    viewBox, heightRatio, hasRipple,
-    touchHeight, touchWidth
+    hasRipple, size = '24px', viewBox = 24, heightRatio = 1,
+    touchWidth = '48px', touchHeight = '48px'
   } = props
   const { colors } = useContext(context)
 
-  if (size == null) { size = '24px' }
-  if (viewBox == null) { viewBox = 24 }
-  if (heightRatio == null) { heightRatio = 1 }
-  if (touchWidth == null) { touchWidth = '48px' }
-  if (touchHeight == null) { touchHeight = '48px' }
   const isClickable = Boolean(onclick || onmousedown)
 
   const tag = hasRipple ? 'a' : 'div'
@@ -49,21 +39,23 @@ export default function $icon (props) {
         ? `${parseInt(size) * heightRatio}%`
         : `${parseInt(size) * heightRatio}px`
     }
-  },
-  z('svg', {
-    namespace: 'http://www.w3.org/2000/svg',
-    viewBox: `0 0 ${viewBox} ${viewBox * heightRatio}`,
-    style: {
-      width: size,
-      height: size?.indexOf?.('%') !== -1
-        ? `${parseInt(size) * heightRatio}%`
-        : `${parseInt(size) * heightRatio}px`
-    }
-  },
-  z('path', {
-    namespace: 'http://www.w3.org/2000/svg',
-    d: icon,
-    fill: color,
-    'fill-rule': 'evenodd'
-  })))
+  }, [
+    z('svg', {
+      namespace: 'http://www.w3.org/2000/svg',
+      viewBox: `0 0 ${viewBox} ${viewBox * heightRatio}`,
+      style: {
+        width: size,
+        height: size?.indexOf?.('%') !== -1
+          ? `${parseInt(size) * heightRatio}%`
+          : `${parseInt(size) * heightRatio}px`
+      }
+    }, [
+      z('path', {
+        namespace: 'http://www.w3.org/2000/svg',
+        d: icon,
+        fill: color,
+        'fill-rule': 'evenodd'
+      })
+    ])
+  ])
 }

@@ -1,9 +1,3 @@
-/* eslint-disable
-    no-undef,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { z, useContext } from 'zorium'
 import * as _ from 'lodash-es'
 
@@ -41,13 +35,13 @@ export default function $actionBar (props) {
   }
   // bgColor = colors.$header500
 
-  return z('.z-action-bar',
+  return z('.z-action-bar', [
     z($appBar, {
       title,
       isPrimary,
       isSecondary,
       $topLeftButton:
-        z(Icon, {
+        z($icon, {
           icon: cancel.icon,
           color,
           hasRipple: true,
@@ -56,21 +50,20 @@ export default function $actionBar (props) {
             e?.stopPropagation()
             return cancel.onclick(e)
           }
-        }
-        ),
+        }),
       $topRightButton:
-        save?.onclick
-          ? z($icon, {
+        save?.onclick &&
+          z($icon, {
             icon: isSaving ? ellipsisIconPath : save.icon,
             color,
             hasRipple: true,
             isTouchTarget: true,
-            onclick (e) {
+            onclick: (e) => {
               e?.stopPropagation()
               return save.onclick(e)
             }
-          }
-          ) : undefined,
+          }),
       isFlat: true
-    }))
+    })
+  ])
 }

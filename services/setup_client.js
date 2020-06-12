@@ -1,10 +1,3 @@
-/* eslint-disable
-    no-return-assign,
-    no-undef,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { z, render } from 'zorium'
 import cookieLib from 'cookie'
 import LocationRouter from 'location-router'
@@ -15,7 +8,6 @@ import * as rx from 'rxjs/operators'
 import Environment from './environment'
 import DateService from './date'
 import RouterService from './router'
-import PushService from './push'
 import ServiceWorkerService from './service_worker'
 import CookieService from './cookie'
 import LogService from './log'
@@ -23,14 +15,11 @@ import LanguageService from './language'
 import PortalService from './portal'
 import WindowService from './window'
 
-let setup
 require('frontend-shared/polyfill')
 
 require('../root.styl')
 
-export default setup = function ({ $app, Lang, Model, colors, config }) {
-  const MAX_ERRORS_LOGGED = 5
-
+export default function setup ({ $app, Lang, Model, colors, config }) {
   LogService.init({ apiUrl: config.API_URL })
 
   Environment.setAppKey(config.APP_KEY)
@@ -76,8 +65,7 @@ export default setup = function ({ $app, Lang, Model, colors, config }) {
     initialCookies,
     host: config.HOST,
     setCookie (key, value, options) {
-      return document.cookie = cookieLib.serialize(
-        key, value, options)
+      document.cookie = cookieLib.serialize(key, value, options)
     }
   })
   const lang = new LanguageService({
@@ -148,7 +136,7 @@ export default setup = function ({ $app, Lang, Model, colors, config }) {
         action: {
           text: lang.get('general.yes'),
           onclick () {
-            ga?.('send', 'event', 'translate', 'click', language)
+            globalThis?.window?.ga?.('send', 'event', 'translate', 'click', language)
             return portal.call('browser.openWindow', {
               url: 'https://crowdin.com/project/FIXME', // FIXME
               target: '_system'
@@ -247,7 +235,7 @@ export default setup = function ({ $app, Lang, Model, colors, config }) {
 
     function routeHandler (data) {
       if (data == null) { data = {} }
-      let { path, query, source, _isPush, _original, _isDeepLink } = data
+      let { path, query, _isPush, _original, _isDeepLink } = data
 
       if (_isDeepLink) {
         return router.goPath(path)
@@ -275,7 +263,7 @@ export default setup = function ({ $app, Lang, Model, colors, config }) {
           data: { path }
         })
       } else if (path != null) {
-        ga?.('send', 'event', 'hit_from_share', 'hit', JSON.stringify(path))
+        globalThis?.window?.ga?.('send', 'event', 'hit_from_share', 'hit', JSON.stringify(path))
         if (path?.key) {
           router.go(path.key, path.params)
         } else if (typeof path === 'string') {
@@ -287,7 +275,7 @@ export default setup = function ({ $app, Lang, Model, colors, config }) {
 
       if (data.logEvent) {
         const { category, action, label } = data.logEvent
-        return ga?.('send', 'event', category, action, label)
+        return globalThis?.window?.ga?.('send', 'event', category, action, label)
       }
     }
 
@@ -318,7 +306,7 @@ export default setup = function ({ $app, Lang, Model, colors, config }) {
         }
       }).then(() => requestsStream.pipe(rx.tap(function ({ path }) {
         if (typeof window !== 'undefined' && window !== null) {
-          return ga?.('send', 'pageview', path)
+          return globalThis?.window?.ga?.('send', 'pageview', path)
         }
       })).subscribe())
 

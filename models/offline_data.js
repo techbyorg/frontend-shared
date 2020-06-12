@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 export default class OfflineDataModel {
   constructor ({ exoid, portal, lang, statusBar }) {
     this.record = this.record.bind(this)
@@ -34,8 +32,10 @@ export default class OfflineDataModel {
   save () {
     this.isRecording = false
     this.exoid.getCacheStream().take(1).subscribe(cache => {
-      this.exoid.enableInvalidation();
-      (typeof localStorage !== 'undefined' && localStorage !== null) && (localStorage.offlineCache = JSON.stringify(cache))
+      this.exoid.enableInvalidation()
+      if (globalThis?.localStorage) {
+        localStorage.offlineCache = JSON.stringify(cache)
+      }
       return this.statusBar.close()
     })
     return this.portal.call('cache.stopRecording')

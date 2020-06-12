@@ -1,8 +1,3 @@
-/* eslint-disable
-    no-return-assign,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 function hashFn (s) {
   if (!s) {
     return 'none'
@@ -29,7 +24,7 @@ export default class ImageModel {
     } else if (this.loadedImages[hash]) {
       return this.loadedImages[hash]
     }
-    return this.loadedImages[hash] = new Promise((resolve, reject) => {
+    this.loadedImages[hash] = new Promise((resolve, reject) => {
       const preloadImage = new Image()
       preloadImage.src = url
       return preloadImage.addEventListener('load', () => {
@@ -42,7 +37,8 @@ export default class ImageModel {
   isLoaded (url) {
     // don't show for server-side otherwise it shows,
     // then hides, then shows again
-    return (typeof window !== 'undefined' && window !== null) && (this.loadedImages[hashFn(url)] === true)
+    return (typeof window !== 'undefined') &&
+      this.loadedImages[hashFn(url)] === true
   }
 
   getHash (url) {
@@ -52,7 +48,8 @@ export default class ImageModel {
   isLoadedByHash (hash) {
     // don't show for server-side otherwise it shows,
     // then hides, then shows again
-    return (typeof window !== 'undefined' && window !== null) && (this.loadedImages[hash] === true)
+    return (typeof window !== 'undefined') &&
+      this.loadedImages[hash] === true
   }
 
   getSrcByPrefix (prefix, param) {

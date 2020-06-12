@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import Exoid from 'exoid'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
@@ -21,19 +19,20 @@ const SERIALIZATION_KEY = 'MODEL'
 
 export default class Model {
   constructor (options) {
-    let authCookie, host, io, lang, offlineCache, serverHeaders, userAgent
     this.validateInitialCache = this.validateInitialCache.bind(this)
     this.wasCached = this.wasCached.bind(this)
     this.dispose = this.dispose.bind(this)
     this.getSerializationStream = this.getSerializationStream.bind(this)
-    this.getSerialization = this.getSerialization.bind(this);
-    ({
-      serverHeaders, io, cookie: this.cookie, portal: this.portal, lang, userAgent, authCookie, host
-    } = options)
-    if (serverHeaders == null) { serverHeaders = {} }
+    this.getSerialization = this.getSerialization.bind(this)
+    const {
+      io, cookie, portal, lang, userAgent, authCookie, host,
+      serverHeaders = {}
+    } = options
+    this.cookie = cookie
+    this.portal = portal
 
     const cache = globalThis?.window?.[SERIALIZATION_KEY] || {}
-    if (typeof window !== 'undefined' && window !== null) {
+    if (typeof window !== 'undefined') {
       console.log('using cache', cache)
       window[SERIALIZATION_KEY] = null
       // maybe this means less memory used for long caches
@@ -66,7 +65,7 @@ export default class Model {
       if (accessToken) {
         url += `?accessToken=${accessToken}`
       }
-      const response = await (window.fetch(url, _.merge({
+      const response = await window.fetch(url, _.merge({
         responseType: 'json',
         headers: _.isPlainObject(opts?.body)
           ? _.merge({
@@ -74,12 +73,11 @@ export default class Model {
             'Content-Type': 'text/plain'
           }, proxyHeaders)
           : proxyHeaders
-      }, opts)
-      )
-      )
+      }, opts))
       return response.json()
     }
 
+    let offlineCache
     if (globalThis?.navigator?.onLine) {
       offlineCache = null
     } else {
@@ -118,13 +116,24 @@ export default class Model {
       host
     })
 
-    this.offlineData = new OfflineData({ exoid: this.exoid, portal: this.portal, statusBar: this.statusBar, lang })
+    this.offlineData = new OfflineData({
+      exoid: this.exoid, portal: this.portal, statusBar: this.statusBar, lang
+    })
 
     this.image = new Image({ additionalScript: this.additionalScript })
     this.loginLink = new LoginLink({ auth: this.auth })
     this.statusBar = new StatusBar()
     this.time = new Time({ auth: this.auth })
-    this.user = new User({ auth: this.auth, proxy, exoid: this.exoid, cookie: this.cookie, lang, overlay: this.overlay, portal: this.portal, router: this.router })
+    this.user = new User({
+      auth: this.auth,
+      proxy,
+      exoid: this.exoid,
+      cookie: this.cookie,
+      lang,
+      overlay: this.overlay,
+      portal: this.portal,
+      router: this.router
+    })
 
     this.drawer = new Drawer()
     this.tooltip = new Tooltip()

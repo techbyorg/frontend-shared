@@ -1,8 +1,3 @@
-/* eslint-disable
-    no-return-assign,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import PortalGun from 'portal-gun'
 
 export default class Portal {
@@ -38,11 +33,11 @@ export default class Portal {
   // portal.on 'cache.onUpdateAvailable', onUpdateAvailable
 
   topOnData (fn) {
-    return this.onPushFn = fn
+    this.onPushFn = fn
   }
 
   pushSetContextId (options) {
-    return this.contextId = options.contextId
+    this.contextId = options.contextId
   }
 
   deleteHtmlCache () {
@@ -52,11 +47,11 @@ export default class Portal {
   }
 
   startRecording () {
-    return this.cache.isRecording = true
+    this.cache.isRecording = true
   }
 
   stopRecording () {
-    return this.cache.isRecording = false
+    this.cache.isRecording = false
   }
 
   getSizeByCacheName ({ cacheName }) {

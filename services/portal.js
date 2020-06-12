@@ -1,35 +1,13 @@
-/* eslint-disable
-    no-constant-condition,
-    no-return-assign,
-    no-undef,
-    no-unused-vars,
-    no-useless-escape,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import Fingerprint from 'fingerprintjs'
 import getUuidByString from 'uuid-by-string'
+import * as _ from 'lodash-es'
 
 import Environment from '../services/environment'
-import PushService from '../services/push'
 import GetAppDialog from '../components/get_app_dialog'
 let Portal, PortalGun
 
 if (typeof window !== 'undefined' && window !== null) {
   PortalGun = require('portal-gun').default
-}
-
-function urlBase64ToUint8Array (base64String) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
-  const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/')
-  const rawData = window.atob(base64)
-  const outputArray = new Uint8Array(rawData.length)
-  let i = 0
-  while (i < rawData.length) {
-    outputArray[i] = rawData.charCodeAt(i)
-    i += 1
-  }
-  return outputArray
 }
 
 export default Portal = (function () {
@@ -156,7 +134,7 @@ export default Portal = (function () {
     }
 
     shareAny ({ text, imageUrl, url }) {
-      ga?.('send', 'event', 'share_service', 'share_any')
+      globalThis?.window?.ga?.('send', 'event', 'share_service', 'share_any')
 
       if (navigator.share) {
         return navigator.share({
@@ -187,7 +165,7 @@ export default Portal = (function () {
     }
 
     appRate () {
-      ga?.('send', 'event', 'native', 'rate')
+      globalThis?.window?.ga?.('send', 'event', 'native', 'rate')
 
       return this.call('browser.openWindow', {
         url: Environment.isIos()
@@ -224,16 +202,14 @@ export default Portal = (function () {
         googlePlayAppUrl
       } = this
 
-      if (Environment.isAndroid() && this.isChrome() && false) { // FIXME
-        if (this.installOverlay.prompt) {
-          const {
-            prompt
-          } = this.installOverlay
-          return this.installOverlay.setPrompt(null)
-        } else {
-          return this.installOverlay.open()
-        }
-      } else if (Environment.isIos()) {
+      // if (Environment.isAndroid() && this.isChrome()) { // FIXME
+      //   if (this.installOverlay.prompt) {
+      //     return this.installOverlay.setPrompt(null)
+      //   } else {
+      //     return this.installOverlay.open()
+      //   }
+      // } else if (Environment.isIos()) {
+      if (Environment.isIos()) {
         return this.call('browser.openWindow', {
           url: iosAppUrl,
           target: '_system'
@@ -277,7 +253,7 @@ export default Portal = (function () {
     }
 
     deepLinkOnRoute (fn) {
-      return window.onRoute = path => fn({ path: path.replace('browser://', '/') })
+      window.onRoute = path => fn({ path: path.replace('browser://', '/') })
     }
 
     // facebookLogin: =>
@@ -337,7 +313,7 @@ export default Portal = (function () {
 
     handleRouteData (data, { model, router, notificationStream }) {
       if (data == null) { data = {} }
-      let { path, query, source, _isPush, _original, _isDeepLink } = data
+      let { path, query, _isPush, _original, _isDeepLink } = data
 
       if (_isDeepLink) {
         return router.goPath(path)
@@ -365,7 +341,7 @@ export default Portal = (function () {
           data: { path }
         })
       } else if (path != null) {
-        ga?.('send', 'event', 'hit_from_share', 'hit', JSON.stringify(path))
+        globalThis?.window?.ga?.('send', 'event', 'hit_from_share', 'hit', JSON.stringify(path))
         if (path?.key) {
           router.go(path.key, path.params)
         } else if (typeof path === 'string') {
@@ -377,7 +353,7 @@ export default Portal = (function () {
 
       if (data.logEvent) {
         const { category, action, label } = data.logEvent
-        return ga?.('send', 'event', category, action, label)
+        return globalThis?.window?.ga?.('send', 'event', category, action, label)
       }
     }
   }

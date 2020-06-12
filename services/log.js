@@ -1,8 +1,3 @@
-/* eslint-disable
-    no-return-assign,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 const MAX_ERRORS_LOGGED = 5
 
 class Log {
@@ -13,10 +8,10 @@ class Log {
 
   init ({ apiUrl }) {
     // Report errors to API_URL/log
-    const postErrToServer = err => {
+    const postErrToServer = (err) => {
       if (this.errorsSent < MAX_ERRORS_LOGGED) {
         this.errorsSent += 1
-        return window.fetch(`${apiUrl}/log`, {
+        window.fetch(`${apiUrl}/log`, {
           method: 'POST',
           headers: {
             'Content-Type': 'text/plain'
@@ -31,7 +26,7 @@ class Log {
     }
 
     const oldOnError = window.onerror
-    return window.onerror = function (message, file, line, column, error) {
+    window.onerror = function (message, file, line, column, error) {
       // if we log with `new Error` it's pretty pointless (gives error message that
       // just points to this line). if we pass the 5th argument (error), it breaks
       // on json.stringify
@@ -40,7 +35,7 @@ class Log {
       postErrToServer(err)
 
       if (oldOnError) {
-        return oldOnError(...arguments)
+        oldOnError(...arguments)
       }
     }
   }

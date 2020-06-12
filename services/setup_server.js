@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import { z, renderToString, untilStable } from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
@@ -66,11 +64,15 @@ export default function setup ({ $app, Lang, Model, gulpPaths, config, colors })
       }
     }).catch(next))
 
-  app.use('/sitemap.txt', (req, res, next) => requestPromise(config.API_URL + '/sitemap', { json: true })
-    .then(function (paths) {
-      res.setHeader('Content-Type', 'text/plain')
-      return res.send((_.map(paths, path => `https://${config.HOST}${path}`)).join('\n'))
-    }))
+  app.use('/sitemap.txt', (req, res, next) =>
+    requestPromise(config.API_URL + '/sitemap', { json: true })
+      .then(function (paths) {
+        res.setHeader('Content-Type', 'text/plain')
+        return res.send((_.map(paths, path =>
+          `https://${config.HOST}${path}`)).join('\n')
+        )
+      })
+  )
 
   app.use('/ping', (req, res) => res.send('pong'))
 
@@ -119,7 +121,9 @@ export default function setup ({ $app, Lang, Model, gulpPaths, config, colors })
         return res.cookie(key, value, options)
       }
     })
-    const lang = new LanguageService({ language, cookie, files: Lang.getLangFiles() })
+    const lang = new LanguageService({
+      language, cookie, files: Lang.getLangFiles()
+    })
     const browser = new WindowService({ cookie, userAgent })
     const model = new Model({
       io,

@@ -1,13 +1,8 @@
-/* eslint-disable
-    no-undef,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
-import { z, classKebab, useContext, useEffect, useStream } from 'zorium'
+import { z, classKebab, useContext, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 
 import $icon from '../icon'
+import $positionedOverlay from '../positioned_overlay'
 import { closeIconPath } from '../icon/paths'
 import context from '../../context'
 
@@ -16,24 +11,25 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 // FIXME: use $positionedOverlay
 export default function $tooltip (props) {
   const {
-    $$target, key, anchor, offset, isVisibleStream, zIndex,
-    $title, $content
+    $$target, key, anchor, isVisibleStream, $title, $content
   } = props
   const { cookie, colors } = useContext(context)
 
+  const { isVisible } = useStream(() => ({
+    isVisible: isVisibleStream
+  }))
+
   function close () {
-    let completedTooltips = (() => {
-      try {
-        return cookie.get('completedTooltips').split(',')
-      } catch (error) {
-        return []
-      }
-    })()
+    let completedTooltips
+    try {
+      completedTooltips = cookie.get('completedTooltips').split(',')
+    } catch (error) {
+      completedTooltips = []
+    }
     if (completedTooltips == null) { completedTooltips = [] }
     cookie.set('completedTooltips', _.uniq(
       completedTooltips.concat([key])
-    ).join(',')
-    )
+    ).join(','))
     $positionedOverlay.close()
 
     return isVisibleStream.next(false)
@@ -41,23 +37,23 @@ export default function $tooltip (props) {
 
   return z(`.z-tooltip.anchor-${anchor}`, {
     ref: $$target,
-    className: classKebab({ isVisible }),
-    style
-  },
-  z($positionedOverlay, {
-    $content: [
-      z('.close',
-        z($icon, {
-          icon: closeIconPath,
-          size: '16px',
-          color: colors.$bgText54,
-          onclick: close
-        }
-        )
-      ),
-      z('.content',
-        z('.title', $title),
-        $content)
-    ]
-  }))
+    className: classKebab({ isVisible })
+  }, [
+    z($positionedOverlay, {
+      $content: [
+        z('.close', [
+          z($icon, {
+            icon: closeIconPath,
+            size: '16px',
+            color: colors.$bgText54,
+            onclick: close
+          })
+        ]),
+        z('.content', [
+          z('.title', $title),
+          $content
+        ])
+      ]
+    })
+  ])
 }

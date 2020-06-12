@@ -1,11 +1,4 @@
-/* eslint-disable
-    handle-callback-err,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import Environment from '../services/environment'
-import SemverService from '../services/semver'
 
 const ONE_DAY_MS = 3600 * 24 * 1000
 
@@ -57,10 +50,9 @@ class PushService {
     return Promise.all([
       portal.call('push.register'),
       portal.call('app.getDeviceId')
-        .catch(err => '')
+        .catch(() => null)
     ])
-      .then(function (...args) {
-        const array = args[0]; const val = array[0]; let { token, sourceType } = val != null ? val : {}; const deviceId = array[1]
+      .then(({ token, sourceType }, deviceId) => {
         if (token != null) {
           if (!isAlwaysCalled || !cookie.get('hasPushToken')) {
             const isNativeApp = Environment.isNativeApp()

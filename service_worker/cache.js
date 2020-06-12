@@ -1,12 +1,4 @@
-/* eslint-disable
-    no-unused-vars,
-    no-useless-escape,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import * as _ from 'lodash-es'
-
-import Environment from '../services/environment'
 
 export default class Cache {
   constructor ({ host }) {
@@ -87,14 +79,28 @@ export default class Cache {
 
   getSizeByCacheName (cacheName) {
     return caches.open(cacheName)
-      .then(cache => cache.keys().then(keys => Promise.all(_.map(keys, key => cache.match(key).then(response => response.clone().blob().then(blob => blob.size)))).then(sizes => _.sum(sizes))))
+      .then((cache) =>
+        cache.keys().then((keys) =>
+          Promise.all(_.map(keys, (key) =>
+            cache.match(key).then((response) =>
+              response.clone().blob().then((blob) =>
+                blob.size
+              )
+            )
+          )).then(sizes => _.sum(sizes))
+        )
+      )
   }
 
   // grab from normal stores (can't use caches.match, because we want to avoid
   // the recorded cache)
   getCacheMatch (request) {
-    return Promise.all(_.map(this.cachesFiles, ({ version }, cacheName) => caches.open(`${cacheName}:${version}`)
-      .then(cache => cache.match(request)))).then(matches => _.find(matches, match => Boolean(match)))
+    return Promise.all(
+      _.map(this.cachesFiles, ({ version }, cacheName) =>
+        caches.open(`${cacheName}:${version}`)
+          .then(cache => cache.match(request))
+      )
+    ).then(matches => _.find(matches, match => Boolean(match)))
   }
 
   onFetch (event) {
@@ -111,7 +117,7 @@ export default class Cache {
     } = event
     // console.log 'fetch'
     // console.log event.request.url
-    if (event.request.url.match(/((:\/\/|\.)techby.org|localhost:50340)([^\.]*)$/i)) {
+    if (event.request.url.match(/((:\/\/|\.)techby.org|localhost:50340)([^.]*)$/i)) {
       request = `https://${this.host}/cache-shell`
     }
     // request = 'https://staging.techby.org/cache-shell'
@@ -140,7 +146,9 @@ export default class Cache {
   }
 
   onActivate (event) {
-    const cacheKeys = _.map(this.cachesFiles, ({ version }, cacheName) => `${cacheName}:${version}`)
+    const cacheKeys = _.map(this.cachesFiles, ({ version }, cacheName) =>
+      `${cacheName}:${version}`
+    )
     caches.keys().then(keys => Promise.all(
       _.map(keys, function (key) {
         if (cacheKeys.indexOf(key) === -1) {

@@ -1,11 +1,5 @@
-/* eslint-disable
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
-import { useState, useMemo, useCallback, useLayoutEffect, useStream } from 'zorium'
+import { useMemo, useCallback, useLayoutEffect, useStream } from 'zorium'
 import * as Rx from 'rxjs'
-let useRefSize
 
 function getSize ($$el) {
   return {
@@ -14,18 +8,16 @@ function getSize ($$el) {
   }
 }
 
-export default useRefSize = function ($$ref) {
+export default function useRefSize ($$ref) {
   const { sizeStream } = useMemo(() => ({
     sizeStream: new Rx.BehaviorSubject(null)
-  })
-  , [])
+  }), [])
 
-  const onResize = useCallback(function () {
+  const onResize = useCallback(() => {
     if ($$ref?.current) {
       return sizeStream.next(getSize($$ref.current))
     }
-  }
-  , [$$ref])
+  }, [$$ref])
 
   useLayoutEffect(function () {
     onResize()

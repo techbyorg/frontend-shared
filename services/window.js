@@ -1,9 +1,3 @@
-/* eslint-disable
-    no-inner-declarations,
-    no-return-assign,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 
@@ -55,7 +49,7 @@ export default class Window {
         this.size.next(newSize)
       }
       if (oldBreakpoint !== newBreakpoint) {
-        return this.breakpoint.next(newBreakpoint)
+        this.breakpoint.next(newBreakpoint)
       }
     }
   }
@@ -156,7 +150,7 @@ export default class Window {
         return false
       })()
 
-      function _prefixStyle (style) {
+      const _prefixStyle = (style) => {
         if (_vendor === false) {
           return false
         }
@@ -173,16 +167,16 @@ export default class Window {
   }
 
   pauseResizing () {
-    return this.isPaused = true
+    this.isPaused = true
   }
 
   resumeResizing () {
     this.isPaused = false
-    return this.updateSize()
+    this.updateSize()
   }
 
   resume () {
-    return _.forEach(this.resumeFns, fn => fn())
+    _.forEach(this.resumeFns, fn => fn())
   }
 
   onResume (fn) {
@@ -190,7 +184,7 @@ export default class Window {
     this.resumeFns[id] = fn
     return {
       unsubscribe: () => {
-        return delete this.resumeFns[id]
+        delete this.resumeFns[id]
       }
     }
   }

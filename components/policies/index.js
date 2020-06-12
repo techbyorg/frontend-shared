@@ -1,8 +1,3 @@
-/* eslint-disable
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
@@ -12,7 +7,6 @@ import $button from '../button'
 import $privacy from '../privacy'
 import $tos from '../tos'
 import { expandMoreIconPath } from '../icon/paths'
-import Environment from '../../services/environment'
 import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
@@ -23,27 +17,28 @@ export default function $policies ({ isIabStream, $dropdowns }) {
   $dropdowns = [
     {
       $title: 'Privacy Policy',
-      $content: z($privacy),
+      $content: $privacy,
       isVisible: false
     },
     {
       $title: 'Terms of Service',
-      $content: z($tos),
+      $content: $tos,
       isVisible: false
     }
   ]
 
-  const { visibleDropdownsStream } = useMemo(() => ({
-    visibleDropdownsStream: new Rx.BehaviorSubject([])
-  })
-  , [])
+  const { visibleDropdownsStream } = useMemo(() => {
+    return {
+      visibleDropdownsStream: new Rx.BehaviorSubject([])
+    }
+  }, [])
 
-  var { isIab, visibleDropdowns } = useStream(() => ({
-    isIab,
+  const { isIab, visibleDropdowns } = useStream(() => ({
+    isIab: isIabStream,
     visibleDropdowns: visibleDropdownsStream
   }))
 
-  return z('.z-policies',
+  return z('.z-policies', [
     z('.title', lang.get('policies.title')),
     z('.description',
       lang.get('policies.description')),
@@ -53,41 +48,42 @@ export default function $policies ({ isIabStream, $dropdowns }) {
       const isVisible = visibleDropdowns.indexOf(i) !== -1
       return [
         z('.divider'),
-        z('.dropdown',
+        z('.dropdown', [
           z('.block', {
             onclick () {
               if (isVisible) {
-                return visibleDropdownsStream.next(_.filter(visibleDropdowns, index => index !== i)
+                return visibleDropdownsStream.next(
+                  _.filter(visibleDropdowns, index => index !== i)
                 )
               } else {
-                return visibleDropdownsStream.next(_.uniq(visibleDropdowns.concat(i)))
+                return visibleDropdownsStream.next(
+                  _.uniq(visibleDropdowns.concat(i))
+                )
               }
             }
           },
           z('.title', $title),
-          z('.icon',
+          z('.icon', [
             z($icon, {
               icon: expandMoreIconPath,
               color: colors.$primaryMain
-            }
-            )
-          )
+            })
+          ])
           ),
           z('.content', { className: classKebab({ isVisible }) },
             $content)
-        )
+        ])
       ]
     }),
 
-    !isIab
-      ? z('.continue-button',
+    !isIab &&
+      z('.continue-button', [
         z($button, {
           text: 'Continue',
           onclick () {
             return router.goPath('/')
           }
-        }
-        )
-      ) : undefined
-  )
+        })
+      ])
+  ])
 }

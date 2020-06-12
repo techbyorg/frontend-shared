@@ -1,14 +1,8 @@
-/* eslint-disable
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 
 import $tabs from '../tabs'
-import $icon from '../icon'
 import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
@@ -16,16 +10,17 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 export default function $slideSteps ({ onSkip, onDone, steps, doneText }) {
   const { lang } = useContext(context)
 
-  const { selectedIndexStream } = useMemo(() => ({
-    selectedIndexStream: new Rx.BehaviorSubject(0)
-  })
-  , [])
+  const { selectedIndexStream } = useMemo(() => {
+    return {
+      selectedIndexStream: new Rx.BehaviorSubject(0)
+    }
+  }, [])
 
   const { selectedIndex } = useStream(() => ({
     selectedIndex: selectedIndexStream
   }))
 
-  return z('.p-slide-steps',
+  return z('.p-slide-steps', [
     z($tabs, {
       selectedIndex,
       hideTabBar: true,
@@ -68,5 +63,6 @@ export default function $slideSteps ({ onSkip, onDone, steps, doneText }) {
           onclick: onDone
         },
         doneText || lang.get('general.gotIt'))
-    ]))
+    ])
+  ])
 }

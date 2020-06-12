@@ -1,10 +1,3 @@
-/* eslint-disable
-    no-undef,
-    no-unused-vars,
-    prefer-const,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
@@ -13,12 +6,12 @@ import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default function $togle (props) {
-  let isSelectedStreams, onToggle, withText;
-  ({ isSelectedStreams, isSelectedStreams, onToggle, withText } = props)
-  const { lang } = useContext(context);
+export default function $toggle (props) {
+  const { isSelectedStream, onToggle, withText } = props
+  const { lang } = useContext(context)
 
-  ({ isSelectedStreams } = useMemo(function () {
+  const { isSelectedStreams } = useMemo(function () {
+    let isSelectedStreams = props.isSelectedStreams
     if (!isSelectedStreams) {
       isSelectedStreams = new Rx.ReplaySubject(1)
       if (isSelectedStreams == null) { isSelectedStreams = Rx.of('') }
@@ -27,17 +20,13 @@ export default function $togle (props) {
     return {
       isSelectedStreams
     }
-  }
-  , []))
+  }, [])
 
   const { isSelected } = useStream(() => ({
     isSelected: isSelectedStreams.pipe(rx.switchAll())
   }))
 
-  function toggle (param) {
-    let onToggle
-    if (param == null) { param = {} }
-    ({ onToggle } = param)
+  function toggle ({ onToggle } = {}) {
     if (isSelected) {
       isSelected.next(!isSelected)
     } else {
@@ -48,17 +37,13 @@ export default function $togle (props) {
 
   return z('.z-toggle', {
     className: classKebab({ isSelected, withText }),
-    onclick () { return toggle({ onToggle }) }
-  },
-  z('.track',
-    (() => {
-      if (withText && isSelected) {
-        return lang.get('general.yes')
-      } else if (withText) {
-        return lang.get('general.no')
-      }
-    })()
-  ),
-
-  z('.knob'))
+    onclick: () => { return toggle({ onToggle }) }
+  }, [
+    z('.track',
+      withText && isSelected
+        ? lang.get('general.yes')
+        : withText && lang.get('general.no')
+    ),
+    z('.knob')
+  ])
 }

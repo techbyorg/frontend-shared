@@ -1,20 +1,16 @@
-/* eslint-disable
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { useEffect } from 'zorium'
 import * as _ from 'lodash-es'
-let useOnClickOutside
 
-export default useOnClickOutside = function ($$refs, handler) {
+export default function useOnClickOutside ($$refs, handler) {
   if (!_.isArray($$refs)) {
     $$refs = [$$refs]
   }
 
-  return useEffect(function () {
-    function listener (e) {
-      const isInTarget = _.some($$refs, $$ref => $$ref.current?.contains(e.target))
+  return useEffect(() => {
+    const listener = (e) => {
+      const isInTarget = _.some($$refs, $$ref =>
+        $$ref.current?.contains(e.target)
+      )
       if (!isInTarget) {
         return handler(e)
       }
@@ -27,7 +23,5 @@ export default useOnClickOutside = function ($$refs, handler) {
       document.removeEventListener('mousedown', listener)
       return document.removeEventListener('touchstart', listener)
     }
-  }
-
-  , [$$refs]) // could add handler here, but would need to useCallback on all passed
+  }, [$$refs]) // could add handler here, but would need to useCallback on all passed
 }

@@ -1,8 +1,3 @@
-/* eslint-disable
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { z, useContext } from 'zorium'
 
 import $appBar from '../../components/app_bar'
@@ -15,12 +10,12 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 export default function $privacyPage () {
   const { lang, colors } = useContext(context)
 
-  return z('.p-privacy',
+  return z('.p-privacy', [
     z($appBar, {
       title: lang.get('privacyPage.title'),
       $topLeftButton: z($buttonBack, {
         color: colors.$header500Icon
       })
-    }),
-    z($privacy))
+    }), z($privacy)
+  ])
 }

@@ -1,12 +1,3 @@
-/* eslint-disable
-    no-return-assign,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
-import z from 'zorium'
-import * as _ from 'lodash-es'
-
 class FormatService {
   constructor () {
     this.abbreviateDollar = this.abbreviateDollar.bind(this)
@@ -107,18 +98,17 @@ class FormatService {
 
   // [2015, 2016, 2017, 2019] -> "2015-2017, 2019"
   yearsArrayToEnglish (years) {
-    const lastYear = 0
     let isConsecutive = false
     let str = ''
     years.forEach(function (year, i) {
       if ((years[i + 1] === (year + 1)) && !isConsecutive) {
         str += `${year}-`
-        return isConsecutive = true
+        isConsecutive = true
       } else if (!isConsecutive) {
-        return str += `${year}, `
+        str += `${year}, `
       } else if (years[i + 1] !== (year + 1)) {
         str += `${year}, `
-        return isConsecutive = false
+        isConsecutive = false
       }
     })
 

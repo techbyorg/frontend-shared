@@ -1,6 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
-// coffeelint: disable=max_line_length,cyclomatic_complexity
 // https://material.io/resources/icons/?icon=loyalty&style=round
 export var accountCircleIconPath = 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z'
 export var addIconPath = 'M19,13 L13,13 L13,19 L11,19 L11,13 L5,13 L5,11 L11,11 L11,5 L13,5 L13,11 L19,11 L19,13 L19,13 Z'
@@ -104,4 +101,3 @@ export var webIconPath = 'M16.36,14C16.44,13.34 16.5,12.68 16.5,12C16.5,11.32 16
 export var workIconPath = 'M10,2H14A2,2 0 0,1 16,4V6H20A2,2 0 0,1 22,8V19A2,2 0 0,1 20,21H4C2.89,21 2,20.1 2,19V8C2,6.89 2.89,6 4,6H8V4C8,2.89 8.89,2 10,2M14,6V4H10V6H14Z'
 export var youtubeIconPath = 'M21.8 8.02s-.196-1.371-.795-1.975c-.76-.793-1.613-.797-2.004-.844C16.202 5 12.004 5 12.004 5h-.008s-4.199 0-6.997.201c-.392.047-1.243.05-2.004.843-.6.605-.795 1.976-.795 1.976S2 9.63 2 11.242v1.51c0 1.61.2 3.221.2 3.221s.196 1.372.795 1.976c.76.793 1.76.768 2.205.851 1.6.153 6.8.2 6.8.2s4.202-.006 7.001-.208c.392-.046 1.243-.05 2.004-.843.6-.604.795-1.976.795-1.976s.2-1.61.2-3.221v-1.51c0-1.611-.2-3.222-.2-3.222zM9.935 14.582V8.99l5.404 2.806-5.404 2.787z'
 export var videoAddIconPath = 'M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5M14,13H11V16H9V13H6V11H9V8H11V11H14V13Z'
-// coffeelint: enable=max_line_length,cyclomatic_complexity

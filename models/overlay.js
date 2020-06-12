@@ -1,9 +1,3 @@
-/* eslint-disable
-    no-return-assign,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
@@ -53,8 +47,7 @@ export default class Overlay {
 
     const newOverlays = _.filter((this.overlays.getValue() || []).concat(
       { $, onComplete, onCancel, id }
-    )
-    )
+    ))
     this.overlays.next(newOverlays)
 
     window.addEventListener('backbutton', this.closeFromBackButton)
@@ -62,7 +55,7 @@ export default class Overlay {
     this.setData(data) // TODO: per-overlay data
 
     // prevent body scrolling while viewing menu
-    return document.body.style.overflow = 'hidden'
+    document.body.style.overflow = 'hidden'
   }
 
   closeFromBackButton (e) {
@@ -73,7 +66,7 @@ export default class Overlay {
   close (param) {
     let onCancel, onComplete
     if (param == null) { param = {} }
-    const { action, response, isFromBackButton, id } = param
+    const { action, response, id } = param
     let overlays = this.overlays.getValue()
     if (_.isEmpty(overlays)) {
       return
@@ -102,6 +95,6 @@ export default class Overlay {
       onCancel?.(response)
     }
 
-    return document.body.style.overflow = 'auto'
+    document.body.style.overflow = 'auto'
   }
 }

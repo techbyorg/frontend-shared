@@ -10,9 +10,6 @@
     "watch": "./bin/watch.sh"
   },
   "devDependencies": {
-    "clay-coffeescript-style-guide": "^1.1.0",
-    "coffeelint": "^2.1.0",
-    "coffeescript": "^2.5.1"
   },
   "dependencies": {
     "assert-none-missing": "github:claydotio/assert-none-missing#es",

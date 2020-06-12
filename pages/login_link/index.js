@@ -1,9 +1,4 @@
-/* eslint-disable
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
-import { z, useContext, useEffect, useStream } from 'zorium'
+import { z, useContext, useEffect } from 'zorium'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
@@ -13,9 +8,9 @@ import context from '../../context'
 if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $loginLinkPage ({ requestsStream, serverData }) {
-  const { model, router, browser } = useContext(context)
+  const { model, router } = useContext(context)
 
-  useEffect(function () {
+  useEffect(() => {
     let disposable
     if (typeof window !== 'undefined' && window !== null) {
       disposable = requestsStream.pipe(
@@ -51,15 +46,13 @@ export default function $loginLinkPage ({ requestsStream, serverData }) {
     }
 
     return () => disposable?.unsubscribe()
-  }
-  , [])
+  }, [])
 
-  return z('.p-login-link',
+  return z('.p-login-link', [
     z($spinner),
     z('.loading', 'Loading...'),
     router.link(z('a.stuck', {
       href: router.get('home')
-    }, 'Stuck? Tap to go home')
-    )
-  )
+    }, 'Stuck? Tap to go home'))
+  ])
 }

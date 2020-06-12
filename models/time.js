@@ -1,8 +1,3 @@
-/* eslint-disable
-    no-return-assign,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 export default class Time {
   constructor ({ auth }) {
     this.updateServerTime = this.updateServerTime.bind(this)
@@ -11,9 +6,8 @@ export default class Time {
     this.auth = auth
     this.serverTime = Date.now()
     this.timeInterval = setInterval(() => {
-      return this.serverTime += 1000
-    }
-    , 1000)
+      this.serverTime += 1000
+    }, 1000)
 
     setTimeout(() => {
       return this.updateServerTime()
@@ -22,9 +16,9 @@ export default class Time {
   }
 
   updateServerTime () {
-    return this.auth.call({ query: 'query Time { time }' })
+    this.auth.call({ query: 'query Time { time }' })
       .then(({ data }) => {
-        return this.serverTime = Date.parse(data.time.now)
+        this.serverTime = Date.parse(data.time.now)
       })
   }
 
@@ -33,7 +27,7 @@ export default class Time {
   }
 
   dispose () {
-    return clearInterval(this.timeInterval)
+    clearInterval(this.timeInterval)
   }
 
   getCurrentSeason () { return 'spring' } // TODO

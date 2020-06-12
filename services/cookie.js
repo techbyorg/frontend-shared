@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import * as Rx from 'rxjs'
 
 const COOKIE_DURATION_MS = 365 * 24 * 3600 * 1000 // 1 year

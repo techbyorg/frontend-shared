@@ -1,8 +1,4 @@
-/* eslint-disable
-    no-undef,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
+import * as _ from 'lodash-es'
 import RouterService from '../services/router'
 import Language from '../services/language'
 
@@ -12,7 +8,10 @@ const router = new RouterService({
 })
 
 export default class Push {
-  constructor ({ cdnUrl, host }) { this.listen = this.listen.bind(this); this.cdnUrl = cdnUrl; this.host = host; null }
+  constructor ({ cdnUrl, host }) {
+    this.listen = this.listen.bind(this)
+    this.cdnUrl = cdnUrl; this.host = host
+  }
 
   listen () {
     self.addEventListener('push', this.onPush)
@@ -43,7 +42,7 @@ export default class Push {
     }
 
     return e.waitUntil(
-      clients.matchAll({
+      globalThis?.clients.matchAll({
         includeUncontrolled: true,
         type: 'window'
       })
@@ -51,7 +50,7 @@ export default class Push {
           const isFocused = activeClients?.some(client => client.focused)
 
           if (!isFocused || (
-            contextId && (contextId !== message.data?.contextId)
+            globalThis?.contextId && (globalThis?.contextId !== message.data?.contextId)
           )) {
             return self.registration.showNotification('TechBy', {
               icon: message.icon
@@ -75,16 +74,16 @@ export default class Push {
     e.notification.close()
 
     return e.waitUntil(
-      clients.matchAll({
+      globalThis?.clients.matchAll({
         includeUncontrolled: true,
         type: 'window'
       })
         .then(function (activeClients) {
           if (activeClients.length > 0) {
             activeClients[0].focus()
-            return onPushFn?.(e.notification.data)
+            return this.onPushFn?.(e.notification.data)
           } else {
-            return clients.openWindow(e.notification.data.url)
+            return globalThis?.clients.openWindow(e.notification.data.url)
           }
         })
     )

@@ -1,15 +1,8 @@
-/* eslint-disable
-    no-return-assign,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import * as _ from 'lodash-es'
 import qs from 'qs-lite'
 
 import Environment from '../services/environment'
 import SemverService from '../services/semver'
-import sharedConfig from '../shared_config'
 
 function ev (
   // coffeelint: disable=missing_fat_arrows
@@ -55,7 +48,7 @@ class RouterService {
     this.lang = lang
     this.portal = portal
     this.host = host
-    this.history = (typeof window !== 'undefined' && window !== null) ? [window.location.pathname] : []
+    this.history = (typeof window !== 'undefined') ? [window.location.pathname] : []
     this.requestsStream = null
     this.onBackFn = null
     this.entitySlug = null
@@ -139,7 +132,9 @@ class RouterService {
       route = route.replace(`/${entitySlug}`, '')
     }
 
-    _.forEach(replacements, (value, key) => route = route.replace(`:${key}`, value))
+    _.forEach(replacements, (value, key) => {
+      route = route.replace(`:${key}`, value)
+    })
 
     if (options?.qs) {
       route = `${route}?${qs.stringify(options.qs)}`
@@ -151,7 +146,7 @@ class RouterService {
     this.preservedRequest = null
     if (this.overlayListener) {
       window.removeEventListener('popstate', this.overlayOnBack)
-      return this.overlayListener = null
+      this.overlayListener = null
     }
   }
 

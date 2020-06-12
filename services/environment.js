@@ -1,9 +1,3 @@
-/* eslint-disable
-    no-multi-str,
-    no-useless-escape,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import * as _ from 'lodash-es'
 
 class Environment {
@@ -13,72 +7,40 @@ class Environment {
 
   setAppKey (appKey) { this.appKey = appKey; return null }
 
-  isMobile (param) {
-    if (param == null) { param = {} }
-    let { userAgent } = param
-    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
-    return new RegExp('\
-Mobile\
-|iP(hone|od|ad)\
-|Android\
-|BlackBerry\
-|IEMobile\
-|Kindle\
-|NetFront\
-|Silk-Accelerated\
-|(hpw|web)OS\
-|Fennec\
-|Minimo\
-|Opera M(obi|ini)\
-|Blazer\
-|Dolfin\
-|Dolphin\
-|Skyfire\
-|Zune\
-').test(userAgent)
+  isMobile ({ userAgent }) {
+    userAgent = userAgent || globalThis?.navigator?.userAgent
+    return new RegExp('Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile|Kindle|NetFront|Silk-Accelerated|(hpw|web)OS|Fennec|Minimo|Opera M(obi|ini)|Blazer|Dolfin|Dolphin|Skyfire|Zune').test(userAgent)
   }
 
-  isAndroid (param) {
-    if (param == null) { param = {} }
-    let { userAgent } = param
-    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
+  isAndroid ({ userAgent }) {
+    userAgent = userAgent || globalThis?.navigator?.userAgent
     return _.includes(userAgent, 'Android')
   }
 
-  isIos (param) {
-    if (param == null) { param = {} }
-    let { userAgent } = param
-    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
+  isIos ({ userAgent }) {
+    userAgent = userAgent || globalThis?.navigator?.userAgent
     return Boolean(userAgent?.match(/iP(hone|od|ad)/g))
   }
 
-  isNativeApp (param) {
-    if (param == null) { param = {} }
-    let { userAgent } = param
-    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
+  isNativeApp ({ userAgent }) {
+    userAgent = userAgent || globalThis?.navigator?.userAgent
     return _.includes(userAgent?.toLowerCase(), ` ${this.appKey}/`)
   }
 
-  isMainApp (param) {
-    if (param == null) { param = {} }
-    let { userAgent } = param
-    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
+  isMainApp ({ userAgent }) {
+    userAgent = userAgent || globalThis?.navigator?.userAgent
     return _.includes(userAgent?.toLowerCase(), ` ${this.appKey}/${this.appKey}`)
   }
 
-  isEntityApp (entityAppKey, param) {
-    if (param == null) { param = {} }
-    let { userAgent } = param
-    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
+  isEntityApp (entityAppKey, { userAgent }) {
+    userAgent = userAgent || globalThis?.navigator?.userAgent
     return Boolean(entityAppKey &&
       _.includes(userAgent?.toLowerCase(), ` ${this.appKey}/${entityAppKey}/`)
     )
   }
 
-  getAppKey (param) {
-    if (param == null) { param = {} }
-    let { userAgent } = param
-    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
+  getAppKey ({ userAgent }) {
+    userAgent = userAgent || globalThis?.navigator?.userAgent
     const matches = userAgent.match(/techby\/([a-zA-Z0-9-]+)/)
     return matches?.[1] || 'browser'
   }
@@ -87,19 +49,15 @@ Mobile\
     return Promise.resolve(Boolean(globalThis?.window?.PushManager))
   }
 
-  getAppVersion (param) {
-    if (param == null) { param = {} }
-    let { userAgent } = param
-    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
-    const regex = new RegExp(`(${this.appKey})\/(?:[a-zA-Z0-9]+/)?([0-9\.]+)`)
+  getAppVersion ({ userAgent }) {
+    userAgent = userAgent || globalThis?.navigator?.userAgent
+    const regex = new RegExp(`(${this.appKey})/(?:[a-zA-Z0-9]+/)?([0-9.]+)`)
     const matches = userAgent.match(regex)
     return matches?.[2]
   }
 
-  getPlatform (param) {
-    if (param == null) { param = {} }
-    let { userAgent } = param
-    if (userAgent == null) { userAgent = globalThis?.navigator?.userAgent }
+  getPlatform ({ userAgent }) {
+    userAgent = userAgent || globalThis?.navigator?.userAgent
 
     const isApp = this.isNativeApp(this.appKey, { userAgent })
 

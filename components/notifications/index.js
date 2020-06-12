@@ -1,12 +1,5 @@
-/* eslint-disable
-    no-undef,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
-import { z, classKebab, useContext, useStream } from 'zorium'
+import { z, classKebab, useContext, useEffect, useStream } from 'zorium'
 import * as _ from 'lodash-es'
-import * as rx from 'rxjs/operators'
 
 import $icon from '../icon'
 import $spinner from '../spinner'
@@ -18,32 +11,27 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 export default function $notifications () {
   const { model, router, colors } = useContext(context)
 
-  useEffect(() => beforeUnmount
-    , [])
+  useEffect(() => {
+    return () => {
+      model.exoid.invalidate('notifications.getAll', {})
+      model.exoid.invalidate('notifications.getUnreadCount', {})
+    }
+  }, [])
 
   const { notifications } = useStream(() => ({
-    notifications: model.notification.getAll().pipe(rx.map(notifications => _.map(notifications, notification => ({
-      notification
-    }))))
+    notifications: model.notification.getAll()
   }))
 
-  function beforeUnmount () {
-    model.exoid.invalidate('notifications.getAll', {})
-    return model.exoid.invalidate('notifications.getUnreadCount', {})
-  }
-
-  return z('.z-notifications',
+  return z('.z-notifications', [
     notifications && _.isEmpty(notifications)
-      ? z('.no-notifications',
-        z($notificationsIcon, {
+      ? z('.no-notifications', [
+        z($icon, {
           icon: 'notifications-none',
           size: '80px',
           color: colors.$black26
-        }
-        ),
-        z('.message',
-          'You\'re all caught up!')
-      )
+        }),
+        z('.message', 'You\'re all caught up!')
+      ])
       : notifications
         ? _.map(notifications, function ({ notification }) {
           const isUnread = !notification.isRead
@@ -58,20 +46,19 @@ export default function $notifications () {
                 )
               }
             }
-          },
-          z('.icon',
-            z($icon, {
-              icon: '', // TODO
-              color: isUnread
-                ? colors.$secondaryMain
-                : colors.$bgText54
-            }
-            )
-          ),
-          z('.right',
-            z('.title', `${notification.title}: ${notification.text}`),
-            z('.time', DateService.fromNow(notification.time)))
-          )
+          }, [
+            z('.icon',
+              z($icon, {
+                icon: '', // TODO
+                color: isUnread ? colors.$secondaryMain : colors.$bgText54
+              })
+            ),
+            z('.right', [
+              z('.title', `${notification.title}: ${notification.text}`),
+              z('.time', DateService.fromNow(notification.time))
+            ])
+          ])
         })
-        : z($spinner, { model }))
+        : z($spinner)
+  ])
 }

@@ -1,8 +1,3 @@
-/* eslint-disable
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { z, useContext } from 'zorium'
 
 import $button from '../button'
@@ -15,33 +10,35 @@ import context from '../../context'
 export default function $pushNotificationSheet () {
   const { model, lang, colors } = useContext(context)
 
-  return z('.z-push-notifications-sheet',
+  return z('.z-push-notifications-sheet', [
     z($sheet, {
       $content:
-        z('.z-push-notifications-sheet_content',
-          z('.icon',
+        z('.z-push-notifications-sheet_content', [
+          z('.icon', [
             z($icon, {
               icon: notificationsIconPath,
               color: colors.$primaryMain
-            }
-            )
-          ),
-          z('.message', lang.get('pushNotificationsSheet.message'))),
+            })
+          ]),
+          z('.message', lang.get('pushNotificationsSheet.message'))
+        ]),
       $actions:
-        z('.z-push-notifications-sheet_actions',
+        z('.z-push-notifications-sheet_actions', [
           z($button, {
             text: lang.get('general.notNow'),
             isFullWidth: false,
-            onclick () { return model.overlay.close({ action: 'complete' }) }
+            onclick: () => { model.overlay.close({ action: 'complete' }) }
           }),
           z($button, {
             isFullWidth: false,
             text: lang.get('pushNotificationsSheet.submitButtonText'),
-            onclick () {
-              return PushService.register({ model })
+            onclick: () => {
+              PushService.register({ model })
                 .catch(() => null)
                 .then(() => model.overlay.close({ action: 'complete' }))
             }
-          }))
-    }))
+          })
+        ])
+    })
+  ])
 }

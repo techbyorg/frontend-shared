@@ -1,8 +1,3 @@
-/* eslint-disable
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { z, useContext } from 'zorium'
 
 import context from '../../context'
@@ -12,8 +7,8 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 export default function $tos () {
   const { router } = useContext(context)
 
-  return z('.z-tos',
-    z('p',
+  return z('.z-tos', [
+    z('p', [
       `\
 The following terms and conditions govern all use of the TechBy app and all content, services and products available at or through the app. The app is owned and operated by TechBy.
 . The app is offered subject to your acceptance without modification of all of the terms and conditions contained herein and all other operating rules,
@@ -21,38 +16,38 @@ policies (including, without limitation,\
 `,
       router.link(z('a',
         { href: router.get('privacy') },
-        'TechBy\'s Privacy Policy')
-      ),
+        'TechBy\'s Privacy Policy'
+      )),
       `\
 ) and procedures that may be published from time to'
 time on this Site by TechBy (collectively, the "Agreement").\
 `
-    ),
-    z('p',
+    ]),
+    z('p', [
       `\
 Please read this Agreement carefully before accessing or using the app. By accessing or using any part of the web site, you agree to become bound by the
 terms and conditions of this agreement. If you do not agree to all the terms and conditions of this agreement, then you may not access the app or use any services.
 If these terms and conditions are considered an offer by TechBy, acceptance is expressly limited to these terms. The app is available only to individuals who
 are at least 13 years old.\
 `
-    ),
-    z('ol',
-      z('li',
+    ]),
+    z('ol', [
+      z('li', [
         z('div.is-bold', 'Your TechBy Account and Site.'),
         `\
 If you create an account on the app, you are responsible for maintaining the accuracy and security of your account,
 and you are fully responsible for all activities that occur under the account and any other actions taken in connection with the account. TechBy will not
 be liable for any acts or omissions by You, including any damages of any kind incurred as a result of such acts or omissions.\
 `
-      ),
-      z('li',
+      ]),
+      z('li', [
         z('div.is-bold', 'Chat and Forums.'),
         `\
 There is no tolerance for objectionable content or abusive users. Any user responsible for content that is unlawful, libelous, defamatory, obscene, pornographic, indecent, lewd, harassing, threatening, harmful, invasive of privacy or publicity rights, abusive, inflammatory or otherwise objectionable
 will be permantently banned.\
 `
-      ),
-      z('li',
+      ]),
+      z('li', [
         z('div.is-bold', 'Responsibility of app Visitors.'),
         `\
 TechBy has not reviewed, and cannot review, all of the material, including computer software,
@@ -64,8 +59,8 @@ or infringes the intellectual property and other proprietary rights, of third pa
 terms and conditions, stated or unstated. TechBy disclaims any responsibility for any harm resulting from the use by visitors of the app, or from
 any downloading by those visitors of content there posted.\
 `
-      ),
-      z('li',
+      ]),
+      z('li', [
         z('div.is-bold', 'Content Posted on Other apps.'),
         `\
 We have not reviewed, and cannot review, all of the material, including computer software, made available
@@ -75,8 +70,8 @@ or imply that it endorses such app or webpage. You are responsible for taking pr
 viruses, worms, Trojan horses, and other harmful or destructive content. TechBy disclaims any responsibility for any harm resulting from your use of
 non-TechBy apps and webpages.\
 `
-      ),
-      z('li',
+      ]),
+      z('li', [
         z('div.is-bold', 'Copyright Infringement and DMCA Policy.'),
         `\
 As TechBy asks others to respect its intellectual property rights, it respects the intellectual property rights
@@ -93,8 +88,8 @@ to all such notices, including as required or appropriate by removing the infrin
 the copyrights or other intellectual property rights of TechBy or others. In the case of such termination, TechBy will have no obligation to provide
 a refund of any amounts previously paid to TechBy.\
 `
-      ),
-      z('li',
+      ]),
+      z('li', [
         z('div.is-bold', 'Intellectual Property.'),
         `\
 This Agreement does not transfer from TechBy to you any TechBy or third party intellectual property, and all
@@ -104,8 +99,8 @@ registered trademarks of TechBy or TechBy's licensors. Other trademarks, service
 may be the trademarks of other third parties. Your use of the app grants you no right or license to reproduce or otherwise use any TechBy or
 third-party trademarks.\
 `
-      ),
-      z('li',
+      ]),
+      z('li', [
         z('div.is-bold', 'Your rights'),
         `\
 You retain your rights to any Content you submit, post or display on or through TechBy. By submitting, posting or displaying content on or through TechBy, you grant us a worldwide, non-exclusive, royalty-free license (with the right to sublicense) to use, copy, reproduce, process, adapt, modify, publish, transmit, display and distribute such content in any and all media or distribution methods (now known or later developed).
@@ -120,8 +115,8 @@ You are responsible for your use of TechBy, for any content you provide, and for
 
 \
 `
-      ),
-      z('li',
+      ]),
+      z('li', [
         z('div.is-bold', 'Changes.'),
         `\
 TechBy reserves the right, at its sole discretion, to modify or replace any part of this Agreement. It is your responsibility
@@ -129,8 +124,8 @@ to check this Agreement periodically for changes. Your continued use of or acces
 constitutes acceptance of those changes. TechBy may also, in the future, offer new services and/or features through the app (including, the
 release of new tools and resources). Such new features and/or services shall be subject to the terms and conditions of this Agreement.\
 `
-      ),
-      z('li',
+      ]),
+      z('li', [
         z('div.is-bold', 'Termination.'),
         `\
 TechBy may terminate your access to all or any part of the app at any time, with or without cause, with or without notice,
@@ -138,8 +133,8 @@ effective immediately. If you wish to terminate this Agreement or your TechBy ac
 app. All provisions of this Agreement which by their nature should survive termination
 shall survive termination, including, without limitation, ownership provisions, warranty disclaimers, indemnity and limitations of liability.\
 `
-      ),
-      z('li.important',
+      ]),
+      z('li.important', [
         z('div.is-bold', 'Disclaimer of Warranties.'),
         `\
 The app is provided "as is". TechBy and its suppliers and licensors hereby disclaim
@@ -148,8 +143,8 @@ and non-infringement. Neither TechBy nor its suppliers and licensors, makes any 
 thereto will be continuous or uninterrupted.
 You understand that you download from, or otherwise obtain content or services through, the app at your own discretion and risk.\
 `
-      ),
-      z('li.important',
+      ]),
+      z('li.important', [
         z('div.is-bold', 'Limitation of Liability.'),
         `In no event will TechBy, or its suppliers or licensors, be liable with respect to any subject matter of
 this agreement under any contract, negligence, strict liability or other legal or equitable theory for: (i) any special, incidental or consequential damages;
@@ -157,8 +152,8 @@ this agreement under any contract, negligence, strict liability or other legal o
 exceed the fees paid by you to TechBy under this agreement during the twelve (12) month period prior to the cause of action. TechBy shall have no
 liability for any failure or delay due to matters beyond their reasonable control. The foregoing shall not apply to the extent prohibited by applicable law.\
 `
-      ),
-      z('li',
+      ]),
+      z('li', [
         z('div.is-bold', 'General Representation and Warranty.'),
         `\
 You represent and warrant that (i) your use of the app will be in strict accordance with the
@@ -167,16 +162,16 @@ your country, state, city, or other governmental area, regarding online conduct 
 transmission of technical data exported from the United States or the country in which you reside) and (ii) your use of the app will not infringe or
 misappropriate the intellectual property rights of any third party.\
 `
-      ),
-      z('li',
+      ]),
+      z('li', [
         z('div.is-bold', 'Indemnification.'),
         `\
 You agree to indemnify and hold harmless TechBy, its contractors, and its licensors, and their respective directors,
 officers, employees and agents from and against any and all claims and expenses, including attorneys' fees, arising out of your use of the app,
 including but not limited to your violation of this Agreement.\
 `
-      ),
-      z('li',
+      ]),
+      z('li', [
         z('div.is-bold', 'Miscellaneous.'),
         `\
 This Agreement constitutes the entire agreement between TechBy and you concerning the subject matter
@@ -194,8 +189,8 @@ such term or condition or any subsequent breach thereof. You may assign your rig
 to be bound by, its terms and conditions; TechBy may assign its rights under this Agreement without condition. This Agreement will be binding
 upon and will inure to the benefit of the parties, their successors and permitted assigns.\
 `
-      )
-    )
-  )
+      ])
+    ])
+  ])
 }
 // coffeelint: enable=max_line_length

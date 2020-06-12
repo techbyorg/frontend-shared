@@ -1,13 +1,4 @@
-/* eslint-disable
-    no-return-assign,
-    no-undef,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
-// not currently used. previously used for cell carrier selection
-
-import { z, classKebab, useStream } from 'zorium'
+import { z, classKebab, useMemo, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
@@ -17,69 +8,38 @@ import $checkbox from '../checkbox'
 if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $dropdownMultiple (props) {
-  let error, isOpen, isOpenStream, options, value
-  let {
-    valueStreams,
-    errorStream,
-    optionsStream
-  } = props
-  const val = props.isDisabled
-  const isDisabled = val != null ? val : false
   const {
-    currentText
-  } = props;
+    valueStreams, errorStream, currentText, isDisabled = false
+  } = props
 
-  ({ valueStreams, isOpenStream, optionsStream, value } = useMemo(function () {
-    let options
-    if (!options.pipe(rx.switchMap)) {
-      options = Rx.of(options)
-    }
-
-    if (valueStreams == null) { valueStreams = new Rx.ReplaySubject(1) }
-    valueStreams.next(value)
-
+  const { isOpenStream, options } = useMemo(() => {
+    const options = _.map(props.options, function (option) {
+      const isCheckedStreams = new Rx.ReplaySubject(1)
+      isCheckedStreams.next(Rx.of(false))
+      return { option, isCheckedStreams }
+    })
     return {
-      valueStreams,
       isOpenStream: new Rx.BehaviorSubject(false),
-      optionsStream: options.pipe(rx.map(options => options = _.map(options, function (option) {
-        let isCheckedStreams
-        if (option.isCheckedStreams) {
-          ({
-            isCheckedStreams
-          } = option)
-        } else {
-          isCheckedStreams = new Rx.ReplaySubject(1)
-          isCheckedStreams.next(Rx.of(false))
-        }
-        return {
-          option,
-          isCheckedStreams
-        }
-      }))),
-
-      valueStream: options.pipe(rx.switchMap(options => Rx.combineLatest(
-        _.map(options, ({ isCheckedStreams }) => isCheckedStreams.pipe(rx.switchAll())),
-        (...vals) => vals)
-        .map(values => _.filter(_.map(options, function ({ option }, i) {
+      options: options,
+      valueStream: Rx.combineLatest(
+        _.map(options, ({ isCheckedStreams }) =>
+          isCheckedStreams.pipe(rx.switchAll())
+        ), (...vals) => vals
+      ).pipe(rx.map((values) =>
+        _.filter(_.map(options, ({ option }, i) => {
           if (values[i]) {
             return option
-          } else {
-            return null
           }
-        })
-        )))
-      )
+        }))
+      ))
     }
-  }
-  , []));
-  // valueStreams.next Rx.of null
+  }, [])
 
-  ({ value, isOpen, options, error } = useStream(() => ({
+  const { value, isOpen, error } = useStream(() => ({
     value: valueStreams.pipe(rx.switchAll()),
     isOpen: isOpenStream,
-    options: optionsStream,
     error: errorStream
-  })))
+  }))
 
   const toggle = () => isOpenStream.next(!isOpen)
 
@@ -92,25 +52,20 @@ export default function $dropdownMultiple (props) {
       isOpen,
       isError: (error != null)
     })
-  },
-  z('.wrapper', {
-    onclick () {
-      return toggle()
-    }
-
-  }),
-  z('.current', {
-    onclick: toggle
-  },
-  currentText,
-  z('.arrow')),
-  z('.options',
-    _.map(options, ({ option }) => z('label.option',
-      z('.text',
-          option?.text),
-      z('.checkbox',
-        z($checkbox, { onChange: toggle }))))),
-  (error != null)
-    ? z('.error', error) : undefined
-  )
+  }, [
+    z('.wrapper', { onclick: () => { toggle() } }),
+    z('.current', { onclick: toggle }, [
+      currentText,
+      z('.arrow')
+    ]),
+    z('.options',
+      _.map(options, ({ option }) =>
+        z('label.option', [
+          z('.text', option?.text),
+          z('.checkbox', z($checkbox, { onChange: toggle }))
+        ])
+      )
+    ),
+    error && z('.error', error)
+  ])
 }

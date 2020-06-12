@@ -1,5 +1,3 @@
-// TODO: This file was created by bulk-decaffeinate.
-// Sanity-check the conversion and remove this comment.
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 
@@ -54,7 +52,11 @@ class Language {
 
   getRouteKeyByValue (routeValue) {
     const language = this.getLanguageStr()
-    return _.findKey(this.files.paths[language], route => route === routeValue) || _.findKey(this.files.paths.en, route => route === routeValue)
+    return _.findKey(this.files.paths[language], (route) =>
+      route === routeValue
+    ) || _.findKey(this.files.paths.en, route =>
+      route === routeValue
+    )
   }
 
   getAllPathsByRouteKey (routeKey) {

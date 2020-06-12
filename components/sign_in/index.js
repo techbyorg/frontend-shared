@@ -1,13 +1,7 @@
-/* eslint-disable
-    no-undef,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import { z, useContext, useMemo, useStream } from 'zorium'
 import * as Rx from 'rxjs'
 
-import $primaryInput from '../primary_input'
+import $input from '../primary_input'
 import $button from '../button'
 import context from '../../context'
 
@@ -16,27 +10,26 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 // FIXME: passing stream to child component causes 2 renders of child
 // since state updates in 2 places
 
-export default function $signIn ({ modeStream }) {
-  let emailErrorStream, emailValueStream, hasErrorStream, isLoadingStream, nameErrorStream, nameValueStream, passwordErrorStream, passwordValueStream
-  let e
-  const { model, router, portal, lang, config } = useContext(context);
+export default function $signIn (props) {
+  const { model, portal, lang, config } = useContext(context)
 
-  ({
+  const {
     nameValueStream, nameErrorStream, passwordValueStream, passwordErrorStream,
-    emailValueStream, emailErrorStream, modeStream,
-    isLoadingStream, hasErrorStream
-  } = useMemo(() => ({
-    nameValueStream: new Rx.BehaviorSubject(''),
-    nameErrorStream: new Rx.BehaviorSubject(null),
-    passwordValueStream: new Rx.BehaviorSubject(''),
-    passwordErrorStream: new Rx.BehaviorSubject(null),
-    emailValueStream: new Rx.BehaviorSubject(''),
-    emailErrorStream: new Rx.BehaviorSubject(null),
-    modeStream: modeStream || new Rx.BehaviorSubject('signIn')
-  })
-  , []))
+    emailValueStream, emailErrorStream, isLoadingStream, hasErrorStream,
+    modeStream
+  } = useMemo(() => {
+    return {
+      nameValueStream: new Rx.BehaviorSubject(''),
+      nameErrorStream: new Rx.BehaviorSubject(null),
+      passwordValueStream: new Rx.BehaviorSubject(''),
+      passwordErrorStream: new Rx.BehaviorSubject(null),
+      emailValueStream: new Rx.BehaviorSubject(''),
+      emailErrorStream: new Rx.BehaviorSubject(null),
+      modeStream: props.modeStream || new Rx.BehaviorSubject('signIn')
+    }
+  }, [])
 
-  const { me, mode, isLoading, hasError, nameValue } = useStream(() => ({
+  const { me, mode, isLoading, hasError } = useStream(() => ({
     me: model.user.getMe(),
     mode: modeStream,
     isLoading: isLoadingStream,
@@ -71,9 +64,9 @@ export default function $signIn ({ modeStream }) {
         })()
         const errorStream = (() => {
           switch (err.info.field) {
-            case 'name': return nameErrorS
+            case 'name': return nameErrorStream
             case 'email': return emailErrorStream
-            case 'password': return passwordErrorS
+            case 'password': return passwordErrorStream
             default: return emailErrorStream
           }
         })()
@@ -128,8 +121,11 @@ export default function $signIn ({ modeStream }) {
       .then(function () {
         isLoadingStream.next(false)
         // give time for invalidate to work
-        return setTimeout(() => model.user.getMe().take(1).subscribe(() => model.overlay.close({ action: 'complete' }))
-          , 0)
+        return setTimeout(() =>
+          model.user.getMe().take(1).subscribe(() =>
+            model.overlay.close({ action: 'complete' })
+          )
+        , 0)
       }).catch(function (err) {
         hasErrorStream.next(true)
         err = (() => {
@@ -156,94 +152,90 @@ export default function $signIn ({ modeStream }) {
 
   const isMember = model.user.isMember(me)
 
-  return z('.z-sign-in',
+  return z('.z-sign-in', [
     z('.title',
       mode === 'join'
         ? lang.get('signInOverlay.join')
         : lang.get('signInOverlay.signIn')
     ),
-    (() => {
-      if ((mode === 'join') && isMember) {
-        return z('.content',
-          lang.get('signIn.alreadyLoggedIn'))
-      } else if (mode) {
-        return z('form.content',
-          mode === 'join'
-            ? z('.input',
-              z($primaryInput, {
-                valueStream: nameValueStream,
-                errorStream: nameErrorStream,
-                hintText: lang.get('general.name'),
-                type: 'text'
-              })) : undefined,
-          z('.input',
-            z($primaryInput, {
-              valueStream: emailValueStream,
-              errorStream: emailErrorStream,
-              hintText: lang.get('general.email'),
-              type: 'email'
-            })),
-          mode !== 'reset'
-            ? z('.input', { key: 'password-input' },
-              z($primaryInput, {
-                valueStream: passwordValueStream,
-                errorStream: passwordErrorStream,
-                hintText: lang.get('general.password'),
-                type: 'password'
-              })) : undefined,
-
-          mode === 'join'
-            ? z('.terms',
-              lang.get('signInOverlay.terms', {
-                replacements: { tos: ' ' }
-              }),
-              z('a', {
-                href: `https://${config.HOST}/policies`,
-                target: '_system',
-                onclick (e) {
-                  e.preventDefault()
-                  return portal.call('browser.openWindow', {
-                    url: `https://${config.HOST}/policies`,
-                    target: '_system'
-                  })
-                }
-              }, 'TOS')
-            ) : undefined,
-          z('.actions',
-            z('.button',
-              z($button, {
-                isPrimary: true,
-                text: isLoading
-                  ? lang.get('general.loading')
-                  : mode === 'reset'
-                    ? lang.get('signInOverlay.emailResetLink')
-                    : mode === 'join'
-                      ? lang.get('signInOverlay.createAccount')
-                      : lang.get('general.signIn'),
-                onclick (e) {
-                  if (mode === 'reset') {
-                    return reset(e)
-                  } else if (mode === 'join') {
-                    return join(e)
-                  } else {
-                    return signIn(e)
-                  }
-                },
-                type: 'submit'
+    ((mode === 'join') && isMember) &&
+      z('.content', lang.get('signIn.alreadyLoggedIn')),
+    z('form.content', [
+      mode === 'join' &&
+        z('.input', [
+          z($input, {
+            valueStream: nameValueStream,
+            errorStream: nameErrorStream,
+            placeholder: lang.get('general.name'),
+            type: 'text'
+          })
+        ]),
+      z('.input', [
+        z($input, {
+          valueStream: emailValueStream,
+          errorStream: emailErrorStream,
+          placeholder: lang.get('general.email'),
+          type: 'email'
+        })
+      ]),
+      mode !== 'reset' &&
+        z('.input', { key: 'password-input' }, [
+          z($input, {
+            valueStream: passwordValueStream,
+            errorStream: passwordErrorStream,
+            placeholder: lang.get('general.password'),
+            type: 'password'
+          })
+        ]),
+      mode === 'join' &&
+        z('.terms', [
+          lang.get('signInOverlay.terms', {
+            replacements: { tos: ' ' }
+          }),
+          z('a', {
+            href: `https://${config.HOST}/policies`,
+            target: '_system',
+            onclick (e) {
+              e.preventDefault()
+              return portal.call('browser.openWindow', {
+                url: `https://${config.HOST}/policies`,
+                target: '_system'
+              })
+            }
+          }, 'TOS')
+        ]),
+      z('.actions', [
+        z('.button', [
+          z($button, {
+            isPrimary: true,
+            text: isLoading
+              ? lang.get('general.loading')
+              : mode === 'reset'
+                ? lang.get('signInOverlay.emailResetLink')
+                : mode === 'join'
+                  ? lang.get('signInOverlay.createAccount')
+                  : lang.get('general.signIn'),
+            onclick (e) {
+              if (mode === 'reset') {
+                return reset(e)
+              } else if (mode === 'join') {
+                return join(e)
+              } else {
+                return signIn(e)
               }
-              )
-            )
-          )
-        )
-      }
-    })()
-  )
+            },
+            type: 'submit'
+          })
+        ])
+      ])
+    ]),
+    (hasError && mode === 'signIn') &&
+      z('.button', [
+        z($button, {
+          isInverted: true,
+          text: lang.get('signInOverlay.resetPassword'),
+          onclick: () => mode.next('reset')
+        })
+      ])
+  ])
 }
-// TODO: re-enable after removing username req
-// if hasError and mode is 'signIn'
-//   z '.button',
-//     z $button,
-//       isInverted: true
-//       text: lang.get 'signInOverlay.resetPassword'
-//       onclick: ->
-//         mode.next 'reset'

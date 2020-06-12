@@ -1,18 +1,10 @@
-/* eslint-disable
-    no-multi-str,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
-import { z, useContext, useStream } from 'zorium'
+import { z } from 'zorium'
 import * as _ from 'lodash-es'
 
-import Environment from '../../services/environment'
 import fontsCss from './fonts'
-import context from '../../context'
 
 export default function $head (props) {
-  const { serverData, metaHtml, lang, model, cookie, config, colors } = props
+  const { serverData, model, cookie, config, colors } = props
 
   const cssColors = colors.default
   if (cssColors['--drawer-header-500'] == null) { cssColors['--drawer-header-500'] = cssColors['--primary-500'] }
@@ -29,7 +21,7 @@ export default function $head (props) {
   //   modelSerialization: unless globalThis?.window?
   //     model.getSerializationStream()
 
-  const modelSerialization = (typeof window === 'undefined' || window === null) && model.getSerialization()
+  const modelSerialization = globalThis?.window && model.getSerialization()
 
   const isInliningSource = config.ENV === config.ENVS.PROD
 
@@ -39,8 +31,7 @@ export default function $head (props) {
       dangerouslySetInnerHTML: {
         __html: modelSerialization || ''
       }
-    }
-    ),
+    }),
 
     z('script#ga1', {
       key: 'ga1',
@@ -56,14 +47,12 @@ ga( \
 });\
 `
       }
-    }
-    ),
+    }),
     z('script#ga2', {
       key: 'ga2',
       async: true,
       src: 'https://www.google-analytics.com/analytics.js'
-    }
-    ),
+    }),
 
     z('style#fonts', { key: 'fonts' }, fontsCss),
 
@@ -71,46 +60,22 @@ ga( \
     z('style#css-variables', {
       key: 'css-variables',
       dangerouslySetInnerHTML: {
-        __html:
-          `:root {${cssVariables || cookie.get('cachedCssVariables')}}`
+        __html: `:root {${cssVariables || cookie.get('cachedCssVariables')}}`
       }
-    }
-    ),
-    isInliningSource
-      ? z('link#bundle-css', {
+    }),
+    isInliningSource &&
+      z('link#bundle-css', {
         rel: 'stylesheet',
         type: 'text/css',
         href: bundleCssPath
-      }
-      )
-      : null,
+      }),
 
     // scripts
     z('script#bundle', {
       key: 'bundle',
       async: true,
       src: bundlePath || `${config.WEBPACK_DEV_URL}/bundle.js`
-    }
-    )
-
-    // any conditional scripts need to be at end or else they interfere with others
-    // if meta.structuredData
-    //   z 'script#structured-data', {
-    //     key: 'structured-data'
-    //     type: 'application/ld+json'
-    //     dangerouslySetInnerHTML:
-    //       __html:
-    //         JSON.stringify {
-    //           'context': 'http://schema.org'
-    //           'type': meta.structuredData.type or 'LocalBusiness'
-    //           'name': meta.structuredData.name
-    //           'aggregateRating': {
-    //             'type': 'AggregateRating'
-    //             'ratingValue': meta.structuredData.ratingValue
-    //             'ratingCount': meta.structuredData.ratingCount
-    //           }
-    //         }
-    //       }
+    })
   ]
 }
 
@@ -121,9 +86,7 @@ export var getDefaultMeta = ({ lang, colors, config }) => ({
   metas: [
     {
       name: 'viewport',
-      content: 'initial-scale=1.0, width=device-width, minimum-scale=1.0, \
-maximum-scale=1.0, user-scalable=0, minimal-ui, \
-viewport-fit=cover'
+      content: 'initial-scale=1.0, width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui, viewport-fit=cover'
     },
     // {
     //   'http-equiv': 'Content-Security-Policy'

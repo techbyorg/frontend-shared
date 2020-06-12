@@ -1,14 +1,7 @@
-/* eslint-disable
-    no-multi-str,
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
-import Environment from '../services/environment'
 import sharedConfig from '../shared_config'
 
 export default class Auth {
@@ -23,26 +16,22 @@ export default class Auth {
     this.stream = this.stream.bind(this)
     this.call = this.call.bind(this);
     ({
-      exoid: this.exoid, pushToken: this.pushToken, lang: this.lang, cookie: this.cookie, userAgent: this.userAgent,
+      exoid: this.exoid, pushToken: this.pushToken, lang: this.lang,
+      cookie: this.cookie, userAgent: this.userAgent,
       portal: this.portal, authCookie: this.authCookie, host: this.host
     } = options)
 
     this.waitValidAuthCookie = Rx.defer(() => {
       let accessToken = this.cookie.get(this.authCookie)
-      const language = this.lang.getLanguageStr()
       return (accessToken
         ? this.exoid.getCached('graphql', {
-          query: '\
-query Query { me { id, name, data { bio } } }\
-'.trim()
+          query: 'query Query { me { id, name, data { bio } } }'.trim()
         }).then(user => {
           if (user != null) {
             return { data: { userLoginAnon: { accessToken } } }
           }
           return this.exoid.stream('graphql', {
-            query: '\
-query Query { me { id, name, data { bio } } }\
-'.trim()
+            query: 'query Query { me { id, name, data { bio } } }'.trim()
           }).pipe(rx.take(1)).toPromise()
             .then(() => ({
               data: { userLoginAnon: { accessToken } }
@@ -51,24 +40,22 @@ query Query { me { id, name, data { bio } } }\
           .catch(() => {
             return this.exoid.call('graphql', {
             // FIXME: cleanup all this duplication
-              query: `\
-mutation LoginAnon {
-  userLoginAnon {
-    accessToken
-  }
-}\
-`
+              query: `
+                mutation LoginAnon {
+                  userLoginAnon {
+                    accessToken
+                  }
+                }`
             }
             )
           })
         : this.exoid.call('graphql', {
-          query: `\
-mutation LoginAnon {
-  userLoginAnon {
-    accessToken
-  }
-}\
-`
+          query: `
+            mutation LoginAnon {
+              userLoginAnon {
+                accessToken
+              }
+            }`
         }))
         .then(({ data }) => {
           accessToken = data?.userLoginAnon.accessToken
@@ -91,15 +78,13 @@ mutation LoginAnon {
 
   logout () {
     this.setAccessToken('')
-    const language = this.lang.getLanguageStr()
     return this.exoid.call('graphql', {
-      query: `\
-mutation LoginAnon {
-  userLoginAnon {
-    accessToken
-  }
-}\
-`
+      query: `
+        mutation LoginAnon {
+          userLoginAnon {
+            accessToken
+          }
+        }`
     }).then(({ data }) => {
       this.setAccessToken(data?.userLoginAnon.accessToken)
       return this.exoid.invalidateAll()
@@ -108,7 +93,7 @@ mutation LoginAnon {
 
   join (param) {
     if (param == null) { param = {} }
-    const { name, email, password } = param
+    // const { name, email, password } = param
     console.log('FIXME')
     return Promise.resolve(null)
   }
@@ -119,7 +104,7 @@ mutation LoginAnon {
 
   resetPassword (param) {
     if (param == null) { param = {} }
-    const { email } = param
+    // const { email } = param
     console.log('FIXME')
     return Promise.resolve(null)
   }
@@ -134,9 +119,9 @@ mutation LoginAnon {
       return this.portal.call('app.getDeviceId')
         .catch(() => null)
         .then(deviceId => {
-          const sourceType = Environment.isAndroid()
-            ? 'android'
-            : 'ios-fcm'
+          // const sourceType = Environment.isAndroid()
+          //   ? 'android'
+          //   : 'ios-fcm'
           return console.log('FIXME: tokens')
         }).catch(() => null)
     }
@@ -146,13 +131,12 @@ mutation LoginAnon {
     if (param == null) { param = {} }
     const { email, password } = param
     return this.exoid.call('graphql', {
-      query: `\
-mutation UserLoginEmail($email: String!, $password: String!) {
-  userLoginEmail(email: $email, password: $password) {
-    accessToken
-  }
-}\
-`,
+      query: `
+        mutation UserLoginEmail($email: String!, $password: String!) {
+          userLoginEmail(email: $email, password: $password) {
+            accessToken
+          }
+        }`,
       variables: { email, password }
     })
       .then(this.afterLogin)
@@ -162,13 +146,12 @@ mutation UserLoginEmail($email: String!, $password: String!) {
     if (param == null) { param = {} }
     const { userId, tokenStr } = param
     return this.exoid.call('graphql', {
-      query: `\
-mutation UserLoginLink($userId: ID!, $tokenStr: String!) {
-  userLoginLink(userId: $userId, tokenStr: $tokenStr) {
-    accessToken
-  }
-}\
-`,
+      query: `
+        mutation UserLoginLink($userId: ID!, $tokenStr: String!) {
+          userLoginLink(userId: $userId, tokenStr: $tokenStr) {
+            accessToken
+          }
+        }`,
       variables: { userId, tokenStr }
     })
       .then(this.afterLogin)
@@ -180,7 +163,6 @@ mutation UserLoginLink($userId: ID!, $tokenStr: String!) {
       console.warn('missing', arguments[0])
     }
 
-    const start = Date.now()
     options = _.pick(options, [
       'isErrorable', 'clientChangesStream', 'ignoreCache', 'initialSortFn',
       'isStreamed', 'limit'
@@ -207,7 +189,9 @@ mutation UserLoginLink($userId: ID!, $tokenStr: String!) {
 
     return this.waitValidAuthCookie.pipe(rx.take(1)).toPromise()
       .then(() => {
-        return this.exoid.call('graphql', { query, variables }, { additionalDataStream })
+        return this.exoid.call('graphql', { query, variables }, {
+          additionalDataStream
+        })
       })
       .then(response => {
         if (invalidateAll) {

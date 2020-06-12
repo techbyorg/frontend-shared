@@ -1,14 +1,4 @@
-/* eslint-disable
-    no-unused-vars,
-*/
-// TODO: This file was created by bulk-decaffeinate.
-// Fix any style issues and re-enable lint.
 import PushService from './push'
-import Environment from './environment'
-
-if (typeof window !== 'undefined' && window !== null) {
-  const PortalGun = require('portal-gun')
-}
 
 class ServiceWorkerService {
   constructor () {
@@ -72,11 +62,12 @@ class ServiceWorkerService {
   could detect service worker changes here, then request refresh
   */
   listenForWaitingServiceWorker (reg, callback) {
-    const awaitStateChange = () => reg.installing.addEventListener('statechange', function () {
-      if (this.state === 'installed') {
-        return callback(reg)
-      }
-    })
+    const awaitStateChange = () =>
+      reg.installing.addEventListener('statechange', () => {
+        if (this.state === 'installed') {
+          return callback(reg)
+        }
+      })
 
     if (!reg) {
       return
