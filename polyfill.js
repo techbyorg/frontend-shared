@@ -1,5 +1,4 @@
 import Promiz from 'promiz'
-window.Promise = window.Promise || Promiz
+import 'whatwg-fetch'
 
-// Fetch polyfill - https://github.com/github/fetch
-require('whatwg-fetch')
+window.Promise = window.Promise || Promiz

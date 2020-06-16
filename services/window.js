@@ -1,8 +1,6 @@
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
-
-let uuid
-if (typeof window !== 'undefined') { uuid = require('uuid') }
+import uuid from 'uuid'
 
 const DRAWER_RIGHT_PADDING = 56
 // DRAWER_MAX_WIDTH = 336
