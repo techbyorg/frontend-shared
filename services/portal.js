@@ -4,11 +4,9 @@ import * as _ from 'lodash-es'
 
 import Environment from '../services/environment'
 import GetAppDialog from '../components/get_app_dialog'
-let Portal, PortalGun
+import PortalGun from 'portal-gun'
 
-if (typeof window !== 'undefined' && window !== null) {
-  PortalGun = require('portal-gun').default
-}
+let Portal
 
 export default Portal = (function () {
   Portal = class Portal {

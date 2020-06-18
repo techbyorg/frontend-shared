@@ -15,7 +15,7 @@ import LanguageService from './language'
 import PortalService from './portal'
 import WindowService from './window'
 
-require('frontend-shared/polyfill')
+import 'frontend-shared/polyfill'
 
 require('../root.styl')
 
