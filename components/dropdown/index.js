@@ -38,8 +38,6 @@ export default function $dropdown (props) {
     }
   })
 
-  console.log('dropdown val', value)
-
   function setValue (value) {
     if (valueStreams) {
       return valueStreams.next(Rx.of(value))
