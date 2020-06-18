@@ -176,6 +176,7 @@ class RouterService {
     const isAbsoluteUrl = url?.match(/^(?:[a-z-]+:)?\/\//i)
     const webAppRegex = new RegExp(`https?://(${this.host})`, 'i')
     const isWebApp = url?.match(webAppRegex)
+    const isNative = Environment.isNativeApp()
     if (!isAbsoluteUrl || isWebApp) {
       const path = isWebApp
         ? url.replace(webAppRegex, '')
@@ -184,7 +185,7 @@ class RouterService {
     } else {
       return this.portal.call('browser.openWindow', {
         url,
-        target: target || '_system'
+        target: target || isNative ? '_system' : '_blank'
       })
     }
   }

@@ -1,8 +1,9 @@
-import { z, classKebab, useMemo, useRef } from 'zorium'
+import { z, classKebab, useContext, useMemo, useRef } from 'zorium'
 import * as _ from 'lodash-es'
 
 import $spinner from '../spinner'
 import useRefSize from '../../services/use_ref_size'
+import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
@@ -10,7 +11,8 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 // https://github.com/mckervinc/react-fluid-table
 // so i'm using same api to make for easy replacement
 export default function $table (props) {
-  const { data, columns, onRowClick, mobileRowRenderer, breakpoint } = props
+  const { data, columns, rowHrefFn, mobileRowRenderer, breakpoint } = props
+  const { router } = useContext(context)
 
   function getStyle ({ width, isFlex }) {
     if (isFlex) {
@@ -37,7 +39,7 @@ export default function $table (props) {
   const isMobileView = isMobile && mobileRowRenderer
 
   return z('.z-table', {
-    className: classKebab({ isMobile, hasRowClick: onRowClick })
+    className: classKebab({ isMobile, hasRowClick: rowHrefFn })
   }, [
     !isMobileView &&
       z('.thead', {
@@ -53,17 +55,17 @@ export default function $table (props) {
       !data && z($spinner),
       _.map(data, (row, i) => {
         if (isMobile && mobileRowRenderer) {
-          return z('.tr-mobile', { onclick (e) { onRowClick(e, i) } }, [
-            mobileRowRenderer({ row })
-          ])
+          return router.linkIfHref(z('.tr-mobile', {
+            href: rowHrefFn && rowHrefFn(i)
+          }, mobileRowRenderer({ row })))
         } else {
-          return z('.tr', { onclick (e) { onRowClick(e, i) } },
-            _.map(columnsWithRefAndSize, function (column) {
-              const { key, width, size, isFlex, content } = column
-              return z('.td', { style: getStyle({ width, isFlex }) },
-                content ? content({ row, size }) : row[key])
-            })
-          )
+          return router.linkIfHref(z('.tr', {
+            href: rowHrefFn && rowHrefFn(i)
+          }, _.map(columnsWithRefAndSize, function (column) {
+            const { key, width, size, isFlex, content } = column
+            return z('.td', { style: getStyle({ width, isFlex }) },
+              content ? content({ row, size }) : row[key])
+          })))
         }
       })
     ])
