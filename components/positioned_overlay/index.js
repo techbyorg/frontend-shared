@@ -15,7 +15,7 @@ export default function $positionedOverlay (props) {
   } = props
   const { browser } = useContext(context)
 
-  const $$ref = props.ref || useRef()
+  const $$ref = props.$$ref || useRef()
 
   if (!hasBackdrop) {
     useOnClickOutside([$$ref, $$targetRef], onClose)

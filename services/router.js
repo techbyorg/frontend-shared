@@ -101,8 +101,14 @@ class RouterService {
     return this.goPath(this.getFund(fund))
   }
 
-  getOrg (org) {
-    return this.get('orgByEin', { slug: _.kebabCase(org?.name), ein: org?.ein })
+  getOrg (org, tab) {
+    if (tab) {
+      return this.get('orgByEinWithTab', {
+        tab, slug: _.kebabCase(org?.name), ein: org?.ein
+      })
+    } else {
+      return this.get('orgByEin', { slug: _.kebabCase(org?.name), ein: org?.ein })
+    }
   }
 
   goOrg (org) {
