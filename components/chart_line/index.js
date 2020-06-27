@@ -1,4 +1,5 @@
 import { z, lazy, Suspense, Boundary, useContext } from 'zorium'
+import * as _ from 'lodash-es'
 
 import $spinner from '../spinner'
 import FormatService from '../../services/format'
@@ -14,14 +15,14 @@ make sure there aren't dupe react/preact/nivos in package-lock.json.
 also make sure nothing is npm-linked (idk why)
 */
 
-export default function $chartLine ({ data }) {
+export default function $chartLine ({ data, chartOptions }) {
   const { colors } = useContext(context)
 
   return z('.z-chart-line', [
     (typeof window !== 'undefined') &&
       z(Boundary, { fallback: z('.error', 'err') }, [
         z(Suspense, { fallback: $spinner }, [
-          z($line, {
+          z($line, _.defaults(chartOptions || {}, {
             data,
             theme: {},
             xScale: { type: 'point' },
@@ -60,7 +61,7 @@ export default function $chartLine ({ data }) {
             yFormat (value) {
               return FormatService.abbreviateDollar(Number(value), 2)
             }
-          })
+          }))
         ])
       ])
   ])

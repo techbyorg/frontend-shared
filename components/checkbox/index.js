@@ -1,10 +1,10 @@
 import { z, useContext, useMemo, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
 
 import $icon from '../icon'
 import { checkIconPath } from '../icon/paths'
+import { streamsOrStream, setStreamsOrStream } from '../../services/obs'
 import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
@@ -19,7 +19,7 @@ export default function $checkbox (props) {
   }), [])
 
   const { value } = useStream(() => ({
-    value: valueStreams?.pipe(rx.switchAll()) || valueStream
+    value: streamsOrStream(valueStreams, valueStream)
   }))
 
   const colors = _.defaults(props.colors || {}, {
@@ -41,13 +41,9 @@ export default function $checkbox (props) {
       disabled: Boolean(isDisabled),
       checked: Boolean(value),
       onchange: (e) => {
-        if (valueStreams) {
-          valueStreams.next(Rx.of(e.target.checked))
-        } else {
-          valueStream.next(e.target.checked)
-        }
-          onChange?.(e.target.checked)
-          return e.target.blur()
+        setStreamsOrStream(valueStreams, valueStream, e.target.checked)
+        onChange?.(e.target.checked)
+        return e.target.blur()
       }
     }),
     z('.icon', [

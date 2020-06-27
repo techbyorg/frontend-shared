@@ -6,6 +6,7 @@ import * as rx from 'rxjs/operators'
 import $icon from '../icon'
 import $positionedOverlay from '../positioned_overlay'
 import { chevronDownIconPath } from '../icon/paths'
+import { streamsOrStream, setStreamsOrStream } from '../../services/obs'
 import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
@@ -27,7 +28,7 @@ export default function $dropdown (props) {
   }, [])
 
   const { value, selectedOption, isOpen } = useStream(() => {
-    const _valueStream = valueStreams?.pipe(rx.switchAll()) || valueStream
+    const _valueStream = streamsOrStream(valueStreams, valueStream)
     return {
       value: _valueStream,
       selectedOption: _valueStream.pipe(rx.map((value) =>
@@ -37,14 +38,6 @@ export default function $dropdown (props) {
       isOpen: isOpenStream
     }
   })
-
-  function setValue (value) {
-    if (valueStreams) {
-      return valueStreams.next(Rx.of(value))
-    } else {
-      return valueStream.next(value)
-    }
-  }
 
   const toggle = () => isOpenStream.next(!isOpen)
 
@@ -86,7 +79,7 @@ export default function $dropdown (props) {
               z('label.option', {
                 className: classKebab({ isSelected: `${value}` === option.value }),
                 onclick () {
-                  setValue(option.value)
+                  setStreamsOrStream(valueStreams, valueStream, option.value)
                   return toggle()
                 }
               }, z('.text', option.text))

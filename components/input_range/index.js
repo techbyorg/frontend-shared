@@ -4,6 +4,7 @@ import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import context from '../../context'
+import { streamsOrStream, setStreamsOrStream } from '../../services/obs'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
@@ -16,7 +17,7 @@ export default function $inputRange (props) {
   useEffect(function () {
     let disposable
     if (onChange) {
-      disposable = (valueStreams?.pipe(rx.switchAll()) || value)
+      disposable = streamsOrStream(valueStreams, valueStream)
         .subscribe(onChange)
     }
 
@@ -30,18 +31,10 @@ export default function $inputRange (props) {
   }, [])
 
   const { value } = useStream(() => ({
-    value: (valueStreams?.pipe(rx.switchAll()) || valueStream).pipe(
+    value: (streamsOrStream(valueStreams, valueStream)).pipe(
       rx.map((value) => (value != null) ? parseInt(value) : null)
     )
   }))
-
-  function setValue (value) {
-    if (valueStreams) {
-      return valueStreams.next(Rx.of(value))
-    } else {
-      return valueStream.next(value)
-    }
-  }
 
   const percent = parseInt((100 * (((value != null) ? value : 1) - minValue)) / (maxValue - minValue))
 
@@ -62,10 +55,14 @@ export default function $inputRange (props) {
             return e.stopPropagation()
           },
           onclick: (e) => {
-            return setValue(parseInt(e.currentTarget.value))
+            setStreamsOrStream(
+              valueStreams, valueStream, parseInt(e.currentTarget.value)
+            )
           },
           oninput: (e) => {
-            return setValue(parseInt(e.currentTarget.value))
+            setStreamsOrStream(
+              valueStreams, valueStream, parseInt(e.currentTarget.value)
+            )
           }
         })
       ]),
@@ -78,7 +75,11 @@ export default function $inputRange (props) {
                 minValue, maxValue / 2, maxValue, value
               ].includes(number)
               return z('.number', {
-                onclick: () => { setValue(parseInt(number)) }
+                onclick: () => {
+                  setStreamsOrStream(
+                    valueStreams, valueStream, parseInt(number)
+                  )
+                }
               }, isStepWithNumber && number)
             })
           ])

@@ -1,0 +1,23 @@
+@require '../../vars'
+
+.z-input-date-range
+  position: relative
+  display: inline-block
+
+  > .input
+    input()
+    display: flex
+    cursor: pointer
+
+    > .divider
+      height: 1px
+      width: 8px
+      background: getColor('$bgText')
+      margin: auto 8px
+
+.z-input-date-range_calendar
+  shadow-1()
+  background: getColor('$bgColor')
+
+  &.is-mobile
+    box-shadow: none

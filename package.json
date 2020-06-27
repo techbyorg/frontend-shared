@@ -11,9 +11,10 @@
   },
   "devDependencies": {},
   "dependencies": {
+    "@lls/react-light-calendar": "^2.2.0",
     "@nivo/geo": "github:techbyorg/nivo-geo",
-    "@nivo/line": "^0.60.0",
-    "@nivo/pie": "^0.60.0",
+    "@nivo/line": "^0.62.0",
+    "@nivo/pie": "^0.62.0",
     "assert-none-missing": "github:claydotio/assert-none-missing#es",
     "bluebird": "^3.4.6",
     "body-parser": "^1.14.1",

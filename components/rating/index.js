@@ -5,6 +5,7 @@ import * as rx from 'rxjs/operators'
 
 import $icon from '../icon'
 import { starIconPath, starHalfIconPath, starOutlineIconPath } from '../icon/paths'
+import { streamsOrStream, setStreamsOrStream } from '../../services/obs'
 import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
@@ -22,7 +23,7 @@ export default function $rating (props) {
     if (!props.valueStream) { valueStream = new Rx.BehaviorSubject(0) }
     return {
       valueStream,
-      ratingStream: valueStreams?.pipe(rx.switchAll()) || valueStream
+      ratingStream: streamsOrStream(valueStreams, valueStream)
     }
   }, [])
 
@@ -41,11 +42,7 @@ export default function $rating (props) {
   }))
 
   function setRating (value) {
-    if (valueStreams) {
-      valueStreams.next(Rx.of(value))
-    } else {
-      valueStream.next(value)
-    }
+    setStreamsOrStream(valueStreams, valueStream, value)
     return onRate?.(value)
   }
 

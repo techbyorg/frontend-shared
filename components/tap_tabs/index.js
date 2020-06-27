@@ -1,8 +1,8 @@
 import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
 
+import { streamsOrStream, setStreamsOrStream } from '../../services/obs'
 import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
@@ -18,8 +18,7 @@ export default function $tapTabs (props) {
   }, [])
 
   const { selectedIndex } = useStream(() => ({
-    selectedIndex:
-      selectedIndexStreams?.pipe(rx.switchAll()) || selectedIndexStream
+    selectedIndex: streamsOrStream(selectedIndexStreams, selectedIndexStream)
   }))
 
   return z('.z-tap-tabs', [
@@ -31,12 +30,8 @@ export default function $tapTabs (props) {
           return router.linkIfHref(z('.tap-tab', {
             className: classKebab({ isSelected }),
             href: route,
-            onclick () {
-              if (selectedIndexStreams) {
-                return selectedIndexStreams.next(Rx.of(i))
-              } else {
-                return selectedIndexStream.next(i)
-              }
+            onclick: () => {
+              setStreamsOrStream(selectedIndexStreams, selectedIndexStream, i)
             }
           }, name))
         })

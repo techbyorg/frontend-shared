@@ -1,0 +1,19 @@
+@require '../../vars'
+
+.z-calendar
+  // flex1()
+  // display: flex
+  max-width: 300px
+  margin: 0 auto
+
+  > .rlc-calendar
+    box-shadow: none
+    border: none
+    margin: 0 auto
+    width: 100%
+
+    > .rlc-days, > .rlc-days-label
+      > .rlc-day, > .rlc-day-label
+        width: (100 / 7)%
+
+// react-light-calendar overrides
