@@ -21,6 +21,9 @@ class FormatService {
     if (value === 0) {
       return '0'
     }
+    if (typeof value !== 'number') {
+      value = Number(value)
+    }
     // terminate early
     fixed = !fixed || (fixed < 0) ? 0 : fixed
     // valueber of decimal places to show

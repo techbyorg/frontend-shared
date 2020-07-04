@@ -24,7 +24,7 @@ export default function $dropdownMultiple (props) {
       valueStream: Rx.combineLatest(
         _.map(options, ({ isCheckedStreams }) =>
           isCheckedStreams.pipe(rx.switchAll())
-        ), (...vals) => vals
+        )
       ).pipe(rx.map((values) =>
         _.filter(_.map(options, ({ option }, i) => {
           if (values[i]) {

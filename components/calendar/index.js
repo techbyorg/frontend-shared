@@ -39,19 +39,18 @@ export default function $calendar (props) {
             startDate: startDateTime,
             endDate: endDateTime,
             onChange: (startDateTime, endDateTime) => {
-              console.log(startDateTime, endDateTime)
               const startDate = DateService.format(
                 DateService.dateToUTC(new Date(startDateTime)),
                 'yyyy-mm-dd'
               )
-              const endDate = DateService.format(
-                DateService.dateToUTC(new Date(endDateTime || startDateTime)),
+              const endDate = endDateTime && DateService.format(
+                DateService.dateToUTC(new Date(endDateTime)),
                 'yyyy-mm-dd'
               )
-              console.log('set', startDate, endDate)
 
-              setStreamsOrStream(startDateStreams, startDateStream, startDate)
+              // order matters (end before start) bc of metricStream rx.filter
               setStreamsOrStream(endDateStreams, endDateStream, endDate)
+              setStreamsOrStream(startDateStreams, startDateStream, startDate)
             }
           })
         ])

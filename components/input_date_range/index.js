@@ -5,6 +5,7 @@ import $calendar from '../calendar'
 import $positionedOverlay from '../positioned_overlay'
 import $sheet from '../sheet'
 import Environment from '../../services/environment'
+import DateService from '../../services/date'
 import { streamsOrStream } from '../../services/obs'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
@@ -33,14 +34,22 @@ export default function $inputDateRange (props) {
   const $container = isMobile ? $sheet : $positionedOverlay
 
   console.log('open', isOpen)
+  const startDateFormatted = DateService.format(
+    DateService.dateToUTC(new Date(startDate)),
+    'MMM D, YYYY'
+  )
+  const endDateFormatted = DateService.format(
+    DateService.dateToUTC(new Date(endDate)),
+    'MMM D, YYYY'
+  )
 
   return z('.z-input-date-range', { ref: $$ref }, [
     z('.input', {
       onclick: () => isOpenStream.next(!isOpen)
     }, [
-      z('.start', startDate),
+      z('.start', startDateFormatted),
       z('.divider'),
-      z('.end', endDate),
+      z('.end', endDateFormatted),
       z('.preset-dates-button')
     ]),
     isOpen &&

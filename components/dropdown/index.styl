@@ -42,12 +42,16 @@
     height: 100%
 
   > .current
-    font-subtitle1()
+    font-subtitle2()
     background: getColor('$bgColor')
-    padding: 12px 8px 12px 24px
+    padding: 8px 46px 8px 14px
     border-radius: 8px
     display: flex
     border: 1px solid getColor('$bgText12')
+    transition: border 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+
+    &:hover
+      border: 1px solid getColor('$bgText26')
 
     > .text
       flex1()
@@ -55,12 +59,15 @@
       white-space: nowrap
 
     > .arrow
-      margin-left: auto
-      padding: 0 8px
+      position: absolute
+      right: 16px
+      top: 50%
+      margin-top: -12px
 
 
 .z-dropdown_options
   shadow-1()
+  font-body2()
   // position: absolute
   margin-top: 8px
   z-index: 2

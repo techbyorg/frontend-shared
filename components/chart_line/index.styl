@@ -3,3 +3,22 @@
 .z-chart-line
   flex1()
   display: flex
+  position: relative
+
+  > .z-hovered-point
+    &.is-visible
+      display: block
+
+    position: absolute
+    pointer-events: none
+    display: none
+    z-index: 1
+    width: 6px
+    height: 6px
+    border: 3px solid getColor('$bgColor')
+    // 2px box shadow set in js
+    margin-top: -5.5px
+    margin-left: -5.5px
+    background: getColor('$upchieve500')
+    border-radius: 50%
+

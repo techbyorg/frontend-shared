@@ -1,5 +1,5 @@
 import { z, useContext, useMemo, useStream } from 'zorium'
-import Rx from 'rxjs'
+import * as Rx from 'rxjs'
 
 import $button from '../button'
 import $dialog from '../dialog'

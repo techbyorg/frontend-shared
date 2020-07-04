@@ -12,6 +12,7 @@
   "devDependencies": {},
   "dependencies": {
     "@lls/react-light-calendar": "^2.2.0",
+    "@nivo/bar": "^0.62.0",
     "@nivo/geo": "github:techbyorg/nivo-geo",
     "@nivo/line": "^0.62.0",
     "@nivo/pie": "^0.62.0",

@@ -1,0 +1,31 @@
+@require '../../vars'
+
+.z-chart-tooltip
+  padding: 12px
+  border-radius: 6px
+  background: getColor('$graphTooltipBg')
+
+  > .label
+    font-caption()
+    color: getColor('$white')
+    margin-bottom: 6px
+
+  > .x
+    font-caption()
+    color: getColor('$white')
+
+  > .y
+    display: flex
+    align-items: center
+
+    > .color
+      width: 8px
+      height: 8px
+      border-radius: 50%
+      margin-right: 12px
+      margin-top: 4px
+
+    > .value
+      font-subtitle2()
+      color: getColor('$white')
+      margin-top: 6px

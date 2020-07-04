@@ -37,6 +37,11 @@ class DateService {
       mm = _.padStart(date.getMinutes(), 2, '0')
       const a = hours > 12 ? 'pm' : 'am'
       return `${MMM} ${D}, ${h}:${mm} ${a}`
+    } else if (format === 'MMM D, YYYY') {
+      MMM = this.lang.get(`months.${date.getMonth()}`).substring(0, 3)
+      D = date.getDate()
+      yyyy = date.getFullYear()
+      return `${MMM} ${D}, ${yyyy}`
     } else if (format === 'MMMM yyyy') {
       const MMMM = this.lang.get(`months.${date.getMonth()}`)
       yyyy = date.getFullYear()
@@ -73,6 +78,14 @@ class DateService {
     } else {
       return `00:${seconds}`
     }
+  }
+
+  secondsToHours (seconds, precision = 2) {
+    return (seconds / ONE_HOUR_S).toFixed(precision)
+  }
+
+  secondsToMinutes (seconds, precision = 2) {
+    return (seconds / ONE_MINUTE_S).toFixed(precision)
   }
 
   formatSeconds (seconds, precision) {
@@ -145,6 +158,37 @@ class DateService {
       date.getUTCHours(),
       date.getUTCMinutes(),
       date.getUTCSeconds())
+  }
+
+  scaledTimeToUTC (scaledTime) {
+    const timeScale = scaledTime.match(/([A-Z]+)-/)[1]
+    const timeStr = scaledTime.replace(`${timeScale}-`, '')
+    let date
+    if (timeScale === 'BIWEEK') {
+      // 1 - 26
+      const [year, biweek] = timeStr.split('-')
+      const week = biweek * 2
+      date = this.getDateOfISOWeek(year, week)
+    } else if (timeScale === 'WEEK') {
+      const [year, week] = timeStr.split('-')
+      date = this.getDateOfISOWeek(year, week)
+    } else { // day, month, minute
+      date = new Date(timeStr)
+    }
+    return this.dateToUTC(date)
+  }
+
+  // https://stackoverflow.com/a/16591175
+  getDateOfISOWeek (year, week) {
+    var simple = new Date(year, 0, 1 + (week - 1) * 7)
+    var dow = simple.getDay()
+    var ISOweekStart = simple
+    if (dow <= 4) {
+      ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1)
+    } else {
+      ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay())
+    }
+    return ISOweekStart
   }
 }
 

@@ -1,8 +1,8 @@
 import { z, lazy, Suspense, Boundary, useContext, useRef, useMemo } from 'zorium'
 import * as _ from 'lodash-es'
 
+import $chartTooltip from '../chart_tooltip'
 import $spinner from '../spinner'
-import FormatService from '../../services/format'
 import useRefSize from '../../services/use_ref_size'
 import context from '../../context'
 
@@ -21,27 +21,33 @@ const $choropleth = lazy(() => Promise.all([
 ])
   .then(function ([ChloroplethCanvas, { features }]) {
     const { colors } = useContext(context)
-    return ({ width, height, data, min, max }) =>
-      z(ChloroplethCanvas, {
+    return ({ key, width, height, data, min, max, chartOptions }) =>
+      z(ChloroplethCanvas, _.defaultsDeep(chartOptions || {}, {
+        key,
         data,
         width,
         height,
         features,
         theme: {},
+        // animate: false,
+        tooltip: ({ feature }) => {
+          return feature.data && z($chartTooltip, {
+            key: feature.id,
+            x: feature.id,
+            y: feature.data.value
+          })
+        },
         domain: [min, max],
         unknownColor: colors.getRawColor(colors.$bgText12),
         colors: [
           '#91e0f4', '#81caef', '#6fafe6', '#5e9de7', '#4a7ed5', '#3d6edb'
         ],
         label: 'properties.name',
-        valueFormat (value) {
-          return FormatService.abbreviateDollar(Number(value))
-        },
         projectionScale: width * 1.2,
         projectionType: 'albersUsa',
         borderWidth: 1,
         borderColor: colors.getRawColor(colors.$bgColor)
-      })
+      }))
   })
 )
 

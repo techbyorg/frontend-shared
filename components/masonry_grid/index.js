@@ -5,7 +5,8 @@ import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default function $masonryGrid ({ $elements, columnCounts }) {
+export default function $masonryGrid (props) {
+  const { $elements, columnCounts = {}, columnGapPxs = {} } = props
   const { browser } = useContext(context)
 
   const { breakpoint } = useStream(() => ({
@@ -13,6 +14,7 @@ export default function $masonryGrid ({ $elements, columnCounts }) {
   }))
 
   const columnCount = columnCounts[breakpoint || 'mobile'] || columnCounts.mobile
+  const columnGapPx = columnGapPxs[breakpoint || 'mobile'] || columnGapPxs.mobile || 0
   let $columns
   if (columnCount === 1) {
     $columns = [$elements]
@@ -29,9 +31,15 @@ export default function $masonryGrid ({ $elements, columnCounts }) {
       columnCount,
       webkitColumnCount: columnCount
     }
-  }, _.map($columns, ($els) =>
-    z('.column', { style: { width: `${100 / columnCount}%` } },
-      _.map($els, ($el) => z('.row', $el))
-    )
-  ))
+  }, _.map($columns, ($els, i) => {
+    const isFirst = i === 0
+    const isLast = i === $columns.length - 1
+    return z('.column', {
+      style: {
+        width: `${100 / columnCount}%`,
+        paddingLeft: !isFirst && `${columnGapPx / 2}px`,
+        paddingRight: !isLast && `${columnGapPx / 2}px`
+      }
+    }, _.map($els, ($el) => z('.row', $el)))
+  }))
 }
