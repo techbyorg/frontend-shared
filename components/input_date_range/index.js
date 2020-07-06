@@ -1,12 +1,15 @@
-import { z, classKebab, useRef, useMemo, useStream } from 'zorium'
+import { z, classKebab, useContext, useRef, useMemo, useStream } from 'zorium'
 import * as Rx from 'rxjs'
 
 import $calendar from '../calendar'
+import $icon from '../icon'
+import { notesIconPath } from '../icon/paths'
 import $positionedOverlay from '../positioned_overlay'
 import $sheet from '../sheet'
 import Environment from '../../services/environment'
 import DateService from '../../services/date'
 import { streamsOrStream } from '../../services/obs'
+import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
@@ -15,6 +18,7 @@ export default function $inputDateRange (props) {
   const {
     startDateStreams, endDateStreams, startDateStream, endDateStream
   } = props
+  const { colors } = useContext(context)
 
   const $$ref = useRef()
 
@@ -49,8 +53,14 @@ export default function $inputDateRange (props) {
     }, [
       z('.start', startDateFormatted),
       z('.divider'),
-      z('.end', endDateFormatted),
-      z('.preset-dates-button')
+      z('.end', endDateFormatted)
+    ]),
+    z('.preset-dates-button', [
+      z($icon, {
+        icon: notesIconPath,
+        size: '18px',
+        color: colors.$bgText70
+      })
     ]),
     isOpen &&
       z($container, {

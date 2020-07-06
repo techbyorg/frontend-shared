@@ -161,15 +161,15 @@ class DateService {
   }
 
   scaledTimeToUTC (scaledTime) {
-    const timeScale = scaledTime.match(/([A-Z]+)-/)[1]
-    const timeStr = scaledTime.replace(`${timeScale}-`, '')
+    const timeScale = scaledTime.match(/([A-Z]+):/)[1]
+    const timeStr = scaledTime.replace(`${timeScale}:`, '')
     let date
-    if (timeScale === 'BIWEEK') {
+    if (timeScale === 'BIWK') {
       // 1 - 26
       const [year, biweek] = timeStr.split('-')
       const week = biweek * 2
       date = this.getDateOfISOWeek(year, week)
-    } else if (timeScale === 'WEEK') {
+    } else if (timeScale === 'WK') {
       const [year, week] = timeStr.split('-')
       date = this.getDateOfISOWeek(year, week)
     } else { // day, month, minute

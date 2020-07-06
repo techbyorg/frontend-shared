@@ -1,21 +1,35 @@
 @require '../../vars'
 
 .z-input-date-range
+  font-body2()
   position: relative
   display: inline-block
-  font-body2()
+  display: flex
 
   > .input
     input()
     background: getColor('$bgColor')
     display: flex
     cursor: pointer
+    border-top-right-radius: 0
+    border-bottom-right-radius: 0
 
     > .divider
       height: 1px
       width: 8px
       background: getColor('$bgText')
       margin: auto 8px
+
+  > .preset-dates-button
+    input()
+    background: getColor('$bgColor')
+    cursor: pointer
+    width: auto
+    border-top-left-radius: 0
+    border-bottom-left-radius: 0
+    margin-left: -1px
+    padding: 0 16px 0 10px
+
 
 .z-input-date-range_calendar
   shadow-1()
