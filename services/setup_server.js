@@ -26,7 +26,9 @@ const HEALTHCHECK_TIMEOUT = 200
 const RENDER_TO_STRING_TIMEOUT_MS = 300
 const BOT_RENDER_TO_STRING_TIMEOUT_MS = 4500
 
-export default function setup ({ $app, Lang, Model, gulpPaths, config, colors }) {
+export default function setup (options) {
+  const { config, gulpPaths } = options
+
   Environment.setAppKey(config.APP_KEY)
 
   const app = express()
@@ -42,8 +44,7 @@ export default function setup ({ $app, Lang, Model, gulpPaths, config, colors })
     includeSubDomains: true, // include in Google Chrome
     preload: true, // include in Google Chrome
     force: true
-  })
-  )
+  }))
   app.use(helmet.noSniff())
   app.use(cookieParser())
 
@@ -88,10 +89,25 @@ export default function setup ({ $app, Lang, Model, gulpPaths, config, colors })
     app.use(express.static(gulpPaths.dist, { maxAge: '4h' }))
   } else { app.use(express.static(gulpPaths.build, { maxAge: '4h' })) }
 
-  const stats = JSON.parse(
-    fs.readFileSync(gulpPaths.dist + '/stats.json', 'utf-8'))
+  app.use(getRouteFn(options))
 
-  return app.use(async function (req, res, next) {
+  return app
+  // TODO: support dynamic ssl certs for users to point their domains @ techby
+  // // https://stackoverflow.com/questions/12219639/is-it-possible-to-dynamically-return-an-ssl-certificate-in-nodejs
+  // https://github.com/http-party/node-http-proxy
+  // separate node.js service that's:
+  // - a reverse proxy: use SNICallback to grab ssl certs from scylla
+  // - API endpoint to generate ssl cert via certbot & store in scylla
+  // - cron to renew certs after 45 days
+  // - dns.techby.org points to dynamic-reverse-proxy
+}
+
+function getRouteFn ({ $app, config, colors, Lang, Model, gulpPaths }) {
+  return async function route (req, res, next) {
+    const stats = JSON.parse(
+      fs.readFileSync(gulpPaths.dist + '/stats.json', 'utf-8')
+    )
+
     let bundleCssPath, bundlePath, cache
     let userAgent = req.headers['user-agent']
     // host = req.headers.host
@@ -218,5 +234,5 @@ export default function setup ({ $app, Lang, Model, gulpPaths, config, colors })
       console.log('send')
       return res.send('<!DOCTYPE html>' + html)
     }
-  })
+  }
 }
