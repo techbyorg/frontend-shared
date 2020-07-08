@@ -43,115 +43,121 @@ shadow-3()
 
 shadow-4()
   transition: box-shadow 0.25s
-  box-shadow: 0 15.2px 12px 0 rgba(0, 0, 0, 0.17), 0 20px 40px 0 rgba(0, 0, 0, 0.3)
+  box-shadow: 0 15px 12px 0 rgba(0, 0, 0, 0.17), 0 20px 40px 0 rgba(0, 0, 0, 0.3)
 
 shadow-5()
   transition: box-shadow 0.25s
   box-shadow: 0 17px 17px 0 rgba(0, 0, 0, 0.15), 0 27px 55px 0 rgba(0, 0, 0, 0.3)
 
 font-h1()
-  font-family: Nunito Sans
-  font-size: 56.1px
-  font-weight: normal
-  font-stretch: normal
-  font-style: normal
-  line-height: normal
-  letter-spacing: -0.43px
+  font-family: Montserrat
+  color: getColor('$bgText87')
+  font-size: 56px
+  font-weight: 400
+  letter-spacing: 0.25
 
-font-h4()
-  font-family: Nunito Sans
-  font-size: 36.9px
-  font-weight: normal
-  font-stretch: normal
-  font-style: normal
-  line-height: normal
+font-h2()
+  font-family: Montserrat
+  color: getColor('$bgText87')
+  font-size: 36px
+  font-weight: 400
   letter-spacing: 0.25px
 
-font-h5(state = high)
-  font-family: Nunito Sans
+font-h3(state = high)
+  font-family: Montserrat
   color: getColor('$bgText87')
-  font-size: 26px
-  font-weight: 600
-  font-stretch: normal
-  font-style: normal
-  line-height: normal
-  letter-spacing: normal
+  font-size: 28px
+  font-weight: 400
+  letter-spacing: 0.24px
 
   if state is medium
     color: getColor('$bgText60')
 
-font-h6()
-  font-family: Nunito Sans
+font-h4()
+  font-family: Montserrat
   color: getColor('$bgText87')
-  font-size: 21.7px
+  font-size: 24px
   font-weight: 600
-  font-stretch: normal
-  font-style: normal
-  line-height: normal
-  letter-spacing: 0.25px
+  letter-spacing: 0.15px
+
+font-h5()
+  font-family: Montserrat
+  color: getColor('$bgText87')
+  font-size: 20px
+  font-weight: 600
+  letter-spacing: 0.13px
 
 font-button()
-  font-family: Nunito Sans
+  font-family: Montserrat
   color: getColor('$bgText87')
-  font-size: 15.2px
-  font-weight: bold
-  font-stretch: normal
-  font-style: normal
-  line-height: 1.06
+  font-size: 15px
+  font-weight: 700
+  line-height: 16px
   letter-spacing: 1.25px
 
 font-body1(state = high)
-  font-family: Nunito Sans
+  font-family: Montserrat
   color: getColor('$bgText87')
-  font-size: 17.4px
-  font-weight: normal
-  font-stretch: normal
-  font-style: normal
-  line-height: 1.61
-  letter-spacing: 0.5px
+  font-size: 16px
+  font-weight: 400
+  line-height: 28px
+  letter-spacing: 0.47px
 
   if state is medium
     color: getColor('$bgText60')
 
 font-body2(state = high)
-  font-family: Nunito Sans
+  font-family: Montserrat
   color: getColor('$bgText87')
-  font-size: 15.2px
-  font-weight: normal
-  font-stretch: normal
-  font-style: normal
-  line-height: 1.32
-  letter-spacing: 0.25px
+  font-size: 15px
+  font-weight: 400
+  letter-spacing: 0.23px
+
+  if state is medium
+    color: getColor('$bgText60')
+
+font-subtitle1(state = high)
+  font-family: Montserrat
+  color: getColor('$bgText87')
+  font-size: 16px
+  font-weight: 600
+  line-height: 28px
+  letter-spacing: 0.14px
+
+  if state is medium
+    color: getColor('$bgText60')
+
+font-subtitle2(state = high)
+  font-family: Montserrat
+  color: getColor('$bgText87')
+  font-size: 15px
+  font-weight: 600
+  letter-spacing: 0.1px
 
   if state is medium
     color: getColor('$bgText60')
 
 font-tbd-name() // FIXME name
-  font-family: Nunito Sans
+  font-family: Montserrat
   color: getColor('$bgText87')
   font-size: 13px
   font-weight: 600
-  font-stretch: normal
-  font-style: normal
   line-height: 1.23
   letter-spacing: 0.4px
   text-transform: uppercase
 
 font-tbd2-name() // FIXME name
-  font-family: Nunito Sans
+  font-family: Montserrat
   color: getColor('$bgText87')
   font-size: 13px
   font-weight: 600
 
-font-caption(state = disabled) // primary, disabled, italic
-  font-family: Nunito Sans
+font-caption1(state = disabled) // primary, disabled, italic
+  font-family: Montserrat
   color: getColor('$bgText60')
   font-size: 13px
-  font-weight: normal
-  font-stretch: normal
-  font-style: normal
   line-height: 1.23
-  letter-spacing: 0.4px
+  letter-spacing: 0.37px
 
   if state is italic
     font-style: italic
@@ -162,51 +168,17 @@ font-caption(state = disabled) // primary, disabled, italic
   if state is high
     color: getColor('$bgText87')
 
-font-subtitle1(state = high)
-  font-family: Nunito Sans
-  color: getColor('$bgText87')
-  font-size: 17.4px
+font-caption2(state = disabled) // primary, disabled, italic
+  font-caption1()
   font-weight: 600
-  font-stretch: normal
-  font-style: normal
-  line-height: 1.39
-  letter-spacing: 0.15px
-
-  if state is medium
-    color: getColor('$bgText60')
-
-font-subtitle2(state = high)
-  font-family: Nunito Sans
-  color: getColor('$bgText87')
-  font-size: 15.2px
-  font-weight: 600
-  font-stretch: normal
-  font-style: normal
-  line-height: 1.32
-  letter-spacing: 0.1px
-
-  if state is medium
-    color: getColor('$bgText60')
 
 font-overline()
-  font-family: Nunito Sans
+  font-family: Montserrat
   color: getColor('$bgText87')
   font-size: 13px
   font-weight: bold
-  font-stretch: normal
-  font-style: normal
   line-height: 1.23
   letter-spacing: 2px
-
-font-micro()
-  font-family: Nunito Sans
-  color: getColor('$bgText87')
-  font-size: 11px
-  font-weight: normal
-  font-stretch: normal
-  font-style: normal
-  line-height: 1.45
-  letter-spacing: 0.34px
 
 cssVariableFallbacks(property, args)
   string = join(' ', args)

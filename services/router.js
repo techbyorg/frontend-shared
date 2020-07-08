@@ -27,7 +27,7 @@ class RouterService {
     this.removeOverlay = this.removeOverlay.bind(this)
     this.overlayOnBack = this.overlayOnBack.bind(this)
     this.goOverlay = this.goOverlay.bind(this)
-    this.setEntitySlug = this.setEntitySlug.bind(this)
+    this.setOrganizationSlug = this.setOrganizationSlug.bind(this)
     this.setRequests = this.setRequests.bind(this)
     this.openLink = this.openLink.bind(this)
     this.back = this.back.bind(this)
@@ -47,7 +47,7 @@ class RouterService {
     this.history = (typeof window !== 'undefined') ? [window.location.pathname] : []
     this.requestsStream = null
     this.onBackFn = null
-    this.entitySlug = null
+    this.organizationSlug = null
   }
 
   goPath (path, options) {
@@ -120,18 +120,19 @@ class RouterService {
 
     let route = this.lang.get(routeKey, { file: 'paths', language: options?.language })
 
-    const isEntityPage = route?.indexOf(':entitySlug') !== -1
+    // const isOrganizationPage = route?.indexOf(':orgSlug') !== -1
 
-    const entitySlug = replacements.entitySlug || this.entitySlug
-    if (isEntityPage && !entitySlug) {
-      console.log('entity not set yet')
-      return
-    }
+    // const organizationSlug = replacements.organizationSlug || this.organizationSlug
+    // if (isOrganizationPage && !organizationSlug) {
+    //   console.log('organization not set yet')
+    //   return
+    // }
 
-    replacements.entitySlug = entitySlug
-    const subdomain = this.getSubdomain()
-    if (subdomain && (subdomain === entitySlug)) {
-      route = route.replace(`/${entitySlug}`, '')
+    // replacements.organizationSlug = organizationSlug
+    // TODO: non-hardcoded
+    const isCustomDomain = this.getHost() === 'data.upchieve.org'
+    if (isCustomDomain) {
+      route = route.replace('/org/:orgSlug', '')
     }
 
     _.forEach(replacements, (value, key) => {
@@ -169,7 +170,7 @@ class RouterService {
     })
   }
 
-  setEntitySlug (entitySlug) { this.entitySlug = entitySlug; return null }
+  setOrganizationSlug (organizationSlug) { this.organizationSlug = organizationSlug; return null }
   setRequests (requestsStream) { this.requestsStream = requestsStream; return null }
 
   openLink (url, target) {
@@ -301,9 +302,13 @@ class RouterService {
     return this.router.getStream()
   }
 
+  getHost () {
+    return this.host
+  }
+
   getSubdomain () {
     const hostParts = this.host?.split('.')
-    const isStaging = hostParts[0] === 'free-roam-staging'
+    const isStaging = hostParts[0] === 'tech-by-staging'
     if ((hostParts.length === 3) && !isStaging) {
       return hostParts[0]
     }

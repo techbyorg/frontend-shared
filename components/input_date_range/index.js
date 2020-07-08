@@ -42,7 +42,7 @@ export default function $inputDateRange (props) {
     DateService.dateToUTC(new Date(startDate)),
     'MMM D, YYYY'
   )
-  const endDateFormatted = DateService.format(
+  const endDateFormatted = endDate && DateService.format(
     DateService.dateToUTC(new Date(endDate)),
     'MMM D, YYYY'
   )
@@ -53,7 +53,7 @@ export default function $inputDateRange (props) {
     }, [
       z('.start', startDateFormatted),
       z('.divider'),
-      z('.end', endDateFormatted)
+      z('.end', endDateFormatted || '...')
     ]),
     z('.preset-dates-button', [
       z($icon, {
@@ -65,6 +65,7 @@ export default function $inputDateRange (props) {
     isOpen &&
       z($container, {
         $$targetRef: $$ref,
+        offset: { y: 8 },
         onClose: () => isOpenStream.next(false),
         $content: z('.z-input-date-range_calendar', {
           className: classKebab({ isMobile })

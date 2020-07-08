@@ -1,13 +1,15 @@
 import { z, lazy, Suspense, Boundary, useStream } from 'zorium'
 
+import Environment from 'frontend-shared/services/environment'
+
 import { streamsOrStream, setStreamsOrStream } from '../../services/obs'
 import DateService from '../../services/date'
 import $spinner from '../spinner'
 
-const $lightCalendar = lazy(() =>
+const $dayPicker = lazy(() =>
   Promise.all([
-    import(/* webpackChunkName: "nivo" */'@lls/react-light-calendar'),
-    import('@lls/react-light-calendar/dist/index.css')
+    import(/* webpackChunkName: "nivo" */'react-day-picker'),
+    import('react-day-picker/lib/style.css')
   ]).then(([Calendar]) => Calendar))
 
 if (typeof window !== 'undefined') { require('./index.styl') }
@@ -25,32 +27,42 @@ export default function $calendar (props) {
   // TODO: when preact rerender suspense bug is fixed, move this to
   // useStream as a pipe map to only get once per change instead of per render
   // https://github.com/preactjs/preact/pull/2570
-  const startDateTime = new Date(startDate).getTime()
-  // HACK: figure out why i have to add 24 hrs
-  const endDateTime = new Date(endDate).getTime()
+  const startDateObj = startDate && DateService.dateToUTC(new Date(startDate))
+  const endDateObj = endDate && DateService.dateToUTC(new Date(endDate))
 
-  console.log('sd', startDate, endDate, startDateTime, endDateTime)
+  const lastMonth = new Date()
+  lastMonth.setMonth(lastMonth.getMonth() - 1)
 
   return z('.z-calendar', [
     (typeof window !== 'undefined') &&
       z(Boundary, { fallback: z('.error', 'err') }, [
         z(Suspense, { fallback: $spinner }, [
-          z($lightCalendar, {
-            startDate: startDateTime,
-            endDate: endDateTime,
-            onChange: (startDateTime, endDateTime) => {
-              const startDate = DateService.format(
-                DateService.dateToUTC(new Date(startDateTime)),
-                'yyyy-mm-dd'
-              )
-              const endDate = endDateTime && DateService.format(
-                DateService.dateToUTC(new Date(endDateTime)),
+          z($dayPicker, {
+            className: 'Selectable',
+            numberOfMonths: Environment.isMobile() ? 1 : 2,
+            month: Environment.isMobile() ? undefined : lastMonth,
+            selectedDays: [startDateObj, {
+              from: startDateObj,
+              to: endDateObj
+            }],
+            modifiers: {
+              start: startDateObj,
+              end: endDateObj
+            },
+            onDayClick: (day) => {
+              console.log('day click', day)
+              const date = DateService.format(
+                DateService.dateToUTC(day),
                 'yyyy-mm-dd'
               )
 
-              // order matters (end before start) bc of metricStream rx.filter
-              setStreamsOrStream(endDateStreams, endDateStream, endDate)
-              setStreamsOrStream(startDateStreams, startDateStream, startDate)
+              if (startDate && endDate) {
+                // order matters (end before start) bc of metricStream rx.filter
+                setStreamsOrStream(endDateStreams, endDateStream, null)
+                setStreamsOrStream(startDateStreams, startDateStream, date)
+              } else {
+                setStreamsOrStream(endDateStreams, endDateStream, date)
+              }
             }
           })
         ])

@@ -110,8 +110,9 @@ function getRouteFn ({ $app, config, colors, Lang, Model, gulpPaths }) {
 
     let bundleCssPath, bundlePath, cache
     let userAgent = req.headers['user-agent']
-    // host = req.headers.host
-    const host = config.HOST // req.headers.host is wrong sometimes for cookie?
+    const host = req.headers.host
+    // config.HOST doesn't work since we allow custom domains (eg data.upchieve.org)
+    // const host = config.HOST // req.headers.host is wrong sometimes for cookie?
     // const { accessToken } = req.query
 
     // could potentially keep this connection open?

@@ -38,14 +38,16 @@ export default function $app (props) {
           }
         }
 
-        // subdomain = router.getSubdomain()
-        //
-        // if subdomain # equiv to /entitySlug/route
-        //   route = routes.get "/#{subdomain}#{req.path}"
-        //   if route.handler?() is routes.fourOhFour
-        //     route = routes.get req.path
-        // else
-        const route = hash.get(req.path)
+        // TODO: non-hardcoded version. need to grab corresponding orgId
+        // from domain and store as cookie?
+        const host = router.getHost()
+        console.log('server', host)
+        let route
+        if (host === 'data.upchieve.org') {
+          route = hash.get(`/org/upchieve/${req.path}`)
+        } else {
+          route = hash.get(req.path)
+        }
 
         const $page = route.handler()
         isFirstRequest = false

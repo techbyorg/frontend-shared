@@ -24,7 +24,7 @@ export default function $chartLine ({ data, chartOptions }) {
     return {
       hoveredPointStream: new Rx.BehaviorSubject(null)
     }
-  })
+  }, [])
 
   const nivoOptions = _.defaultsDeep(chartOptions || {}, {
     data,
@@ -68,7 +68,7 @@ export default function $chartLine ({ data, chartOptions }) {
       left: 60,
       bottom: 40,
       right: 20,
-      top: 30
+      top: 10
     },
     axisBottom: {
       tickSize: 0,

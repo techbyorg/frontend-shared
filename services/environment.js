@@ -32,10 +32,10 @@ class Environment {
     return _.includes(userAgent?.toLowerCase(), ` ${this.appKey}/${this.appKey}`)
   }
 
-  isEntityApp (entityAppKey, { userAgent } = {}) {
+  isOrganizationApp (organizationAppKey, { userAgent } = {}) {
     userAgent = userAgent || globalThis?.navigator?.userAgent
-    return Boolean(entityAppKey &&
-      _.includes(userAgent?.toLowerCase(), ` ${this.appKey}/${entityAppKey}/`)
+    return Boolean(organizationAppKey &&
+      _.includes(userAgent?.toLowerCase(), ` ${this.appKey}/${organizationAppKey}/`)
     )
   }
 
