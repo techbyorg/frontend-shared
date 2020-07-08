@@ -3,11 +3,12 @@ import * as _ from 'lodash-es'
 import HttpHash from 'http-hash'
 import * as rx from 'rxjs/operators'
 
-import { getDefaultMeta } from './components/head'
+import { getDefaultMeta, getDefaultCssVariables } from './components/head'
 // import $navDrawer from './components/nav_drawer'
 // import $bottomBar from './components/bottom_bar'
 import Environment from './services/environment'
 import useMeta from './services/use_meta'
+import useCssVariables from './services/use_css_variables'
 import GlobalContext from './context'
 
 // TODO: clean this up a bit
@@ -124,6 +125,7 @@ export default function $app (props) {
   }
 
   useMeta(() => getDefaultMeta({ lang, colors, config }), [])
+  useCssVariables(() => getDefaultCssVariables({ colors, router }), [])
 
   return z(GlobalContext.Provider, {
     value: { model, router, portal, lang, cookie, browser, config, colors }

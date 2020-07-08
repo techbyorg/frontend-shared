@@ -7,14 +7,16 @@
   // height: 300px
   margin: 0 auto
 
-  .DayPicker-Day:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside)
-    &:hover
-      background: getColor('$upchieve5008') !important
+  .DayPicker-Day
+    &:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside)
+      &:hover
+        background: getColor('$primaryMain8') !important
 
   // react-day-picker overrides
-  .DayPicker-Day--selected:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside)
-    font-subtitle2()
-    background: getColor('$upchieve5008')
+  .DayPicker-Day--selected
+    &:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside)
+      font-subtitle2()
+      background: getColor('$primaryMain8')
 
   .DayPicker-Day
     border-radius: 0
@@ -24,19 +26,20 @@
     font-subtitle2()
 
   .DayPicker-Day--start, .DayPicker-Day--end
-    background: getColor('$upchieve500') !important
-    color: getColor('$primaryMainText')
-    border-radius: 50%
-    position: relative
+    &:not(.DayPicker-Day--outside)
+      background: getColor('$primaryMain') !important
+      color: getColor('$primaryMainText')
+      border-radius: 50%
+      position: relative
 
-    &:after
-      content: ''
-      position: absolute
-      left: 0
-      top: 0
-      width: 100%
-      height: 100%
-      background: getColor('$upchieve5008')
+      &:after
+        content: ''
+        position: absolute
+        left: 0
+        top: 0
+        width: 100%
+        height: 100%
+        background: getColor('$primaryMain8')
 
   .DayPicker-Weekday
     font-caption1()

@@ -4,13 +4,7 @@ import * as _ from 'lodash-es'
 import fontsCss from './fonts'
 
 export default function $head (props) {
-  const { serverData, model, cookie, config, colors } = props
-
-  const cssColors = colors.default
-  if (cssColors['--drawer-header-500'] == null) { cssColors['--drawer-header-500'] = cssColors['--primary-500'] }
-  if (cssColors['--drawer-header-500-text'] == null) { cssColors['--drawer-header-500-text'] = cssColors['--primary-500-text'] }
-  const cssVariables = _.map(cssColors, (value, key) => `${key}:${value}`).join(';')
-  cssVariables
+  const { serverData, model, config } = props
 
   const bundlePath = serverData?.bundlePath ||
     globalThis?.document?.getElementById('bundle')?.src
@@ -57,12 +51,6 @@ ga( \
     z('style#fonts', { key: 'fonts' }, fontsCss),
 
     // styles
-    z('style#css-variables', {
-      key: 'css-variables',
-      dangerouslySetInnerHTML: {
-        __html: `:root {${cssVariables || cookie.get('cachedCssVariables')}}`
-      }
-    }),
     isInliningSource &&
       z('link#bundle-css', {
         rel: 'stylesheet',
@@ -79,38 +67,57 @@ ga( \
   ]
 }
 
-export var getDefaultMeta = ({ lang, colors, config }) => ({
-  title: lang.get('homePage.title'),
-  description: lang.get('homePage.description'),
+export function getDefaultMeta ({ lang, colors, config }) {
+  return {
+    title: lang.get('homePage.title'),
+    description: lang.get('homePage.description'),
 
-  metas: [
-    {
-      name: 'viewport',
-      content: 'initial-scale=1.0, width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui, viewport-fit=cover'
-    },
-    // {
-    //   'http-equiv': 'Content-Security-Policy'
-    //   content: "default-src 'self' file://* *; style-src 'self'" +
-    //     " 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'"
-    // }
-    { name: 'apple-mobile-web-app-capable', content: 'yes' },
-    { name: 'theme-color', content: `${colors.getRawColor(colors.$primaryMain)}` },
-    { name: 'msapplication-tap-highlight', content: 'no' }
-  ],
+    metas: [
+      {
+        name: 'viewport',
+        content: 'initial-scale=1.0, width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui, viewport-fit=cover'
+      },
+      // {
+      //   'http-equiv': 'Content-Security-Policy'
+      //   content: "default-src 'self' file://* *; style-src 'self'" +
+      //     " 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+      // }
+      { name: 'apple-mobile-web-app-capable', content: 'yes' },
+      { name: 'theme-color', content: `${colors.getRawColor(colors.$primaryMain)}` },
+      { name: 'msapplication-tap-highlight', content: 'no' }
+    ],
 
-  links: _.filter([
-    { rel: 'apple-touch-icon', href: config.ICON_256_URL },
-    // {rel: 'canonical', href: "#{meta.canonical}"}
-    { rel: 'icon', href: config.FAVICON_URL },
-    { rel: 'preconnect', href: 'https://fonts.gstatic.com/' }, // faster dns for fonts
-    config.HAS_MANIFEST
-      ? { rel: 'manifest', href: '/manifest.json' } : undefined
-  ]),
+    links: _.filter([
+      { rel: 'apple-touch-icon', href: config.ICON_256_URL },
+      // {rel: 'canonical', href: "#{meta.canonical}"}
+      { rel: 'icon', href: config.FAVICON_URL },
+      { rel: 'preconnect', href: 'https://fonts.gstatic.com/' }, // faster dns for fonts
+      config.HAS_MANIFEST
+        ? { rel: 'manifest', href: '/manifest.json' } : undefined
+    ]),
 
-  twitter: {},
+    twitter: {},
 
-  openGraph: {
-    // image: ''
-    site_name: config.APP_NAME
+    openGraph: {
+      // image: ''
+      site_name: config.APP_NAME
+    }
   }
-})
+}
+
+export function getDefaultCssVariables ({ colors, router }) {
+  let cssColors = colors.default
+  if (router.getHost() === 'data.upchieve.org') {
+    cssColors = _.defaults({
+      '--primary-400': '#16d2aa',
+      '--primary-main': '#16d2aa',
+      '--primary-main-8': 'rgba(22, 210, 170, 0.08)'
+    }, cssColors)
+  }
+  cssColors['--drawer-header-500'] = cssColors['--drawer-header-500'] ||
+     cssColors['--primary-500']
+  cssColors['--drawer-header-500-text'] = cssColors['--drawer-header-500-text'] ||
+    cssColors['--primary-500-text']
+  const cssVariables = _.map(cssColors, (value, key) => `${key}:${value}`).join(';')
+  return cssVariables // || cookie.get('cachedCssVariables')
+}

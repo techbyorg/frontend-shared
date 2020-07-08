@@ -10,7 +10,8 @@ import cookieParser from 'cookie-parser'
 import fs from 'fs'
 import socketIO from 'socket.io-client'
 import request from 'xhr-request'
-import { generateStaticHtml } from 'react-metatags-hook'
+import { generateStaticHtml as generateStaticMetaHtml } from 'react-metatags-hook'
+import { generateStaticHtml as generateStaticCssVariablesHtml } from './use_css_variables'
 
 import $head from '../components/head'
 import Environment from './environment'
@@ -219,11 +220,13 @@ function getRouteFn ({ $app, config, colors, Lang, Model, gulpPaths }) {
     model.exoid.setSynchronousCache(exoidCache)
 
     const bodyHtml = renderToString($tree, { cache })
-    const metaHtml = generateStaticHtml()
+    const metaHtml = generateStaticMetaHtml()
+    const cssVariablesHtml = generateStaticCssVariablesHtml()
+    console.log('css', cssVariablesHtml)
     const headHtml = renderToString(z($head, {
-      serverData, metaHtml, lang, model, cookie, config, colors
+      serverData, metaHtml, lang, model, cookie, config, colors, router
     }))
-    const html = `<html><head>${metaHtml}${headHtml}</head><body>${bodyHtml}</body></html>`
+    const html = `<html><head>${metaHtml}${cssVariablesHtml}${headHtml}</head><body>${bodyHtml}</body></html>`
     console.log('rendered', Date.now() - start)
     io.disconnect()
     model.dispose()
