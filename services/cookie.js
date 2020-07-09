@@ -16,14 +16,8 @@ class Cookie {
 
   getCookieOpts (key, { ttlMs, host }) {
     if (ttlMs == null) { ttlMs = COOKIE_DURATION_MS }
-    if (host == null) {
-      ({
-        host
-      } = this)
-    }
+    host = host || this.host
     const hostname = host.split(':')[0]
-
-    console.log('set', hostname)
 
     return {
       path: '/',
@@ -33,8 +27,7 @@ class Cookie {
     }
   }
 
-  set (key, value, param) {
-    if (param == null) { param = {} }
+  set (key, value, param = {}) {
     let { ttlMs, host } = param
     if (ttlMs == null) { ttlMs = COOKIE_DURATION_MS }
     this.cookies[key] = value

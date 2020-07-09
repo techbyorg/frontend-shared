@@ -15,7 +15,7 @@ import Tooltip from './tooltip'
 import User from './user'
 
 const SERIALIZATION_KEY = 'MODEL'
-// SERIALIZATION_EXPIRE_TIME_MS = 1000 * 10 # 10 seconds
+const MAX_ACCEPTABLE_EXOID_TIME_DIFF_MS = 1000 * 30 // 30 seconds
 
 export default class Model {
   constructor (options) {
@@ -40,13 +40,6 @@ export default class Model {
       $$el && ($$el.innerHTML = '')
     }
 
-    // isExpired = if serialization.expires?
-    //   # Because of potential clock skew we check around the value
-    //   delta = Math.abs(Date.now() - serialization.expires)
-    //   delta > SERIALIZATION_EXPIRE_TIME_MS
-    // else
-    //   true
-    // cache = if isExpired then {} else serialization
     this.isFromCache = !_.isEmpty(cache)
 
     const ioEmit = (event, opts) => {
@@ -90,9 +83,10 @@ export default class Model {
       })()
     }
 
-    console.log('offline', offlineCache)
+    // console.log('offline', offlineCache)
     this.initialCache = _.defaults(offlineCache, cache.exoid)
-    console.log('init', this.initialCache)
+    this.initialCacheTime = cache.now
+    // console.log('init', this.initialCache)
 
     this.exoid = new Exoid({
       ioEmit,
@@ -145,18 +139,27 @@ export default class Model {
   // after page has loaded, refetch all initial (cached) requestsStream to verify they're still up-to-date
   validateInitialCache () {
     const cache = this.initialCache
+    const timeDiffMs = Math.abs(Date.now() - this.initialCacheTime)
+    console.warn(timeDiffMs)
+    // allow for clock skew
+    if (timeDiffMs < MAX_ACCEPTABLE_EXOID_TIME_DIFF_MS) {
+      console.warn('exoid cache up-to-date')
+      return
+    }
+
     this.initialCache = null
+
+    console.log('refetching from exoid for latest version')
 
     // could listen for postMessage from service worker to see if this is from
     // cache, then validate data
-    const requestsStream = _.map(cache, (result, key) => {
-      const req = (() => {
-        try {
-          return JSON.parse(key)
-        } catch (error) {
-          return Rx.of(null)
-        }
-      })()
+    const requestsStreamArr = _.map(cache, (result, key) => {
+      let req
+      try {
+        req = JSON.parse(key)
+      } catch (error) {
+        req = {}
+      }
 
       if (req.path) {
         return this.auth.stream(req.body, { ignoreCache: true })
@@ -170,7 +173,7 @@ export default class Model {
     // cache and the actual get (when user doesn't exist from exoid, but cookie gets user)
 
     return Rx.combineLatest(
-      requestsStream
+      requestsStreamArr
     )
       .pipe(rx.take(1)).subscribe(responses => {
         responses = _.zipWith(responses, _.keys(cache), (response, req) => ({
@@ -212,7 +215,8 @@ export default class Model {
     return this.exoid.getCacheStream()
       .pipe(rx.map(function (exoidCache) {
         const string = JSON.stringify({
-          exoid: exoidCache
+          exoid: exoidCache,
+          now: Date.now()
         }).replace(/<\/script/gi, '<\\/script')
         return `window['${SERIALIZATION_KEY}']=${string};`
       })
@@ -223,7 +227,8 @@ export default class Model {
   getSerialization () {
     const exoidCache = this.exoid.getSynchronousCache()
     const string = JSON.stringify({
-      exoid: exoidCache
+      exoid: exoidCache,
+      now: Date.now()
     }).replace(/<\/script/gi, '<\\/script')
     return `window['${SERIALIZATION_KEY}']=${string};`
   }

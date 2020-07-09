@@ -8,7 +8,7 @@
   margin: 0 auto
 
   .DayPicker-Day
-    &:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside)
+    &:not(.DayPicker-Day--start):not(.DayPicker-Day--end):not(.DayPicker-Day--outside):not(.DayPicker-Day--disabled)
       &:hover
         background: getColor('$primaryMain8') !important
 
@@ -19,11 +19,15 @@
       background: getColor('$primaryMain8')
 
   .DayPicker-Day
+    font-subtitle2()
     border-radius: 0
     width: 48px
     height: 48px
     padding: 0
-    font-subtitle2()
+    outline: none
+
+  .DayPicker-Day--disabled
+    color: getColor('$bgText38')
 
   .DayPicker-Day--start, .DayPicker-Day--end
     &:not(.DayPicker-Day--outside)

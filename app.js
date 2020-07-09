@@ -42,7 +42,6 @@ export default function $app (props) {
         // TODO: non-hardcoded version. need to grab corresponding orgId
         // from domain and store as cookie?
         const host = router.getHost()
-        console.log('server', host)
         let route
         if (host === 'data.upchieve.org') {
           route = hash.get(`/org/upchieve/${req.path}`)
@@ -50,6 +49,9 @@ export default function $app (props) {
           route = hash.get(req.path)
         }
 
+        if (typeof route.handler !== 'function') {
+          console.log('bad handler', req, route)
+        }
         const $page = route.handler()
         isFirstRequest = false
         return { req, route, $page }

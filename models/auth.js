@@ -7,6 +7,8 @@ import sharedConfig from '../shared_config'
 export default class Auth {
   constructor (options) {
     this.setAccessToken = this.setAccessToken.bind(this)
+    this.loginAnon = this.loginAnon.bind(this)
+    this.tryAccessToken = this.tryAccessToken.bind(this)
     this.logout = this.logout.bind(this)
     this.join = this.join.bind(this)
     this.resetPassword = this.resetPassword.bind(this)
@@ -21,55 +23,76 @@ export default class Auth {
       portal: this.portal, authCookie: this.authCookie, host: this.host
     } = options)
 
-    this.waitValidAuthCookie = Rx.defer(() => {
-      let accessToken = this.cookie.get(this.authCookie)
-      return (accessToken
-        ? this.exoid.getCached('graphql', {
-          query: 'query Query { me { id, name, data { bio } } }'.trim()
-        }).then(user => {
-          if (user != null) {
-            return { data: { userLoginAnon: { accessToken } } }
-          }
-          return this.exoid.stream('graphql', {
-            query: 'query Query { me { id, name, data { bio } } }'.trim()
-          }).pipe(rx.take(1)).toPromise()
-            .then(() => ({
-              data: { userLoginAnon: { accessToken } }
-            }))
-        })
-          .catch(() => {
-            return this.exoid.call('graphql', {
-            // FIXME: cleanup all this duplication
-              query: `
-                mutation LoginAnon {
-                  userLoginAnon {
-                    accessToken
-                  }
-                }`
-            }
-            )
-          })
-        : this.exoid.call('graphql', {
-          query: `
-            mutation LoginAnon {
-              userLoginAnon {
-                accessToken
-              }
-            }`
-        }))
-        .then(({ data }) => {
-          accessToken = data?.userLoginAnon.accessToken
-          if (accessToken && (accessToken !== 'undefined')) {
-            return this.setAccessToken(data?.userLoginAnon.accessToken)
-          }
-        })
+    this.waitValidAuthCookie = Rx.defer(async () => {
+      const accessToken = this.cookie.get(this.authCookie)
+      let newAccessToken
+      if (accessToken) {
+        newAccessToken = await this.tryAccessToken(accessToken)
+      } else {
+        newAccessToken = await this.loginAnon()
+      }
+
+      if (newAccessToken) {
+        this.setAccessToken(newAccessToken)
+        if (!globalThis.window) {
+          await this.directGetMe() // so user is in exoid cache for client
+        }
+      }
+      return null
     }).pipe(rx.publishReplay(1), rx.refCount())
+  }
+
+  loginAnon () {
+    console.log('login anon')
+    return this.exoid.call('graphql', {
+      query: `
+        mutation LoginAnon {
+          userLoginAnon {
+            accessToken
+          }
+        }`
+    }).then(({ data }) => data?.userLoginAnon.accessToken)
+  }
+
+  async directGetMe () {
+    return this.exoid.stream('graphql', {
+      // FIXME
+      query: 'query Query { me { id, name, data { bio } } }'.trim()
+    }).pipe(rx.take(1)).toPromise()
+  }
+
+  async tryAccessToken (accessToken) {
+    try {
+      let user = await this.exoid.getCached('graphql', {
+        query: 'query Query { me { id, name, data { bio } } }'.trim()
+      })
+
+      console.log('user from cache', user, Date.now())
+      if (!user?.data?.me) { // FIXME: only if user.data.user
+        user = await this.directGetMe()
+      }
+      if (!user?.data?.me) {
+        throw new Error('no user for accesstoken')
+      }
+    } catch (err) {
+      const { data } = await this.exoid.call('graphql', {
+        // FIXME: cleanup all this duplication
+        query: `
+          mutation LoginAnon {
+            userLoginAnon {
+              accessToken
+            }
+          }`
+      })
+      return data?.userLoginAnon.accessToken
+    }
   }
 
   setAccessToken (accessToken) {
     const domain = sharedConfig.ENV === sharedConfig.ENVS.DEV
       ? sharedConfig.HOST
       : _.takeRight(this.host.split('.'), 2).join('.')
+    console.log('setAccessToken', this.authCookie, domain, accessToken)
     return this.cookie.set(this.authCookie, accessToken, {
       // top level domain
       host: domain

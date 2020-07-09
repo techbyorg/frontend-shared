@@ -15,9 +15,11 @@ export default function $head (props) {
   //   modelSerialization: unless globalThis?.window?
   //     model.getSerializationStream()
 
-  const modelSerialization = globalThis?.window && model.getSerialization()
+  const modelSerialization = !globalThis?.window && model.getSerialization()
 
   const isInliningSource = config.ENV === config.ENVS.PROD
+
+  console.log('serial', modelSerialization)
 
   return [
     z('script#model.model', {
@@ -109,8 +111,17 @@ export function getDefaultCssVariables ({ colors, router }) {
   let cssColors = colors.default
   if (router.getHost() === 'data.upchieve.org') {
     cssColors = _.defaults({
-      '--primary-400': '#16d2aa',
-      '--primary-main': '#16d2aa',
+      '--primary-50': '#E3FAF5',
+      '--primary-100': '#B9F2E6',
+      '--primary-200': '#8BE9D5',
+      '--primary-300': '#5CE0C4',
+      '--primary-400': '#39D9B7',
+      '--primary-500': '#16D2AA',
+      '--primary-600': '#13CDA3',
+      '--primary-700': '#10C799',
+      '--primary-800': '#0CC190',
+      '--primary-900': '#06B67F',
+      '--primary-main': '#16d2aa', // primary500
       '--primary-main-8': 'rgba(22, 210, 170, 0.08)'
     }, cssColors)
   }

@@ -41,6 +41,8 @@ export default function $calendar (props) {
             className: 'Selectable',
             numberOfMonths: Environment.isMobile() ? 1 : 2,
             month: Environment.isMobile() ? undefined : lastMonth,
+            // TODO: prop
+            disabledDays: { after: new Date() },
             selectedDays: [startDateObj, {
               from: startDateObj,
               to: endDateObj
@@ -49,8 +51,10 @@ export default function $calendar (props) {
               start: startDateObj,
               end: endDateObj
             },
-            onDayClick: (day) => {
-              console.log('day click', day)
+            onDayClick: (day, modifiers = {}) => {
+              if (modifiers.disabled) {
+                return
+              }
               const date = DateService.format(
                 DateService.dateToUTC(day),
                 'yyyy-mm-dd'

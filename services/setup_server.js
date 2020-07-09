@@ -208,10 +208,8 @@ function getRouteFn ({ $app, config, colors, Lang, Model, gulpPaths }) {
       // but react async server-side rendering sucks atm (5/2020)
       cache = await (untilStable($tree, { timeout }))
     } catch (err) {
-      console.log(err);
-      ({
-        cache
-      } = err)
+      console.log(err)
+      cache = err?.cache
     }
     const exoidCache = await (Promise.race([
       model.exoid.getCacheStream().pipe(rx.take(1)).toPromise(),

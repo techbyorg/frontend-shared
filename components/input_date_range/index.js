@@ -1,6 +1,6 @@
 import { z, classKebab, useContext, useRef, useMemo, useStream } from 'zorium'
 import * as Rx from 'rxjs'
-import * as _ from 'lodash'
+import * as _ from 'lodash-es'
 
 import $calendar from '../calendar'
 import $dropdown from '../dropdown'

@@ -11,7 +11,6 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 const LEGEND_COUNT = 5
 
 export default function $chartPie ({ heightPx, key, data, colors }) {
-  console.log('data', data)
   return z('.z-chart-pie', [
     (typeof window !== 'undefined') &&
       z(Boundary, { fallback: z('.error', 'err') }, [
