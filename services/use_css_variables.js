@@ -20,7 +20,7 @@ export default function (callback, dependencies) {
 }
 
 export function getRawColor (cssVariable) {
-  return localStyle.getPropertyValue(cssVariable)
+  return localStyle?.getPropertyValue(cssVariable)
 }
 
 export function generateStaticHtml () {

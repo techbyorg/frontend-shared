@@ -222,7 +222,6 @@ function getRouteFn ({ $app, config, colors, Lang, Model, gulpPaths }) {
     const bodyHtml = renderToString($tree, { cache })
     const metaHtml = generateStaticMetaHtml()
     const cssVariablesHtml = generateStaticCssVariablesHtml()
-    console.log('css', cssVariablesHtml)
     const headHtml = renderToString(z($head, {
       serverData, metaHtml, lang, model, cookie, config, colors, router
     }))

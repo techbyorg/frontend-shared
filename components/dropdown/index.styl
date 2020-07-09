@@ -1,8 +1,9 @@
 @require '../../vars'
 
 .z-dropdown
+  flex1()
+  display: flex
   // min-height: 48px
-  display: block
   outline: none
   text-align: inherit
   position: relative
@@ -10,59 +11,52 @@
   cursor: pointer
 
   &.is-open
-    > .wrapper
-      display: block
-
     > .options
        display: block
 
   &.is-primary
-    > .current
-      font-body2()
-      background: getColor('$bgText70')
-      color: getColor('$bgColor')
-      height: 34px
-      border-radius: 17.5px
-      border: none
-      padding: 0
+    > .wrapper
+      > .current
+        font-body2()
+        background: getColor('$bgText70')
+        color: getColor('$bgColor')
+        height: 34px
+        border-radius: 17.5px
+        border: none
+        padding: 0
 
-      > .text
-        padding: 8px 24px
+        > .text
+          padding: 8px 24px
 
-      > .arrow
-        border-left: 1px solid getColor('$bgColor26')
+        > .arrow
+          border-left: 1px solid getColor('$bgColor26')
 
   > .wrapper
-    display: none
-    position: fixed
-    z-index: 2
-    left: 0
-    top: 0
-    width: 100%
-    height: 100%
-
-  > .current
-    font-body2()
-    background: getColor('$bgColor')
-    padding: 8px 46px 8px 14px
-    border-radius: 8px
+    flex1()
     display: flex
-    border: 1px solid getColor('$bgText12')
-    transition: border 0.2s cubic-bezier(0.4, 0, 0.2, 1)
 
-    &:hover
-      border: 1px solid getColor('$bgText26')
+    > .current
+      font-body2()
+      background: getColor('$bgColor')
+      padding: 8px 46px 8px 14px
+      border-radius: 8px
+      display: flex
+      border: 1px solid getColor('$bgText12')
+      transition: border 0.2s cubic-bezier(0.4, 0, 0.2, 1)
 
-    > .text
-      flex1()
-      text-align: center
-      white-space: nowrap
+      &:hover
+        border: 1px solid getColor('$bgText26')
 
-    > .arrow
-      position: absolute
-      right: 16px
-      top: 50%
-      margin-top: -12px
+      > .text
+        flex1()
+        text-align: center
+        white-space: nowrap
+
+      > .arrow
+        position: absolute
+        right: 16px
+        top: 50%
+        margin-top: -12px
 
 
 .z-dropdown_options
@@ -76,9 +70,12 @@
   box-sizing: border-box
   cursor: pointer
   // display: none
-  max-height: 200px
   overflow: auto
   -webkit-overflow-scrolling: touch
+
+  &.is-condensed-options
+    > .option
+      padding: 8px 12px
 
   > .option
     padding: 16px

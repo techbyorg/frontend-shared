@@ -24,15 +24,6 @@
       background: getColor('$bgText')
       margin: auto 8px
 
-  > .preset-dates-button
-    input()
-    background: getColor('$bgColor')
-    cursor: pointer
-    width: auto
-    border-top-left-radius: 0
-    border-bottom-left-radius: 0
-    margin-left: -1px
-    padding: 0 16px 0 10px
 
 
 .z-input-date-range_calendar
@@ -41,3 +32,22 @@
 
   &.is-mobile
     box-shadow: none
+
+.z-input-date-range_preset-dates-button
+  input()
+  background: getColor('$bgColor')
+  cursor: pointer
+  width: auto
+  border-top-left-radius: 0
+  border-bottom-left-radius: 0
+  margin-left: -1px
+  padding: 0 16px 0 10px
+
+.z-input-date-range_option
+  > .text
+    display: inline-block
+
+  > .date
+    font-caption1()
+    margin-left: 8px
+    display: inline-block
