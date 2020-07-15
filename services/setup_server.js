@@ -148,9 +148,9 @@ function getRouteFn ({ $app, config, colors, Lang, Model, gulpPaths }) {
       lang,
       cookie,
       userAgent,
+      host,
       authCookie: config.AUTH_COOKIE,
       apiUrl: config.API_URL,
-      host: config.HOST,
       serverHeaders: req.headers
     })
     const router = new RouterService({

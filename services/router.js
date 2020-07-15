@@ -27,7 +27,7 @@ class RouterService {
     this.removeOverlay = this.removeOverlay.bind(this)
     this.overlayOnBack = this.overlayOnBack.bind(this)
     this.goOverlay = this.goOverlay.bind(this)
-    this.setOrganizationSlug = this.setOrganizationSlug.bind(this)
+    this.setOrgSlug = this.setOrgSlug.bind(this)
     this.setRequests = this.setRequests.bind(this)
     this.openLink = this.openLink.bind(this)
     this.back = this.back.bind(this)
@@ -47,7 +47,7 @@ class RouterService {
     this.history = (typeof window !== 'undefined') ? [window.location.pathname] : []
     this.requestsStream = null
     this.onBackFn = null
-    this.organizationSlug = null
+    this.orgSlug = null
   }
 
   goPath (path, options) {
@@ -122,13 +122,13 @@ class RouterService {
 
     // const isOrganizationPage = route?.indexOf(':orgSlug') !== -1
 
-    // const organizationSlug = replacements.organizationSlug || this.organizationSlug
-    // if (isOrganizationPage && !organizationSlug) {
+    // const orgSlug = replacements.orgSlug || this.orgSlug
+    // if (isOrganizationPage && !orgSlug) {
     //   console.log('organization not set yet')
     //   return
     // }
 
-    // replacements.organizationSlug = organizationSlug
+    // replacements.orgSlug = orgSlug
     // TODO: non-hardcoded
     const isCustomDomain = this.getHost() === 'data.upchieve.org'
     if (isCustomDomain) {
@@ -170,7 +170,7 @@ class RouterService {
     })
   }
 
-  setOrganizationSlug (organizationSlug) { this.organizationSlug = organizationSlug; return null }
+  setOrgSlug (orgSlug) { this.orgSlug = orgSlug; return null }
   setRequests (requestsStream) { this.requestsStream = requestsStream; return null }
 
   openLink (url, target) {

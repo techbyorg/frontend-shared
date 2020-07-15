@@ -124,6 +124,21 @@ export function getDefaultCssVariables ({ colors, router }) {
       '--primary-main': '#16d2aa', // primary500
       '--primary-main-8': 'rgba(22, 210, 170, 0.08)'
     }, cssColors)
+  } else if (router.getHost() === 'data.hackclub.com' || true) {
+    cssColors = _.defaults({
+      '--primary-50': '#FDE7EA',
+      '--primary-100': '#F9C3CB',
+      '--primary-200': '#F69BA8',
+      '--primary-300': '#F27385',
+      '--primary-400': '#EF556A',
+      '--primary-500': '#EC3750',
+      '--primary-600': '#EA3149',
+      '--primary-700': '#E72A40',
+      '--primary-800': '#E42337',
+      '--primary-900': '#DF1627',
+      '--primary-main': '#EC3750', // primary500
+      '--primary-main-8': 'rgba(236, 55, 80, 0.08)'
+    }, cssColors)
   }
   cssColors['--drawer-header-500'] = cssColors['--drawer-header-500'] ||
      cssColors['--primary-500']

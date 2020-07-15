@@ -8,6 +8,7 @@ import Drawer from './drawer'
 import Image from './image'
 import LoginLink from './login_link'
 import OfflineData from './offline_data'
+import Org from './org'
 import Overlay from './overlay'
 import StatusBar from './status_bar'
 import Time from './time'
@@ -115,6 +116,7 @@ export default class Model {
     })
 
     this.image = new Image({ additionalScript: this.additionalScript })
+    this.org = new Org({ auth: this.auth })
     this.loginLink = new LoginLink({ auth: this.auth })
     this.statusBar = new StatusBar()
     this.time = new Time({ auth: this.auth })

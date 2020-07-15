@@ -89,7 +89,6 @@ export default function $chartLine ({ data, chartOptions }) {
 
   return z('.z-chart-line', {
     onmouseleave: () => {
-      console.log('leave')
       hoveredPointStream.next(null)
     }
   }, [
