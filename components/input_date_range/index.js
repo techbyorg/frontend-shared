@@ -1,4 +1,6 @@
-import { z, classKebab, useContext, useRef, useMemo, useStream } from 'zorium'
+import {
+  z, classKebab, useContext, useErrorBoundary, useRef, useMemo, useStream
+} from 'zorium'
 import * as Rx from 'rxjs'
 import * as _ from 'lodash-es'
 
@@ -18,7 +20,8 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 // TODO: errorStream
 export default function $inputDateRange (props) {
   const {
-    startDateStreams, endDateStreams, startDateStream, endDateStream
+    startDateStreams, endDateStreams, startDateStream, endDateStream,
+    presetDateRangeStream
   } = props
   const { colors, lang } = useContext(context)
 
@@ -27,7 +30,12 @@ export default function $inputDateRange (props) {
   const { dropdownOptions, isOpenStream } = useMemo(() => {
     return {
       dropdownOptions: getDropdownOptions({
-        lang, startDateStreams, endDateStreams, startDateStream, endDateStream
+        lang,
+        startDateStreams,
+        endDateStreams,
+        startDateStream,
+        endDateStream,
+        presetDateRangeStream
       }),
       isOpenStream: new Rx.BehaviorSubject(false)
     }
@@ -38,6 +46,9 @@ export default function $inputDateRange (props) {
     startDate: streamsOrStream(startDateStreams, startDateStream),
     endDate: streamsOrStream(endDateStreams, endDateStream)
   }))
+
+  const [error] = useErrorBoundary()
+  if (error) { console.warn('err', error) }
 
   const isMobile = Environment.isMobile()
   const $container = isMobile ? $sheet : $positionedOverlay
@@ -91,10 +102,17 @@ export default function $inputDateRange (props) {
 
 function getDropdownOptions (props) {
   const {
-    lang, startDateStreams, startDateStream, endDateStreams, endDateStream
+    lang, startDateStreams, startDateStream, endDateStreams, endDateStream,
+    presetDateRangeStream
   } = props
 
   const rawOptions = [
+    {
+      value: 'today',
+      text: lang.get('inputDateRange.today'),
+      startDateFn: () => new Date(),
+      endDateFn: () => new Date()
+    },
     {
       value: '7days',
       text: lang.get('inputDateRange.7days'),
@@ -200,6 +218,7 @@ function getDropdownOptions (props) {
         z('.date', `${startDateFormatted} - ${endDateFormatted}`)
       ]),
       onSelect: () => {
+        presetDateRangeStream?.next(option.value)
         setStreamsOrStream(
           startDateStreams,
           startDateStream,

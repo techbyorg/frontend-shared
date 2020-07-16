@@ -1,4 +1,4 @@
-import { z, classKebab, lazy, Suspense, Boundary, useContext, useMemo, useStream } from 'zorium'
+import { z, classKebab, lazy, Suspense, useErrorBoundary, useContext, useMemo, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 
@@ -25,6 +25,9 @@ export default function $chartLine ({ data, chartOptions }) {
       hoveredPointStream: new Rx.BehaviorSubject(null)
     }
   }, [])
+
+  const [error] = useErrorBoundary()
+  if (error) { console.log(error) }
 
   const nivoOptions = _.defaultsDeep(chartOptions || {}, {
     data,
@@ -93,11 +96,9 @@ export default function $chartLine ({ data, chartOptions }) {
     }
   }, [
     (typeof window !== 'undefined') &&
-      z(Boundary, { fallback: z('.error', 'err') }, [
-        z(Suspense, { fallback: $spinner }, [
-          z($line, nivoOptions),
-          z($chartLinePoint, { hoveredPointStream, nivoOptions })
-        ])
+      z(Suspense, { fallback: $spinner }, [
+        z($line, nivoOptions),
+        z($chartLinePoint, { hoveredPointStream, nivoOptions })
       ])
   ])
 }

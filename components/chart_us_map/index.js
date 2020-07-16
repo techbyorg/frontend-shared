@@ -1,4 +1,4 @@
-import { z, lazy, Suspense, Boundary, useContext, useRef, useMemo } from 'zorium'
+import { z, lazy, Suspense, useErrorBoundary, useContext, useRef, useMemo } from 'zorium'
 import * as _ from 'lodash-es'
 
 import $chartTooltip from '../chart_tooltip'
@@ -76,14 +76,15 @@ export default function $chartUsMap ({ data }) {
 
   const size = useRefSize($$ref)
 
+  const [error] = useErrorBoundary()
+  if (error) { console.log(error) }
+
   return z('.z-chart-us-map', { ref: $$ref }, [
     (typeof window !== 'undefined') && size &&
-      z(Boundary, { fallback: z('.error', 'err') }, [
-        z(Suspense, { fallback: $spinner }, [
-          z($choropleth, {
-            data, min, max, width: size.width, height: size.height
-          })
-        ])
+      z(Suspense, { fallback: $spinner }, [
+        z($choropleth, {
+          data, min, max, width: size.width, height: size.height
+        })
       ])
   ])
 }

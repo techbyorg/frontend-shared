@@ -1,4 +1,4 @@
-import { z, lazy, Suspense, Boundary, useStream } from 'zorium'
+import { z, lazy, Suspense, useStream } from 'zorium'
 
 import Environment from 'frontend-shared/services/environment'
 
@@ -35,41 +35,39 @@ export default function $calendar (props) {
 
   return z('.z-calendar', [
     (typeof window !== 'undefined') &&
-      z(Boundary, { fallback: z('.error', 'err') }, [
-        z(Suspense, { fallback: $spinner }, [
-          z($dayPicker, {
-            className: 'Selectable',
-            numberOfMonths: Environment.isMobile() ? 1 : 2,
-            month: Environment.isMobile() ? undefined : lastMonth,
-            // TODO: prop
-            disabledDays: { after: new Date() },
-            selectedDays: [startDateObj, {
-              from: startDateObj,
-              to: endDateObj
-            }],
-            modifiers: {
-              start: startDateObj,
-              end: endDateObj
-            },
-            onDayClick: (day, modifiers = {}) => {
-              if (modifiers.disabled) {
-                return
-              }
-              const date = DateService.format(
-                DateService.dateToUTC(day),
-                'yyyy-mm-dd'
-              )
-
-              if (startDate && endDate) {
-                // order matters (end before start) bc of metricStream rx.filter
-                setStreamsOrStream(endDateStreams, endDateStream, null)
-                setStreamsOrStream(startDateStreams, startDateStream, date)
-              } else {
-                setStreamsOrStream(endDateStreams, endDateStream, date)
-              }
+      z(Suspense, { fallback: $spinner }, [
+        z($dayPicker, {
+          className: 'Selectable',
+          numberOfMonths: Environment.isMobile() ? 1 : 2,
+          month: Environment.isMobile() ? undefined : lastMonth,
+          // TODO: prop
+          disabledDays: { after: new Date() },
+          selectedDays: [startDateObj, {
+            from: startDateObj,
+            to: endDateObj
+          }],
+          modifiers: {
+            start: startDateObj,
+            end: endDateObj
+          },
+          onDayClick: (day, modifiers = {}) => {
+            if (modifiers.disabled) {
+              return
             }
-          })
-        ])
+            const date = DateService.format(
+              DateService.dateToUTC(day),
+              'yyyy-mm-dd'
+            )
+
+            if (startDate && endDate) {
+              // order matters (end before start) bc of metricStream rx.filter
+              setStreamsOrStream(endDateStreams, endDateStream, null)
+              setStreamsOrStream(startDateStreams, startDateStream, date)
+            } else {
+              setStreamsOrStream(endDateStreams, endDateStream, date)
+            }
+          }
+        })
       ])
   ])
 }
