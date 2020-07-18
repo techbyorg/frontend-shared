@@ -1,10 +1,6 @@
 import DateService from './date'
 
 class FormatService {
-  constructor () {
-    this.abbreviateDollar = this.abbreviateDollar.bind(this)
-  }
-
   number (number) {
     // http://stackoverflow.com/a/2901298
     if (number != null) {
@@ -44,7 +40,7 @@ class FormatService {
     return e
   }
 
-  abbreviateDollar (value, fixed) {
+  abbreviateDollar = (value, fixed) => {
     return `$ ${this.abbreviateNumber(value, fixed)}`
   }
 

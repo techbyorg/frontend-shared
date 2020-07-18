@@ -20,11 +20,6 @@ const MAX_ACCEPTABLE_EXOID_TIME_DIFF_MS = 1000 * 30 // 30 seconds
 
 export default class Model {
   constructor (options) {
-    this.validateInitialCache = this.validateInitialCache.bind(this)
-    this.wasCached = this.wasCached.bind(this)
-    this.dispose = this.dispose.bind(this)
-    this.getSerializationStream = this.getSerializationStream.bind(this)
-    this.getSerialization = this.getSerialization.bind(this)
     const {
       io, cookie, portal, lang, userAgent, authCookie, host,
       serverHeaders = {}
@@ -139,7 +134,7 @@ export default class Model {
   }
 
   // after page has loaded, refetch all initial (cached) requestsStream to verify they're still up-to-date
-  validateInitialCache () {
+  validateInitialCache = () => {
     const cache = this.initialCache
     const timeDiffMs = Math.abs(Date.now() - this.initialCacheTime)
     console.warn(timeDiffMs)
@@ -206,14 +201,14 @@ export default class Model {
   }
   // FIXME TODO invalidate in service worker
 
-  wasCached () { return this.isFromCache }
+  wasCached = () => { return this.isFromCache }
 
-  dispose () {
+  dispose = () => {
     this.time.dispose()
     return this.exoid.disposeAll()
   }
 
-  getSerializationStream () {
+  getSerializationStream = () => {
     return this.exoid.getCacheStream()
       .pipe(rx.map(function (exoidCache) {
         const string = JSON.stringify({

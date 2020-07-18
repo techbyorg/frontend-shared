@@ -10,14 +10,11 @@ function hashFn (s) {
 
 export default class ImageModel {
   constructor () {
-    this.load = this.load.bind(this)
-    this.isLoaded = this.isLoaded.bind(this)
-    this.isLoadedByHash = this.isLoadedByHash.bind(this)
     this.loadedImages = {}
   }
   // TODO: clear this out every once in a while (otherwise it's technically a memory leak)
 
-  load (url) {
+  load = (url) => {
     const hash = hashFn(url)
     if (this.loadedImages[hash] === true) {
       return Promise.resolve(null)
@@ -34,25 +31,25 @@ export default class ImageModel {
     })
   }
 
-  isLoaded (url) {
+  isLoaded = (url) => {
     // don't show for server-side otherwise it shows,
     // then hides, then shows again
     return (typeof window !== 'undefined') &&
       this.loadedImages[hashFn(url)] === true
   }
 
-  getHash (url) {
+  getHash = (url) => {
     return hashFn(url)
   }
 
-  isLoadedByHash (hash) {
+  isLoadedByHash = (hash) => {
     // don't show for server-side otherwise it shows,
     // then hides, then shows again
     return (typeof window !== 'undefined') &&
       this.loadedImages[hash] === true
   }
 
-  getSrcByPrefix (prefix, param) {
+  getSrcByPrefix = (prefix, param) => {
     if (param == null) { param = {} }
     let { size, cacheBust } = param
     if (size == null) { size = 'small' }

@@ -9,20 +9,6 @@ const GRID_WIDTH = 1280
 
 export default class Window {
   constructor ({ cookie, userAgent }) {
-    this.updateSize = this.updateSize.bind(this)
-    this.getSizeVal = this.getSizeVal.bind(this)
-    this.getBreakpointVal = this.getBreakpointVal.bind(this)
-    this.getDrawerWidthVal = this.getDrawerWidthVal.bind(this)
-    this.getAppBarHeightVal = this.getAppBarHeightVal.bind(this)
-    this.getUserAgent = this.getUserAgent.bind(this)
-    this.getSize = this.getSize.bind(this)
-    this.getDrawerWidth = this.getDrawerWidth.bind(this)
-    this.getBreakpoint = this.getBreakpoint.bind(this)
-    this.getAppBarHeight = this.getAppBarHeight.bind(this)
-    this.pauseResizing = this.pauseResizing.bind(this)
-    this.resumeResizing = this.resumeResizing.bind(this)
-    this.resume = this.resume.bind(this)
-    this.onResume = this.onResume.bind(this)
     this.cookie = cookie
     this.userAgent = userAgent
     this.isPaused = false
@@ -35,7 +21,7 @@ export default class Window {
     globalThis?.window?.addEventListener('resize', this.updateSize)
   }
 
-  updateSize (ignoreBreakpoint) {
+  updateSize = (ignoreBreakpoint) => {
     const oldSize = this.size.getValue()
     const newSize = this.getSizeVal()
     const oldBreakpoint = this.breakpoint.getValue()
@@ -52,7 +38,7 @@ export default class Window {
     }
   }
 
-  getSizeVal () {
+  getSizeVal = () => {
     let height, width
     const resolution = this.cookie.get('resolution')
     if (typeof window !== 'undefined') {
@@ -80,7 +66,7 @@ export default class Window {
     }
   }
 
-  getBreakpointVal () {
+  getBreakpointVal = () => {
     const { width } = this.getSizeVal()
     if (width >= 1280) {
       return 'desktop'
@@ -91,7 +77,7 @@ export default class Window {
     }
   }
 
-  getDrawerWidthVal () {
+  getDrawerWidthVal = () => {
     const { width } = this.getSizeVal()
     return Math.min(
       width - DRAWER_RIGHT_PADDING,
@@ -99,35 +85,35 @@ export default class Window {
     )
   }
 
-  getAppBarHeightVal () {
+  getAppBarHeightVal = () => {
     const { width } = this.getSizeVal()
     if (width >= 768) { return 64 } else { return 56 }
   }
 
-  getUserAgent () {
+  getUserAgent = () => {
     return this.userAgent
   }
 
-  getSize () {
+  getSize = () => {
     return this.size
   }
 
-  getDrawerWidth () {
+  getDrawerWidth = () => {
     return this.drawerWidth
   }
 
-  getBreakpoint () {
+  getBreakpoint = () => {
     return this.breakpoint
   }
 
-  getAppBarHeight () {
+  getAppBarHeight = () => {
     return this.appBarHeight
   }
 
-  getTransformProperty () {
+  getTransformProperty = () => {
     if (typeof window !== 'undefined') {
       const _elementStyle = document.createElement('div').style
-      const _vendor = (function () {
+      const _vendor = (() => {
         const vendors = [
           't',
           'webkitT',
@@ -164,20 +150,20 @@ export default class Window {
     }
   }
 
-  pauseResizing () {
+  pauseResizing = () => {
     this.isPaused = true
   }
 
-  resumeResizing () {
+  resumeResizing = () => {
     this.isPaused = false
     this.updateSize()
   }
 
-  resume () {
+  resume = () => {
     _.forEach(this.resumeFns, fn => fn())
   }
 
-  onResume (fn) {
+  onResume = (fn) => {
     const id = uuid.v4()
     this.resumeFns[id] = fn
     return {

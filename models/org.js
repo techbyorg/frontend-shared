@@ -3,7 +3,7 @@ export default class Org {
     this.auth = auth
   }
 
-  getById (id) {
+  getById = (id) => {
     return this.auth.stream({
       query: `
         query OrgById($id: ID!) {
@@ -16,7 +16,7 @@ export default class Org {
     })
   }
 
-  getBySlug (slug) {
+  getBySlug = (slug) => {
     return this.auth.stream({
       query: `
         query OrgBySlug($slug: String!) {

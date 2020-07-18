@@ -6,17 +6,6 @@ import sharedConfig from '../shared_config'
 
 export default class Auth {
   constructor (options) {
-    this.setAccessToken = this.setAccessToken.bind(this)
-    this.loginAnon = this.loginAnon.bind(this)
-    this.tryAccessToken = this.tryAccessToken.bind(this)
-    this.logout = this.logout.bind(this)
-    this.join = this.join.bind(this)
-    this.resetPassword = this.resetPassword.bind(this)
-    this.afterLogin = this.afterLogin.bind(this)
-    this.login = this.login.bind(this)
-    this.loginLink = this.loginLink.bind(this)
-    this.stream = this.stream.bind(this)
-    this.call = this.call.bind(this);
     ({
       exoid: this.exoid, pushToken: this.pushToken, lang: this.lang,
       cookie: this.cookie, userAgent: this.userAgent,
@@ -42,7 +31,7 @@ export default class Auth {
     }).pipe(rx.publishReplay(1), rx.refCount())
   }
 
-  loginAnon () {
+  loginAnon = () => {
     console.log('login anon')
     return this.exoid.call('graphql', {
       query: `
@@ -54,14 +43,14 @@ export default class Auth {
     }).then(({ data }) => data?.userLoginAnon.accessToken)
   }
 
-  async directGetMe () {
+  directGetMe = async () => {
     return this.exoid.stream('graphql', {
       // FIXME
       query: 'query Query { me { id, name, data { bio } } }'.trim()
     }).pipe(rx.take(1)).toPromise()
   }
 
-  async tryAccessToken (accessToken) {
+  tryAccessToken = async (accessToken) => {
     try {
       let user = await this.exoid.getCached('graphql', {
         query: 'query Query { me { id, name, data { bio } } }'.trim()
@@ -88,7 +77,7 @@ export default class Auth {
     }
   }
 
-  setAccessToken (accessToken) {
+  setAccessToken = (accessToken) => {
     const domain = sharedConfig.ENV === sharedConfig.ENVS.DEV
       ? sharedConfig.HOST
       : _.takeRight(this.host.split('.'), 2).join('.')
@@ -99,7 +88,7 @@ export default class Auth {
     })
   }
 
-  logout () {
+  logout = () => {
     this.setAccessToken('')
     return this.exoid.call('graphql', {
       query: `
@@ -114,7 +103,7 @@ export default class Auth {
     })
   }
 
-  join (param) {
+  join = (param) => {
     if (param == null) { param = {} }
     // const { name, email, password } = param
     console.log('FIXME')
@@ -125,7 +114,7 @@ export default class Auth {
   //   @setAccessToken accessToken
   //   @exoid.invalidateAll()
 
-  resetPassword (param) {
+  resetPassword = (param) => {
     if (param == null) { param = {} }
     // const { email } = param
     console.log('FIXME')
@@ -133,7 +122,7 @@ export default class Auth {
   }
   // @exoid.call 'auth.resetPassword', {email}
 
-  afterLogin ({ accessToken }) {
+  afterLogin = ({ accessToken }) => {
     this.setAccessToken(accessToken)
     this.exoid.invalidateAll()
     let pushToken = this.pushToken.getValue()
@@ -150,7 +139,7 @@ export default class Auth {
     }
   }
 
-  login (param) {
+  login = (param) => {
     if (param == null) { param = {} }
     const { email, password } = param
     return this.exoid.call('graphql', {
@@ -165,7 +154,7 @@ export default class Auth {
       .then(this.afterLogin)
   }
 
-  loginLink (param) {
+  loginLink = (param) => {
     if (param == null) { param = {} }
     const { userId, tokenStr } = param
     return this.exoid.call('graphql', {
@@ -180,12 +169,7 @@ export default class Auth {
       .then(this.afterLogin)
   }
 
-  stream ({ query, variables, pull }, options) {
-    if (options == null) { options = {} }
-    if (!query) {
-      console.warn('missing', arguments[0])
-    }
-
+  stream = ({ query, variables, pull }, options = {}) => {
     options = _.pick(options, [
       'isErrorable', 'clientChangesStream', 'ignoreCache', 'initialSortFn',
       'isStreamed', 'limit'
@@ -202,13 +186,8 @@ export default class Auth {
       )
   }
 
-  call ({ query, variables }, options) {
-    if (options == null) { options = {} }
+  call = ({ query, variables }, options = {}) => {
     const { invalidateAll, invalidateSingle, additionalDataStream } = options
-
-    if (!query) {
-      console.warn('missing', arguments[0])
-    }
 
     return this.waitValidAuthCookie.pipe(rx.take(1)).toPromise()
       .then(() => {

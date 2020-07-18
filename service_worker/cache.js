@@ -2,12 +2,6 @@ import * as _ from 'lodash-es'
 
 export default class Cache {
   constructor ({ host }) {
-    this.fetchViaNetwork = this.fetchViaNetwork.bind(this)
-    this.onInstall = this.onInstall.bind(this)
-    this.getCacheMatch = this.getCacheMatch.bind(this)
-    this.onFetch = this.onFetch.bind(this)
-    this.onActivate = this.onActivate.bind(this)
-    this.listen = this.listen.bind(this)
     this.host = host
     this.isRecording = false
     this.cachesFiles = {
@@ -38,7 +32,7 @@ export default class Cache {
   //   ]
   // }
 
-  updateCache ({ files, version }, cacheName) {
+  updateCache = ({ files, version }, cacheName) => {
     return caches.open(`${cacheName}:${version}`)
       .then(function (cache) {
       // if any of these fail, all fail
@@ -47,7 +41,7 @@ export default class Cache {
       })
   }
 
-  fetchViaNetwork (request) {
+  fetchViaNetwork = (request) => {
     return fetch(request)
       .then(response => {
         if (this.isRecording && (request.method === 'GET')) {
@@ -62,7 +56,7 @@ export default class Cache {
       })
   }
 
-  onInstall (event) {
+  onInstall = (event) => {
     return event.waitUntil(
       Promise.all(_.map(this.cachesFiles, this.updateCache))
       // .then notifyClients
@@ -73,11 +67,11 @@ export default class Cache {
     )
   }
 
-  clearByCacheName (cacheName) {
+  clearByCacheName = (cacheName) => {
     return caches.delete(cacheName)
   }
 
-  getSizeByCacheName (cacheName) {
+  getSizeByCacheName = (cacheName) => {
     return caches.open(cacheName)
       .then((cache) =>
         cache.keys().then((keys) =>
@@ -94,7 +88,7 @@ export default class Cache {
 
   // grab from normal stores (can't use caches.match, because we want to avoid
   // the recorded cache)
-  getCacheMatch (request) {
+  getCacheMatch = (request) => {
     return Promise.all(
       _.map(this.cachesFiles, ({ version }, cacheName) =>
         caches.open(`${cacheName}:${version}`)
@@ -103,7 +97,7 @@ export default class Cache {
     ).then(matches => _.find(matches, match => Boolean(match)))
   }
 
-  onFetch (event) {
+  onFetch = (event) => {
     // xhr upload progress listener doesn't work w/o this
     // https://github.com/w3c/ServiceWorker/issues/1141
     if ((event.request.method === 'POST') && event.request.url.match(
@@ -145,7 +139,7 @@ export default class Cache {
     )
   }
 
-  onActivate (event) {
+  onActivate = (event) => {
     const cacheKeys = _.map(this.cachesFiles, ({ version }, cacheName) =>
       `${cacheName}:${version}`
     )
@@ -162,7 +156,7 @@ export default class Cache {
     )
   }
 
-  listen () {
+  listen = () => {
     self.addEventListener('install', this.onInstall)
 
     self.addEventListener('fetch', this.onFetch)

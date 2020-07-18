@@ -2,17 +2,14 @@ import * as Rx from 'rxjs'
 
 export default class Drawer {
   constructor () {
-    this.isOpen = this.isOpen.bind(this)
-    this.open = this.open.bind(this)
-    this.close = this.close.bind(this)
     this._isOpen = new Rx.BehaviorSubject(false)
   }
 
-  isOpen () {
+  isOpen = () => {
     return this._isOpen
   }
 
-  open () {
+  open = () => {
     // could use vanilla to open and close drawer for perf
     // (would need to get rid of all isOpens in state so it wouldn't re-render)
     this._isOpen.next(true)
@@ -22,7 +19,7 @@ export default class Drawer {
     }
   }
 
-  close () {
+  close = () => {
     this._isOpen.next(false)
     if (globalThis?.window) {
       globalThis.window.document.body.style.overflow = 'auto'

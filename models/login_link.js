@@ -1,10 +1,9 @@
 export default class LoginLink {
   constructor ({ auth }) {
-    this.getByUserIdAndToken = this.getByUserIdAndToken.bind(this)
     this.auth = auth
   }
 
-  getByUserIdAndToken (userId, tokenStr) {
+  getByUserIdAndToken = (userId, tokenStr) => {
     return this.auth.stream({
       query: `
         query LoginLinkGetByUserIdAndToken($userId: ID!, tokenStr: String!) {

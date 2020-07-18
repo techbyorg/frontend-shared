@@ -7,14 +7,10 @@ const ONE_WEEK_S = 3600 * 24 * 7
 
 class DateService {
   constructor () {
-    this.setLang = this.setLang.bind(this)
-    this.formatSeconds = this.formatSeconds.bind(this)
-    this.fromNowSeconds = this.fromNowSeconds.bind(this)
-    this.fromNow = this.fromNow.bind(this)
     this.setLocale('en')
   }
 
-  setLang (lang) { this.lang = lang; return null }
+  setLang = (lang) => { this.lang = lang; return null }
 
   format (date, format) {
     let D, mm, MMM, yyyy
@@ -88,7 +84,7 @@ class DateService {
     return (seconds / ONE_MINUTE_S).toFixed(precision)
   }
 
-  formatSeconds (seconds, precision) {
+  formatSeconds = (seconds, precision) => {
     let divisor, str
     if (precision == null) { precision = 0 }
     if (seconds < ONE_MINUTE_S) {
@@ -107,7 +103,7 @@ class DateService {
     return +parseFloat(seconds / divisor).toFixed(precision) + str
   }
 
-  fromNowSeconds (seconds) {
+  fromNowSeconds = (seconds) => {
     if (isNaN(seconds)) {
       return '...'
     } else if (seconds < 30) {
@@ -125,7 +121,7 @@ class DateService {
     }
   }
 
-  fromNow (date) {
+  fromNow = (date) => {
     if (!(date instanceof Date)) {
       date = new Date(date)
     }

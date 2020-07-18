@@ -8,18 +8,11 @@ import Environment from '../services/environment'
 
 export default class Overlay {
   constructor () {
-    this.getData = this.getData.bind(this)
-    this.setData = this.setData.bind(this)
-    this.get = this.get.bind(this)
-    this.get$ = this.get$.bind(this)
-    this.open = this.open.bind(this)
-    this.closeFromBackButton = this.closeFromBackButton.bind(this)
-    this.close = this.close.bind(this)
     this.overlays = new Rx.BehaviorSubject(null)
     this._data = new Rx.BehaviorSubject(null)
   }
 
-  getData () {
+  getData = () => {
     return this._data
   }
 
@@ -27,15 +20,15 @@ export default class Overlay {
     return this._data.next(data)
   }
 
-  get () {
+  get = () => {
     return this.overlays.getValue()
   }
 
-  get$ () {
+  get$ = () => {
     return this.overlays.pipe(rx.map(overlays => _.map(overlays, '$')))
   }
 
-  open ($, param) {
+  open = ($, param) => {
     if (param == null) { param = {} }
     const { data, onComplete, onCancel, id } = param
     if (Environment.isIos()) {
@@ -58,12 +51,12 @@ export default class Overlay {
     document.body.style.overflow = 'hidden'
   }
 
-  closeFromBackButton (e) {
+  closeFromBackButton = (e) => {
     e.stopPropagation()
     return this.close({ isFromBackButton: true })
   }
 
-  close (param) {
+  close = (param) => {
     let onCancel, onComplete
     if (param == null) { param = {} }
     const { action, response, id } = param
