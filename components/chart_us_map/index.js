@@ -21,8 +21,8 @@ const $choropleth = lazy(() => Promise.all([
 ])
   .then(function ([ChloroplethCanvas, { features }]) {
     const { colors } = useContext(context)
-    return ({ key, width, height, data, min, max, chartOptions }) =>
-      z(ChloroplethCanvas, _.defaultsDeep(chartOptions || {}, {
+    return ({ key, width, height, data, min, max, chartOptions }) => {
+      return z(ChloroplethCanvas, _.defaultsDeep(chartOptions || {}, {
         key,
         data,
         width,
@@ -35,7 +35,7 @@ const $choropleth = lazy(() => Promise.all([
             color: feature.color,
             key: feature.id,
             x: feature.id,
-            y: feature.data.value
+            y: feature.formattedValue
           })
         },
         domain: [min, max],
@@ -58,12 +58,13 @@ const $choropleth = lazy(() => Promise.all([
         borderWidth: 1,
         borderColor: colors.getRawColor(colors.$bgColor)
       }))
+    }
   })
 )
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default function $chartUsMap ({ data }) {
+export default function $chartUsMap ({ data, chartOptions }) {
   const $$ref = useRef()
 
   const { min, max } = useMemo(() => {
@@ -83,7 +84,7 @@ export default function $chartUsMap ({ data }) {
     (typeof window !== 'undefined') && size &&
       z(Suspense, { fallback: $spinner }, [
         z($choropleth, {
-          data, min, max, width: size.width, height: size.height
+          data, chartOptions, min, max, width: size.width, height: size.height
         })
       ])
   ])

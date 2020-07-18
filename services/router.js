@@ -80,18 +80,18 @@ class RouterService {
     return this.goPath(this.getFund(fund))
   }
 
-  getOrg = (org, tab) => {
+  getNonprofit = (nonprofit, tab) => {
     if (tab) {
-      return this.get('orgByEinWithTab', {
-        tab, slug: _.kebabCase(org?.name), ein: org?.ein
+      return this.get('nonprofitByEinWithTab', {
+        tab, slug: _.kebabCase(nonprofit?.name), ein: nonprofit?.ein
       })
     } else {
-      return this.get('orgByEin', { slug: _.kebabCase(org?.name), ein: org?.ein })
+      return this.get('nonprofitByEin', { slug: _.kebabCase(nonprofit?.name), ein: nonprofit?.ein })
     }
   }
 
-  goOrg = (org) => {
-    return this.goPath(this.getOrg(org))
+  goNonprofit = (nonprofit) => {
+    return this.goPath(this.getNonprofit(nonprofit))
   }
 
   get = (routeKey, replacements, options) => {
