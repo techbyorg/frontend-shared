@@ -21,8 +21,8 @@ class RouterService {
     this.go = this.go.bind(this)
     this.getFund = this.getFund.bind(this)
     this.goFund = this.goFund.bind(this)
-    this.getOrg = this.getOrg.bind(this)
-    this.goOrg = this.goOrg.bind(this)
+    this.getNonprofit = this.getNonprofit.bind(this)
+    this.goNonprofit = this.goNonprofit.bind(this)
     this.get = this.get.bind(this)
     this.removeOverlay = this.removeOverlay.bind(this)
     this.overlayOnBack = this.overlayOnBack.bind(this)
@@ -101,18 +101,18 @@ class RouterService {
     return this.goPath(this.getFund(fund))
   }
 
-  getOrg (org, tab) {
+  getNonprofit (nonprofit, tab) {
     if (tab) {
-      return this.get('orgByEinWithTab', {
-        tab, slug: _.kebabCase(org?.name), ein: org?.ein
+      return this.get('nonprofitByEinWithTab', {
+        tab, slug: _.kebabCase(nonprofit?.name), ein: nonprofit?.ein
       })
     } else {
-      return this.get('orgByEin', { slug: _.kebabCase(org?.name), ein: org?.ein })
+      return this.get('nonprofitByEin', { slug: _.kebabCase(nonprofit?.name), ein: nonprofit?.ein })
     }
   }
 
-  goOrg (org) {
-    return this.goPath(this.getOrg(org))
+  goNonprofit (nonprofit) {
+    return this.goPath(this.getNonprofit(nonprofit))
   }
 
   get (routeKey, replacements, options) {
