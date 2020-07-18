@@ -17,27 +17,6 @@ function isSimpleClick (e) {
 
 class RouterService {
   constructor ({ router, model, cookie, lang, portal, host }) {
-    this.goPath = this.goPath.bind(this)
-    this.go = this.go.bind(this)
-    this.getFund = this.getFund.bind(this)
-    this.goFund = this.goFund.bind(this)
-    this.getNonprofit = this.getNonprofit.bind(this)
-    this.goNonprofit = this.goNonprofit.bind(this)
-    this.get = this.get.bind(this)
-    this.removeOverlay = this.removeOverlay.bind(this)
-    this.overlayOnBack = this.overlayOnBack.bind(this)
-    this.goOverlay = this.goOverlay.bind(this)
-    this.setEntitySlug = this.setEntitySlug.bind(this)
-    this.setRequests = this.setRequests.bind(this)
-    this.openLink = this.openLink.bind(this)
-    this.back = this.back.bind(this)
-    this.onBack = this.onBack.bind(this)
-    this.openInAppBrowser = this.openInAppBrowser.bind(this)
-    this.openAddon = this.openAddon.bind(this)
-    this.getStream = this.getStream.bind(this)
-    this.getSubdomain = this.getSubdomain.bind(this)
-    this.link = this.link.bind(this)
-    this.linkIfHref = this.linkIfHref.bind(this)
     this.router = router
     this.model = model
     this.cookie = cookie
@@ -47,10 +26,10 @@ class RouterService {
     this.history = (typeof window !== 'undefined') ? [window.location.pathname] : []
     this.requestsStream = null
     this.onBackFn = null
-    this.entitySlug = null
+    this.orgSlug = null
   }
 
-  goPath (path, options) {
+  goPath = (path, options) => {
     if (options == null) { options = {} }
     const { ignoreHistory, reset, keepPreserved, skipBlur } = options
     if (this.preservedRequest && !keepPreserved) {
@@ -79,7 +58,7 @@ class RouterService {
     }
   }
 
-  go (routeKey, replacements, options) {
+  go = (routeKey, replacements, options) => {
     if (options == null) { options = {} }
     const path = this.get(routeKey, replacements, options)
     console.log('gott', path, routeKey)
@@ -87,7 +66,7 @@ class RouterService {
   }
 
   // FIXME: this should be in fundraise repo, not frontend-shared
-  getFund (fund, tab) {
+  getFund = (fund, tab) => {
     if (tab) {
       return this.get('fundByEinWithTab', {
         tab, slug: _.kebabCase(fund?.name), ein: fund?.ein
@@ -97,11 +76,11 @@ class RouterService {
     }
   }
 
-  goFund (fund) {
+  goFund = (fund) => {
     return this.goPath(this.getFund(fund))
   }
 
-  getNonprofit (nonprofit, tab) {
+  getNonprofit = (nonprofit, tab) => {
     if (tab) {
       return this.get('nonprofitByEinWithTab', {
         tab, slug: _.kebabCase(nonprofit?.name), ein: nonprofit?.ein
@@ -111,27 +90,28 @@ class RouterService {
     }
   }
 
-  goNonprofit (nonprofit) {
+  goNonprofit = (nonprofit) => {
     return this.goPath(this.getNonprofit(nonprofit))
   }
 
-  get (routeKey, replacements, options) {
+  get = (routeKey, replacements, options) => {
     if (replacements == null) { replacements = {} }
 
     let route = this.lang.get(routeKey, { file: 'paths', language: options?.language })
 
-    const isEntityPage = route?.indexOf(':entitySlug') !== -1
+    // const isOrganizationPage = route?.indexOf(':orgSlug') !== -1
 
-    const entitySlug = replacements.entitySlug || this.entitySlug
-    if (isEntityPage && !entitySlug) {
-      console.log('entity not set yet')
-      return
-    }
+    // const orgSlug = replacements.orgSlug || this.orgSlug
+    // if (isOrganizationPage && !orgSlug) {
+    //   console.log('organization not set yet')
+    //   return
+    // }
 
-    replacements.entitySlug = entitySlug
-    const subdomain = this.getSubdomain()
-    if (subdomain && (subdomain === entitySlug)) {
-      route = route.replace(`/${entitySlug}`, '')
+    // replacements.orgSlug = orgSlug
+    // TODO: non-hardcoded
+    const isCustomDomain = this.getHost() === 'data.upchieve.org'
+    if (isCustomDomain) {
+      route = route.replace('/org/:orgSlug', '')
     }
 
     _.forEach(replacements, (value, key) => {
@@ -144,7 +124,7 @@ class RouterService {
     return route
   }
 
-  removeOverlay () {
+  removeOverlay = () => {
     this.preservedRequest = null
     if (this.overlayListener) {
       window.removeEventListener('popstate', this.overlayOnBack)
@@ -152,11 +132,11 @@ class RouterService {
     }
   }
 
-  overlayOnBack () {
+  overlayOnBack = () => {
     return this.removeOverlay()
   }
 
-  goOverlay (routeKey, replacements, options) {
+  goOverlay = (routeKey, replacements, options) => {
     if (options == null) { options = {} }
     this.overlayListener = window.addEventListener('popstate', this.overlayOnBack)
 
@@ -164,15 +144,19 @@ class RouterService {
       this.preservedRequest = request
       return this.go(routeKey, replacements, _.defaults(
         { keepPreserved: true }, options
-      )
-      )
+      ))
     })
   }
 
-  setEntitySlug (entitySlug) { this.entitySlug = entitySlug; return null }
-  setRequests (requestsStream) { this.requestsStream = requestsStream; return null }
+  setOrgSlug = (orgSlug) => {
+    this.orgSlug = orgSlug
+  }
 
-  openLink (url, target) {
+  setRequests = (requestsStream) => {
+    this.requestsStream = requestsStream
+  }
+
+  openLink = (url, target) => {
     const isAbsoluteUrl = url?.match(/^(?:[a-z-]+:)?\/\//i)
     const webAppRegex = new RegExp(`https?://(${this.host})`, 'i')
     const isWebApp = url?.match(webAppRegex)
@@ -190,7 +174,7 @@ class RouterService {
     }
   }
 
-  back (param) {
+  back = (param) => {
     if (param == null) { param = {} }
     const { fromNative, fallbackPath } = param
     if (this.preservedRequest) {
@@ -222,9 +206,11 @@ class RouterService {
     }
   }
 
-  onBack (onBackFn) { this.onBackFn = onBackFn; return null }
+  onBack = (onBackFn) => {
+    this.onBackFn = onBackFn
+  }
 
-  openInAppBrowser (addon, param) {
+  openInAppBrowser = (addon, param) => {
     let language
     if (param == null) { param = {} }
     let { colors, replacements } = param
@@ -275,7 +261,7 @@ class RouterService {
     })
   }
 
-  openAddon (addon, param) {
+  openAddon = (addon, param) => {
     if (param == null) { param = {} }
     const { replacements } = param
     const isNative = Environment.isNativeApp()
@@ -297,19 +283,23 @@ class RouterService {
     }
   }
 
-  getStream () {
+  getStream = () => {
     return this.router.getStream()
   }
 
-  getSubdomain () {
+  getHost = () => {
+    return this.host
+  }
+
+  getSubdomain = () => {
     const hostParts = this.host?.split('.')
-    const isStaging = hostParts[0] === 'free-roam-staging'
+    const isStaging = hostParts[0] === 'tech-by-staging'
     if ((hostParts.length === 3) && !isStaging) {
       return hostParts[0]
     }
   }
 
-  link (node) {
+  link = (node) => {
     node.props.onclick = ev((e, $$el) => {
       if (isSimpleClick(e)) {
         e.preventDefault()
@@ -320,7 +310,7 @@ class RouterService {
     return node
   }
 
-  linkIfHref (node) {
+  linkIfHref = (node) => {
     if (node.props.href) {
       node.type = 'A'
       this.link(node)

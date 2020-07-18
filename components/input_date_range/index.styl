@@ -1,15 +1,22 @@
 @require '../../vars'
 
 .z-input-date-range
+  font-body2()
   position: relative
   display: inline-block
-  font-body2()
+  display: flex
 
   > .input
     input()
     background: getColor('$bgColor')
     display: flex
     cursor: pointer
+    border-top-right-radius: 0
+    border-bottom-right-radius: 0
+
+    > .start, > .end
+      flex1()
+      white-space: nowrap
 
     > .divider
       height: 1px
@@ -17,9 +24,30 @@
       background: getColor('$bgText')
       margin: auto 8px
 
+
+
 .z-input-date-range_calendar
   shadow-1()
   background: getColor('$bgColor')
 
   &.is-mobile
     box-shadow: none
+
+.z-input-date-range_preset-dates-button
+  input()
+  background: getColor('$bgColor')
+  cursor: pointer
+  width: auto
+  border-top-left-radius: 0
+  border-bottom-left-radius: 0
+  margin-left: -1px
+  padding: 0 16px 0 10px
+
+.z-input-date-range_option
+  > .text
+    display: inline-block
+
+  > .date
+    font-caption1()
+    margin-left: 8px
+    display: inline-block

@@ -3,3 +3,42 @@
 .z-chart-pie
   flex1()
   display: flex
+  flex-wrap: wrap
+  align-items: center
+  height: 100%
+  margin-bottom: -16px
+
+  > .pie
+    flex1()
+    height: 100%
+    margin-bottom: 16px
+    min-width: 150px
+
+  > .legend
+    flex1()
+    // margin-top: 24px
+    margin-left: 24px
+    margin-bottom: 16px
+
+    > .legend-item
+      display: flex
+      margin-bottom: 8px
+
+      > .color
+        flex-shrink: 0
+        width: 20px
+        height: 20px
+        border-radius: 8px
+        margin-right: 16px
+
+      > .info
+        > .label
+          font-subtitle2()
+          margin-right: 16px
+
+        > .value
+          font-body2(medium)
+
+      > .percent
+        font-subtitle2()
+        margin-left: auto

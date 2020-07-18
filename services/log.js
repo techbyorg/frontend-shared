@@ -2,11 +2,10 @@ const MAX_ERRORS_LOGGED = 5
 
 class Log {
   constructor () {
-    this.init = this.init.bind(this)
     this.errorsSent = 0
   }
 
-  init ({ apiUrl }) {
+  init = ({ apiUrl }) => {
     // Report errors to API_URL/log
     const postErrToServer = (err) => {
       if (this.errorsSent < MAX_ERRORS_LOGGED) {

@@ -1,12 +1,7 @@
 import PushService from './push'
 
 class ServiceWorkerService {
-  constructor () {
-    this.register = this.register.bind(this)
-    this.handleUpdate = this.handleUpdate.bind(this)
-  }
-
-  register ({ model, lang, onError }) {
+  register = ({ model, lang, onError }) => {
     try {
       console.log('registering service worker...')
       return navigator.serviceWorker?.register('/service_worker.js')
@@ -30,7 +25,7 @@ class ServiceWorkerService {
     }
   }
 
-  handleUpdate (registration, { model, lang }) {
+  handleUpdate = (registration, { model, lang }) => {
     if (this.hasActiveServiceWorker) {
       return model.statusBar.open({
         text: lang.get('status.newVersion'),

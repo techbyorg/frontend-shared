@@ -1,38 +1,30 @@
 export default class User {
   constructor (options) {
-    this.getMe = this.getMe.bind(this)
-    this.getById = this.getById.bind(this)
-    this.getIp = this.getIp.bind(this)
-    this.unsubscribeEmail = this.unsubscribeEmail.bind(this)
-    this.verifyEmail = this.verifyEmail.bind(this)
-    this.resendVerficationEmail = this.resendVerficationEmail.bind(this)
-    this.upsert = this.upsert.bind(this)
-    this.getDisplayName = this.getDisplayName.bind(this);
     ({
       auth: this.auth, proxy: this.proxy, exoid: this.exoid, cookie: this.cookie, lang: this.lang,
       overlay: this.overlay, portal: this.portal, apiUrl: this.apiUrl
     } = options)
   }
 
-  getMe (param) {
-    if (param == null) { param = {} }
+  getMe = () => {
     return this.auth.stream({
+      app: 'FIXME',
       query: 'query UserGetMe { me { id, name, data { bio } } }'
     })
   }
 
-  getById (id) {
+  getById = (id) => {
     return this.auth.stream({
       query: 'query UserGetById($id: ID!) { user(id: $id) { id, name, data { bio } } }',
       variables: { id }
     })
   }
 
-  getIp () {
+  getIp = () => {
     return this.cookie.get('ip')
   }
 
-  unsubscribeEmail ({ userId, tokenStr }) {
+  unsubscribeEmail = ({ userId, tokenStr }) => {
     return this.auth.call({
       query: `
         mutation UserUnsubscribeEmail($userId: ID!, $tokenStr: String!) {
@@ -42,7 +34,7 @@ export default class User {
     })
   }
 
-  verifyEmail ({ userId, tokenStr }) {
+  verifyEmail = ({ userId, tokenStr }) => {
     return this.auth.call({
       query: `
         mutation UserVerifyEmail($userId: ID!, $tokenStr: String!) {
@@ -52,7 +44,7 @@ export default class User {
     })
   }
 
-  resendVerficationEmail () {
+  resendVerficationEmail = () => {
     return this.auth.call({
       query: `
         mutation UserResendVerficationEmail {
@@ -62,7 +54,7 @@ export default class User {
     })
   }
 
-  upsert (diff, param) {
+  upsert = (diff, param) => {
     if (param == null) { param = {} }
     const { file } = param
     if (file) {
@@ -113,11 +105,11 @@ export default class User {
     }
   }
 
-  getDisplayName (user) {
+  getDisplayName = (user) => {
     return user?.name || this.lang.get('general.anonymous')
   }
 
-  isMember (user) {
+  isMember = (user) => {
     return Boolean(user?.email)
   }
 }

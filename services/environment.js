@@ -1,10 +1,6 @@
 import * as _ from 'lodash-es'
 
 class Environment {
-  constructor () {
-    this.getPlatform = this.getPlatform.bind(this)
-  }
-
   setAppKey (appKey) { this.appKey = appKey; return null }
 
   isMobile ({ userAgent } = {}) {
@@ -32,10 +28,10 @@ class Environment {
     return _.includes(userAgent?.toLowerCase(), ` ${this.appKey}/${this.appKey}`)
   }
 
-  isEntityApp (entityAppKey, { userAgent } = {}) {
+  isOrganizationApp (organizationAppKey, { userAgent } = {}) {
     userAgent = userAgent || globalThis?.navigator?.userAgent
-    return Boolean(entityAppKey &&
-      _.includes(userAgent?.toLowerCase(), ` ${this.appKey}/${entityAppKey}/`)
+    return Boolean(organizationAppKey &&
+      _.includes(userAgent?.toLowerCase(), ` ${this.appKey}/${organizationAppKey}/`)
     )
   }
 
@@ -56,7 +52,7 @@ class Environment {
     return matches?.[2]
   }
 
-  getPlatform ({ userAgent } = {}) {
+  getPlatform = ({ userAgent } = {}) => {
     userAgent = userAgent || globalThis?.navigator?.userAgent
 
     const isApp = this.isNativeApp(this.appKey, { userAgent })

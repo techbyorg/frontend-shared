@@ -1,8 +1,6 @@
-class FormatService {
-  constructor () {
-    this.abbreviateDollar = this.abbreviateDollar.bind(this)
-  }
+import DateService from './date'
 
+class FormatService {
   number (number) {
     // http://stackoverflow.com/a/2901298
     if (number != null) {
@@ -42,7 +40,7 @@ class FormatService {
     return e
   }
 
-  abbreviateDollar (value, fixed) {
+  abbreviateDollar = (value, fixed) => {
     return `$ ${this.abbreviateNumber(value, fixed)}`
   }
 
@@ -116,6 +114,26 @@ class FormatService {
     })
 
     return str.slice(0, -2)
+  }
+
+  unit (value, unit, type = 'text') {
+    if (unit === 'second') {
+      value = DateService.secondsToMinutes(value)
+    }
+
+    if (unit === 'percentFraction') {
+      value = Math.round(10 * value * 100) / 10
+    } else if (unit === 'float') {
+      value = Math.round(100 * value) / 100
+    } else {
+      value = this.abbreviateNumber(value)
+    }
+
+    if (unit === 'second') { // already converted to min above
+      value += ' min'
+    }
+
+    return value
   }
 }
 

@@ -13,8 +13,9 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $dropdown (props) {
   const {
-    valueStreams, errorStream, options, $$parentRef, isPrimary,
-    anchor = 'top-left', isDisabled = false
+    valueStreams, errorStream, options, $$parentRef, isPrimary, $current,
+    isCondensedOptions, anchor = 'top-left', isDisabled = false,
+    maxHeightPx = 200
   } = props
   const { colors } = useContext(context)
 
@@ -50,18 +51,19 @@ export default function $dropdown (props) {
       isOpen
     })
   }, [
-    z('.wrapper', { onclick: () => { toggle() } }),
-    z('.current', { onclick: toggle }, [
-      z('.text', selectedOption?.text),
-      z('.arrow', [
-        z($icon, {
-          icon: chevronDownIconPath,
-          color: isPrimary
-            ? colors.$secondaryMainText
-            : colors.$bgText
-        })
+    z('.wrapper', { onclick: toggle },
+      $current || z('.current', [
+        z('.text', selectedOption?.text),
+        z('.arrow', [
+          z($icon, {
+            icon: chevronDownIconPath,
+            color: isPrimary
+              ? colors.$secondaryMainText
+              : colors.$bgText
+          })
+        ])
       ])
-    ]),
+    ),
 
     isOpen &&
       z($positionedOverlay, {
@@ -74,17 +76,22 @@ export default function $dropdown (props) {
         zIndex: 999,
         $$parentRef,
         $content:
-          z('.z-dropdown_options',
-            _.map(options, option =>
-              z('label.option', {
-                className: classKebab({ isSelected: `${value}` === option.value }),
-                onclick () {
+          z('.z-dropdown_options', {
+            className: classKebab({ isCondensedOptions }),
+            style: { maxHeight: maxHeightPx }
+          }, _.map(options, option =>
+            z('label.option', {
+              className: classKebab({ isSelected: `${value}` === option.value }),
+              onclick () {
+                if (option.onSelect) {
+                  option.onSelect()
+                } else {
                   setStreamsOrStream(valueStreams, valueStream, option.value)
-                  return toggle()
                 }
-              }, z('.text', option.text))
-            )
-          )
+                return toggle()
+              }
+            }, z('.text', option.text))
+          ))
       })
   ])
 }

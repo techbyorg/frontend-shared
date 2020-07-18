@@ -5,12 +5,6 @@ import DateService from '../services/date'
 
 class Language {
   constructor (param) {
-    this.setLanguage = this.setLanguage.bind(this)
-    this.getLanguage = this.getLanguage.bind(this)
-    this.getLanguageStr = this.getLanguageStr.bind(this)
-    this.getRouteKeyByValue = this.getRouteKeyByValue.bind(this)
-    this.getAllPathsByRouteKey = this.getAllPathsByRouteKey.bind(this)
-    this.get = this.get.bind(this)
     if (param == null) { param = {} }
     let { language, cookie, files } = param
     this.cookie = cookie
@@ -31,7 +25,7 @@ class Language {
     }
   }
 
-  setLanguage (language) {
+  setLanguage = (language) => {
     this.language.next(language)
     this.cookie?.set('language', language)
     // FIXME: shouldn't have to do this. should date be on context?
@@ -39,9 +33,9 @@ class Language {
     return DateService.setLocale(language)
   }
 
-  getLanguage () { return this.language }
+  getLanguage = () => { return this.language }
 
-  getLanguageStr () { return this.language.getValue() }
+  getLanguageStr = () => { return this.language.getValue() }
 
   // getAll: ->
   //   config.LANGUAGES
@@ -50,7 +44,7 @@ class Language {
     return ['en']
   }
 
-  getRouteKeyByValue (routeValue) {
+  getRouteKeyByValue = (routeValue) => {
     const language = this.getLanguageStr()
     return _.findKey(this.files.paths[language], (route) =>
       route === routeValue
@@ -59,7 +53,7 @@ class Language {
     )
   }
 
-  getAllPathsByRouteKey (routeKey) {
+  getAllPathsByRouteKey = (routeKey) => {
     const languages = this.getAllUrlLanguages()
     return _.reduce(languages, (paths, language) => {
       const path = this.files.paths[language]?.[routeKey]
@@ -71,7 +65,7 @@ class Language {
     , {})
   }
 
-  get (strKey, param) {
+  get = (strKey, param) => {
     if (param == null) { param = {} }
     let { replacements, file, language } = param
     if (file == null) { file = 'strings' }

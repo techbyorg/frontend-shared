@@ -1,8 +1,5 @@
 export default class Time {
   constructor ({ auth }) {
-    this.updateServerTime = this.updateServerTime.bind(this)
-    this.getServerTime = this.getServerTime.bind(this)
-    this.dispose = this.dispose.bind(this)
     this.auth = auth
     this.serverTime = Date.now()
     this.timeInterval = setInterval(() => {
@@ -15,20 +12,18 @@ export default class Time {
     , 100)
   }
 
-  updateServerTime () {
+  updateServerTime = () => {
     this.auth.call({ query: 'query Time { time }' })
       .then(({ data }) => {
         this.serverTime = Date.parse(data.time.now)
       })
   }
 
-  getServerTime () {
+  getServerTime = () => {
     return this.serverTime
   }
 
-  dispose () {
+  dispose = () => {
     clearInterval(this.timeInterval)
   }
-
-  getCurrentSeason () { return 'spring' } // TODO
 }

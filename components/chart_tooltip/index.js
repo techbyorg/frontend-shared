@@ -7,7 +7,10 @@ export default function $chartTooltip ({ color, label, x, y }) {
     label && z('.label', label),
     z('.x', x),
     z('.y', [
-      color && z('.color', { style: { background: color } }),
+      color && z('.color-wrapper', [
+        z('.color', { style: { background: color } }),
+        z('.white-bg')
+      ]),
       z('.value', y)
     ])
   ])

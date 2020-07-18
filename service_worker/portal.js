@@ -2,14 +2,6 @@ import PortalGun from 'portal-gun'
 
 export default class Portal {
   constructor ({ cache }) {
-    this.listen = this.listen.bind(this)
-    this.topOnData = this.topOnData.bind(this)
-    this.pushSetContextId = this.pushSetContextId.bind(this)
-    this.deleteHtmlCache = this.deleteHtmlCache.bind(this)
-    this.startRecording = this.startRecording.bind(this)
-    this.stopRecording = this.stopRecording.bind(this)
-    this.getSizeByCacheName = this.getSizeByCacheName.bind(this)
-    this.clearByCacheName = this.clearByCacheName.bind(this)
     this.cache = cache
     this.portal = new PortalGun()
 
@@ -19,7 +11,7 @@ export default class Portal {
     this.contextId = null
   }
 
-  listen () {
+  listen = () => {
     this.portal.listen()
     this.portal.on('top.onData', this.topOnData)
     this.portal.on('push.setContextId', this.pushSetContextId)
@@ -32,33 +24,33 @@ export default class Portal {
   }
   // portal.on 'cache.onUpdateAvailable', onUpdateAvailable
 
-  topOnData (fn) {
+  topOnData = (fn) => {
     this.onPushFn = fn
   }
 
-  pushSetContextId (options) {
+  pushSetContextId = (options) => {
     this.contextId = options.contextId
   }
 
-  deleteHtmlCache () {
+  deleteHtmlCache = () => {
     console.log('portal update cache', `html:${this.cache.cachesFiles.html.version}`)
     const cache = this.cache.cachesFiles.html
     return this.cache.updateCache(cache, 'html')
   }
 
-  startRecording () {
+  startRecording = () => {
     this.cache.isRecording = true
   }
 
-  stopRecording () {
+  stopRecording = () => {
     this.cache.isRecording = false
   }
 
-  getSizeByCacheName ({ cacheName }) {
+  getSizeByCacheName = ({ cacheName }) => {
     return this.cache.getSizeByCacheName(cacheName)
   }
 
-  clearByCacheName ({ cacheName }) {
+  clearByCacheName = ({ cacheName }) => {
     return this.cache.clearByCacheName(cacheName)
   }
 }

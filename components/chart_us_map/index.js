@@ -1,4 +1,4 @@
-import { z, lazy, Suspense, Boundary, useContext, useRef, useMemo } from 'zorium'
+import { z, lazy, Suspense, useErrorBoundary, useContext, useRef, useMemo } from 'zorium'
 import * as _ from 'lodash-es'
 
 import $chartTooltip from '../chart_tooltip'
@@ -32,6 +32,7 @@ const $choropleth = lazy(() => Promise.all([
         // animate: false,
         tooltip: ({ feature }) => {
           return feature.data && z($chartTooltip, {
+            color: feature.color,
             key: feature.id,
             x: feature.id,
             y: feature.formattedValue
@@ -40,7 +41,16 @@ const $choropleth = lazy(() => Promise.all([
         domain: [min, max],
         unknownColor: colors.getRawColor(colors.$bgText12),
         colors: [
-          '#91e0f4', '#81caef', '#6fafe6', '#5e9de7', '#4a7ed5', '#3d6edb'
+          // `${colors.getRawColor(colors.$primary900)}10`,
+          // `${colors.getRawColor(colors.$primary900)}20`,
+          `${colors.getRawColor(colors.$primary900)}30`,
+          `${colors.getRawColor(colors.$primary900)}40`,
+          `${colors.getRawColor(colors.$primary900)}50`,
+          `${colors.getRawColor(colors.$primary900)}60`,
+          `${colors.getRawColor(colors.$primary900)}70`,
+          `${colors.getRawColor(colors.$primary900)}80`,
+          `${colors.getRawColor(colors.$primary900)}90`,
+          `${colors.getRawColor(colors.$primary900)}`
         ],
         label: 'properties.name',
         projectionScale: width * 1.2,
@@ -67,14 +77,15 @@ export default function $chartUsMap ({ data, chartOptions }) {
 
   const size = useRefSize($$ref)
 
+  const [error] = useErrorBoundary()
+  if (error) { console.log(error) }
+
   return z('.z-chart-us-map', { ref: $$ref }, [
     (typeof window !== 'undefined') && size &&
-      z(Boundary, { fallback: z('.error', 'err') }, [
-        z(Suspense, { fallback: $spinner }, [
-          z($choropleth, {
-            data, chartOptions, min, max, width: size.width, height: size.height
-          })
-        ])
+      z(Suspense, { fallback: $spinner }, [
+        z($choropleth, {
+          data, chartOptions, min, max, width: size.width, height: size.height
+        })
       ])
   ])
 }

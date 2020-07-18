@@ -11,9 +11,9 @@ import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
-// TODO: if using this with entity/groupStream, get it from context
+// TODO: if using this with organization/groupStream, get it from context
 export default function $profileDialog (props) {
-  const { userStreamy, entityUserStream } = props
+  const { userStreamy, organizationUserStream } = props
   const { model, router, browser, lang, colors } = useContext(context)
 
   const {
@@ -28,12 +28,12 @@ export default function $profileDialog (props) {
       expandedItemsStream: new Rx.BehaviorSubject([]),
       meStream,
       userStream
-      // entityAndMeStream: Rx.combineLatest(
-      //   entityStream || Rx.of(null),
+      // organizationAndMeStream: Rx.combineLatest(
+      //   organizationStream || Rx.of(null),
       //   meStream,
       //   (...vals) => vals),
-      // entityAndUserStream: Rx.combineLatest(
-      //   entityStream || Rx.of(null),
+      // organizationAndUserStream: Rx.combineLatest(
+      //   organizationStream || Rx.of(null),
       //   userStream,
       //   (...vals) => vals)
     }
@@ -45,7 +45,7 @@ export default function $profileDialog (props) {
   }, [])
 
   const {
-    me, $links, user, entityUser, isVisible, entity, loadingItems, windowSize,
+    me, $links, user, organizationUser, isVisible, organization, loadingItems, windowSize,
     expandedItems
   } = useStream(() => ({
     me: meStream,
@@ -57,19 +57,19 @@ export default function $profileDialog (props) {
         }
       }
     })))),
-    // meEntityUser: entityAndMeStream.pipe(rx.switchMap(function (...args) {
-    //   let entity, me;
-    //   [entity, me] = Array.from(args[0])
-    //   if (entity && me) {
-    //     return model.entityUser.getByEntityIdAndUserId(entity.id, me.id)
+    // meOrganizationUser: organizationAndMeStream.pipe(rx.switchMap(function (...args) {
+    //   let organization, me;
+    //   [organization, me] = Array.from(args[0])
+    //   if (organization && me) {
+    //     return model.organizationUser.getByOrganizationIdAndUserId(organization.id, me.id)
     //   } else {
     //     return Rx.of(null)
     //   }
     // })),
     user: userStream,
-    entityUser: entityUserStream,
+    organizationUser: organizationUserStream,
     isVisible: isVisibleStream,
-    entity,
+    organization,
     loadingItems: loadingItemsStream,
     expandedItems: expandedItemsStream,
     windowSize: browser.getSize()
@@ -183,8 +183,8 @@ export default function $profileDialog (props) {
               ]),
               z('.about', [
                 z('.name', model.user.getDisplayName(user)),
-                !_.isEmpty(entityUser?.roleNames) &&
-                  z('.roles', entityUser?.roleNames.join(', ')),
+                !_.isEmpty(organizationUser?.roleNames) &&
+                  z('.roles', organizationUser?.roleNames.join(', ')),
                 z('.links',
                   _.map($links, ({ link, type }) =>
                     router.link(z('a.link', {

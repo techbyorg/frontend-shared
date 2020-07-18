@@ -63,7 +63,7 @@ export default function setup ({ $app, Lang, Model, colors, config }) {
   const userAgent = globalThis?.navigator?.userAgent
   const cookie = new CookieService({
     initialCookies,
-    host: config.HOST,
+    host: window.location.host,
     setCookie (key, value, options) {
       document.cookie = cookieLib.serialize(key, value, options)
     }
@@ -90,7 +90,7 @@ export default function setup ({ $app, Lang, Model, colors, config }) {
     userAgent,
     authCookie: config.AUTH_COOKIE,
     apiUrl: config.API_URL,
-    host: config.HOST
+    host: window.location.host
   })
 
   function onOnline () {
@@ -177,12 +177,12 @@ export default function setup ({ $app, Lang, Model, colors, config }) {
     // to not start with null
     // (flash with whatever obs data is on page going empty for 1 frame), then
     // render after a few ms
-    // root = document.getElementById('zorium-root').cloneNode(true)
+    // const documentBody = document.body.cloneNode(true)
     const requestsStream = router.getStream().pipe(
       rx.publishReplay(1), rx.refCount()
     )
     console.log('HMR RENDER')
-    render((z($app, {
+    render(z($app, {
       key: Math.random(), // for hmr to work properly
       requestsStream,
       model,
@@ -195,7 +195,7 @@ export default function setup ({ $app, Lang, Model, colors, config }) {
       currentNotification,
       config,
       colors
-    })), document.body) // document.documentElement
+    }), document.body)
 
     // re-fetch and potentially replace data, in case html is served from cache
     model.validateInitialCache()
@@ -311,9 +311,14 @@ export default function setup ({ $app, Lang, Model, colors, config }) {
       })).subscribe())
 
     // nextTick prevents white flash, lets first render happen
-    // window.requestAnimationFrame ->
-    //   $$root = document.getElementById 'zorium-root'
-    //   $$root.parentNode.replaceChild root, $$root
+    // console.warn('replace0', Date.now())
+    // window.setTimeout(() => {
+    //   console.warn('replace1', Date.now())
+    //   window.requestAnimationFrame(() => {
+    //     console.warn('replace2', Date.now())
+    //     document.body.parentNode.replaceChild(documentBody, document.body)
+    //   })
+    // })
 
     // window.addEventListener 'resize', app.onResize
     // portal.call 'orientation.onChange', app.onResize

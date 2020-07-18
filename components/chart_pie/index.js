@@ -1,4 +1,5 @@
-import { z, lazy, Suspense, Boundary } from 'zorium'
+import { z, lazy, Suspense, useErrorBoundary } from 'zorium'
+import * as _ from 'lodash-es'
 
 import $chartTooltip from '../chart_tooltip'
 import $spinner from '../spinner'
@@ -7,15 +8,20 @@ const $pie = lazy(() => import(/* webpackChunkName: "nivo" */'@nivo/pie').then((
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default function $chartPie ({ key, data, colors }) {
+const LEGEND_COUNT = 5
+
+export default function $chartPie ({ heightPx, key, data, colors }) {
+  const [error] = useErrorBoundary()
+  if (error) { console.log(error) }
+
   return z('.z-chart-pie', [
     (typeof window !== 'undefined') &&
-      z(Boundary, { fallback: z('.error', 'err') }, [
-        z(Suspense, { fallback: $spinner }, [
+      z(Suspense, { fallback: $spinner }, [
+        z('.pie', { style: { height: heightPx } }, [
           z($pie, {
             key,
             data,
-            innerRadius: 0.5,
+            innerRadius: 0.7,
             colors,
             enableRadialLabels: false,
             enableSlicesLabels: false,
@@ -34,9 +40,20 @@ export default function $chartPie ({ key, data, colors }) {
                 color
               })
             }
-          }
+          })
+        ]),
+        z('.legend',
+          _.map(_.take(data, LEGEND_COUNT), ({ id, value, percent, color }) =>
+            z('.legend-item', [
+              z('.color', { style: { background: color } }),
+              z('.info', [
+                z('.label', id)
+              ]),
+              // z '.value', FormatService.abbreviateDollar value
+              z('.percent', `${Math.round(percent)}%`)
+            ])
           )
-        ])
+        )
       ])
   ])
 }

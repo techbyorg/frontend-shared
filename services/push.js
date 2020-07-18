@@ -3,12 +3,9 @@ import Environment from '../services/environment'
 const ONE_DAY_MS = 3600 * 24 * 1000
 
 class PushService {
-  constructor () {
-    this.setFirebaseServiceWorker = this.setFirebaseServiceWorker.bind(this)
-    this.registerWeb = this.registerWeb.bind(this)
+  setFirebaseInfo = (firebaseInfo) => {
+    this.firebaseInfo = firebaseInfo
   }
-
-  setFirebaseInfo (firebaseInfo) { this.firebaseInfo = firebaseInfo; return null }
   // constructor: ->
   //   if globalThis?.window? and not Environment.isNativeApp()
   //     @isReady = new Promise (@resolveReady) => null
@@ -21,7 +18,7 @@ class PushService {
   //       firebase.initializeApp firebaseInfo
   //       @firebaseMessaging = firebase.messaging()
 
-  setFirebaseServiceWorker (registration) {
+  setFirebaseServiceWorker = (registration) => {
     if (this.isFirebaseImported) {
       return this.isFirebaseImported.then(() => {
         this.firebaseMessaging?.useServiceWorker(registration)
@@ -76,7 +73,7 @@ class PushService {
       })
   }
 
-  registerWeb () {
+  registerWeb = () => {
     return this.isReady.then(() => {
       return this.firebaseMessaging.requestPermission()
         .then(() => {

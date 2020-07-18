@@ -4,26 +4,16 @@ const COOKIE_DURATION_MS = 365 * 24 * 3600 * 1000 // 1 year
 
 class Cookie {
   constructor ({ initialCookies, setCookie, host }) {
-    this.getCookieOpts = this.getCookieOpts.bind(this)
-    this.set = this.set.bind(this)
-    this.get = this.get.bind(this)
-    this.getStream = this.getStream.bind(this)
     this.setCookie = setCookie
     this.host = host
     this.cookies = initialCookies || {}
     this.stream = new Rx.BehaviorSubject(this.cookies)
   }
 
-  getCookieOpts (key, { ttlMs, host }) {
+  getCookieOpts = (key, { ttlMs, host }) => {
     if (ttlMs == null) { ttlMs = COOKIE_DURATION_MS }
-    if (host == null) {
-      ({
-        host
-      } = this)
-    }
+    host = host || this.host
     const hostname = host.split(':')[0]
-
-    console.log('set', hostname)
 
     return {
       path: '/',
@@ -33,8 +23,7 @@ class Cookie {
     }
   }
 
-  set (key, value, param) {
-    if (param == null) { param = {} }
+  set = (key, value, param = {}) => {
     let { ttlMs, host } = param
     if (ttlMs == null) { ttlMs = COOKIE_DURATION_MS }
     this.cookies[key] = value
@@ -43,11 +32,11 @@ class Cookie {
     return this.setCookie(key, value, options)
   }
 
-  get (key) {
+  get = (key) => {
     return this.cookies[key]
   }
 
-  getStream () {
+  getStream = () => {
     return this.stream
   }
 }

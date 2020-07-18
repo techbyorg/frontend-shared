@@ -9,17 +9,16 @@ const router = new RouterService({
 
 export default class Push {
   constructor ({ cdnUrl, host }) {
-    this.listen = this.listen.bind(this)
     this.cdnUrl = cdnUrl; this.host = host
   }
 
-  listen () {
+  listen = () => {
     self.addEventListener('push', this.onPush)
 
     return self.addEventListener('notificationclick', this.onNotificationClick)
   }
 
-  onPush (e) {
+  onPush = (e) => {
     let path
     console.log('PUSH', e)
     let message = e.data ? e.data.json() : {}
@@ -70,7 +69,7 @@ export default class Push {
     )
   }
 
-  onNotificationClick (e) {
+  onNotificationClick = (e) => {
     e.notification.close()
 
     return e.waitUntil(

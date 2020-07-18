@@ -1,7 +1,5 @@
 export default class OfflineDataModel {
   constructor ({ exoid, portal, lang, statusBar }) {
-    this.record = this.record.bind(this)
-    this.save = this.save.bind(this)
     this.exoid = exoid
     this.portal = portal
     this.lang = lang
@@ -9,7 +7,7 @@ export default class OfflineDataModel {
     this.isRecording = false
   }
 
-  record () {
+  record = () => {
     this.isRecording = true
     this.statusBar.open({
       text: this.lang.get('status.recordingData'),
@@ -29,7 +27,7 @@ export default class OfflineDataModel {
     , 0)
   }
 
-  save () {
+  save = () => {
     this.isRecording = false
     this.exoid.getCacheStream().take(1).subscribe(cache => {
       this.exoid.enableInvalidation()

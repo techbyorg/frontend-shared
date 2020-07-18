@@ -18,20 +18,6 @@ export default Portal = (function () {
     }
 
     constructor ({ lang, iosAppUrl, googlePlayAppUrl }) {
-      this.setModels = this.setModels.bind(this)
-      this.call = this.call.bind(this)
-      this.callWithError = this.callWithError.bind(this)
-      this.listen = this.listen.bind(this)
-      this.authGetStatus = this.authGetStatus.bind(this)
-      this.shareAny = this.shareAny.bind(this)
-      this.getPlatform = this.getPlatform.bind(this)
-      this.appRate = this.appRate.bind(this)
-      this.appOnResume = this.appOnResume.bind(this)
-      this.appInstall = this.appInstall.bind(this)
-      this.twitterShare = this.twitterShare.bind(this)
-      this.deepLinkOnRoute = this.deepLinkOnRoute.bind(this)
-      this.facebookShare = this.facebookShare.bind(this)
-      this.handleRouteData = this.handleRouteData.bind(this)
       this.lang = lang
       this.iosAppUrl = iosAppUrl
       this.googlePlayAppUrl = googlePlayAppUrl
@@ -42,12 +28,12 @@ export default Portal = (function () {
       }
     }
 
-    setModels (props) {
+    setModels = (props) => {
       ({ user: this.user, installOverlay: this.installOverlay, overlay: this.overlay } = props)
       return null
     }
 
-    call (...args) {
+    call = (...args) => {
       if (typeof window === 'undefined' || window === null) {
         // throw new Error 'Portal called server-side'
         return console.log('Portal called server-side')
@@ -65,7 +51,7 @@ export default Portal = (function () {
         })
     }
 
-    callWithError (...args) {
+    callWithError = (...args) => {
       if (typeof window === 'undefined' || window === null) {
         // throw new Error 'Portal called server-side'
         return console.log('Portal called server-side')
@@ -74,7 +60,7 @@ export default Portal = (function () {
       return this.portal.call(...Array.from(args || []))
     }
 
-    listen () {
+    listen = () => {
       if (typeof window === 'undefined' || window === null) {
         throw new Error('Portal called server-side')
       }
@@ -120,7 +106,7 @@ export default Portal = (function () {
     /*
     @returns {Promise<AuthStatus>}
     */
-    authGetStatus () {
+    authGetStatus = () => {
       return this.model.user.getMe()
         .take(1).toPromise()
         .then(user => ({
@@ -131,7 +117,7 @@ export default Portal = (function () {
         }))
     }
 
-    shareAny ({ text, imageUrl, url }) {
+    shareAny = ({ text, imageUrl, url }) => {
       globalThis?.window?.ga?.('send', 'event', 'share_service', 'share_any')
 
       if (navigator.share) {
@@ -144,7 +130,7 @@ export default Portal = (function () {
       }
     }
 
-    getPlatform (param) {
+    getPlatform = (param) => {
       if (param == null) { param = {} }
       const { gameKey } = param
       const {
@@ -162,7 +148,7 @@ export default Portal = (function () {
       return navigator.userAgent.match(/chrome/i)
     }
 
-    appRate () {
+    appRate = () => {
       globalThis?.window?.ga?.('send', 'event', 'native', 'rate')
 
       return this.call('browser.openWindow', {
@@ -178,7 +164,7 @@ export default Portal = (function () {
       return getUuidByString(`${new Fingerprint().get()}`)
     }
 
-    appOnResume (callback) {
+    appOnResume = (callback) => {
       if (this.appResumeHandler) {
         window.removeEventListener('visibilitychange', this.appResumeHandler)
       }
@@ -192,7 +178,7 @@ export default Portal = (function () {
       return window.addEventListener('visibilitychange', this.appResumeHandler)
     }
 
-    appInstall () {
+    appInstall = () => {
       const {
         iosAppUrl
       } = this
@@ -243,7 +229,7 @@ export default Portal = (function () {
       return Promise.resolve(true)
     }
 
-    twitterShare ({ text }) {
+    twitterShare = ({ text }) => {
       return this.call('browser.openWindow', {
         url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,
         target: '_system'
@@ -271,7 +257,7 @@ export default Portal = (function () {
     //             id: response.authResponse.userID
     //           }
 
-    facebookShare ({ url }) {
+    facebookShare = ({ url }) => {
       return this.call('browser.openWindow', {
         url:
           `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
@@ -309,7 +295,7 @@ export default Portal = (function () {
       return window.addEventListener('offline', fn)
     }
 
-    handleRouteData (data, { model, router, notificationStream }) {
+    handleRouteData = (data, { model, router, notificationStream }) => {
       if (data == null) { data = {} }
       let { path, query, _isPush, _original, _isDeepLink } = data
 

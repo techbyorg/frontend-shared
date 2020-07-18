@@ -3,11 +3,12 @@ import * as _ from 'lodash-es'
 import HttpHash from 'http-hash'
 import * as rx from 'rxjs/operators'
 
-import { getDefaultMeta } from './components/head'
+import { getDefaultMeta, getDefaultCssVariables } from './components/head'
 // import $navDrawer from './components/nav_drawer'
 // import $bottomBar from './components/bottom_bar'
 import Environment from './services/environment'
 import useMeta from './services/use_meta'
+import useCssVariables from './services/use_css_variables'
 import GlobalContext from './context'
 
 // TODO: clean this up a bit
@@ -38,15 +39,21 @@ export default function $app (props) {
           }
         }
 
-        // subdomain = router.getSubdomain()
-        //
-        // if subdomain # equiv to /entitySlug/route
-        //   route = routes.get "/#{subdomain}#{req.path}"
-        //   if route.handler?() is routes.fourOhFour
-        //     route = routes.get req.path
-        // else
-        const route = hash.get(req.path)
+        // TODO: non-hardcoded version. need to grab corresponding orgId
+        // from domain and store as cookie?
+        const host = router.getHost()
+        let route
+        if (host === 'data.upchieve.org') {
+          route = hash.get(`/org/upchieve/${req.path}`)
+        } else if (host === 'data.hackclub.com') {
+          route = hash.get(`/org/hackclub/${req.path}`)
+        } else {
+          route = hash.get(req.path)
+        }
 
+        if (typeof route.handler !== 'function') {
+          console.log('bad handler', req, route)
+        }
         const $page = route.handler()
         isFirstRequest = false
         return { req, route, $page }
@@ -122,6 +129,7 @@ export default function $app (props) {
   }
 
   useMeta(() => getDefaultMeta({ lang, colors, config }), [])
+  useCssVariables(() => getDefaultCssVariables({ colors, router }), [])
 
   return z(GlobalContext.Provider, {
     value: { model, router, portal, lang, cookie, browser, config, colors }
