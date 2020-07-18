@@ -169,6 +169,7 @@ export default class Auth {
       .then(this.afterLogin)
   }
 
+  // _accessToken, _userAgent, _appKey added in model/index.js ioEmit
   stream = ({ query, variables, pull }, options = {}) => {
     options = _.pick(options, [
       'isErrorable', 'clientChangesStream', 'ignoreCache', 'initialSortFn',
@@ -186,6 +187,7 @@ export default class Auth {
       )
   }
 
+  // _accessToken, _userAgent, _appKey added in model/index.js ioEmit
   call = ({ query, variables }, options = {}) => {
     const { invalidateAll, invalidateSingle, additionalDataStream } = options
 

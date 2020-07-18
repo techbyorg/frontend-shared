@@ -149,6 +149,7 @@ function getRouteFn ({ $app, config, colors, Lang, Model, gulpPaths }) {
       cookie,
       userAgent,
       host,
+      appKey: config.APP_KEY,
       authCookie: config.AUTH_COOKIE,
       apiUrl: config.API_URL,
       serverHeaders: req.headers
