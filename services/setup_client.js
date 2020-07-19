@@ -19,7 +19,7 @@ import 'frontend-shared/polyfill'
 
 require('../root.styl')
 
-export default function setup ({ $app, appKey, Lang, Model, colors, config }) {
+export default function setup ({ $app, Lang, Model, colors, config }) {
   LogService.init({ apiUrl: config.API_URL })
 
   Environment.setAppKey(config.APP_KEY)
@@ -88,7 +88,7 @@ export default function setup ({ $app, appKey, Lang, Model, colors, config }) {
     lang,
     cookie,
     userAgent,
-    appKey,
+    product: config.APP_KEY,
     authCookie: config.AUTH_COOKIE,
     apiUrl: config.API_URL,
     host: window.location.host

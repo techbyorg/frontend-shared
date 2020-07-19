@@ -21,7 +21,7 @@ const MAX_ACCEPTABLE_EXOID_TIME_DIFF_MS = 1000 * 30 // 30 seconds
 export default class Model {
   constructor (options) {
     const {
-      io, cookie, portal, lang, userAgent, authCookie, host, appKey,
+      io, cookie, portal, lang, userAgent, authCookie, host, product,
       serverHeaders = {}
     } = options
     this.cookie = cookie
@@ -42,11 +42,7 @@ export default class Model {
       const accessToken = this.cookie.get('accessToken')
       return io.emit(
         event,
-        _.defaults({
-          _accessToken: accessToken,
-          _userAgent: userAgent,
-          _appKey: appKey
-        }, opts)
+        _.defaults({ accessToken, userAgent, product }, opts)
       )
     }
 

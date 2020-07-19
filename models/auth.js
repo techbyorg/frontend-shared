@@ -31,16 +31,17 @@ export default class Auth {
     }).pipe(rx.publishReplay(1), rx.refCount())
   }
 
-  loginAnon = () => {
+  loginAnon = async () => {
     console.log('login anon')
-    return this.exoid.call('graphql', {
+    const { data } = await this.exoid.call('graphql', {
       query: `
         mutation LoginAnon {
           userLoginAnon {
             accessToken
           }
         }`
-    }).then(({ data }) => data?.userLoginAnon.accessToken)
+    })
+    return data?.userLoginAnon.accessToken
   }
 
   directGetMe = async () => {
@@ -80,7 +81,9 @@ export default class Auth {
   setAccessToken = (accessToken) => {
     const domain = sharedConfig.ENV === sharedConfig.ENVS.DEV
       ? sharedConfig.HOST
-      : _.takeRight(this.host.split('.'), 2).join('.')
+      : this.host.indexOf('techby.org') !== -1 // FIXME: var?
+        ? _.takeRight(this.host.split('.'), 2).join('.')
+        : this.host // 3rd part domains
     console.log('setAccessToken', this.authCookie, domain, accessToken)
     return this.cookie.set(this.authCookie, accessToken, {
       // top level domain
@@ -169,7 +172,7 @@ export default class Auth {
       .then(this.afterLogin)
   }
 
-  // _accessToken, _userAgent, _appKey added in model/index.js ioEmit
+  // accessToken, userAgent, product added in model/index.js ioEmit
   stream = ({ query, variables, pull }, options = {}) => {
     options = _.pick(options, [
       'isErrorable', 'clientChangesStream', 'ignoreCache', 'initialSortFn',
@@ -183,11 +186,10 @@ export default class Auth {
         } else {
           return stream
         }
-      })
-      )
+      }))
   }
 
-  // _accessToken, _userAgent, _appKey added in model/index.js ioEmit
+  // accessToken, userAgent, product added in model/index.js ioEmit
   call = ({ query, variables }, options = {}) => {
     const { invalidateAll, invalidateSingle, additionalDataStream } = options
 

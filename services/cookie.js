@@ -10,8 +10,7 @@ class Cookie {
     this.stream = new Rx.BehaviorSubject(this.cookies)
   }
 
-  getCookieOpts = (key, { ttlMs, host }) => {
-    if (ttlMs == null) { ttlMs = COOKIE_DURATION_MS }
+  getCookieOpts = (key, { ttlMs = COOKIE_DURATION_MS, host }) => {
     host = host || this.host
     const hostname = host.split(':')[0]
 
@@ -23,9 +22,7 @@ class Cookie {
     }
   }
 
-  set = (key, value, param = {}) => {
-    let { ttlMs, host } = param
-    if (ttlMs == null) { ttlMs = COOKIE_DURATION_MS }
+  set = (key, value, { ttlMs = COOKIE_DURATION_MS, host } = {}) => {
     this.cookies[key] = value
     this.stream.next(this.cookies)
     const options = this.getCookieOpts(key, { ttlMs, host })
