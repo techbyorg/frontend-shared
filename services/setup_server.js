@@ -24,10 +24,6 @@ const requestPromise = Promise.promisify(request)
 
 const MIN_TIME_REQUIRED_FOR_HSTS_GOOGLE_PRELOAD_MS = 10886400000 // 18 weeks
 const HEALTHCHECK_TIMEOUT = 200
-// atm it will take ~these amounts of ms every time to render.
-// if it loads everything faster (eg for bots) it'll still take min this time
-// because of the crappy ssr implementation
-// this slowness for bots probably hurts us for seo
 const RENDER_TO_STRING_TIMEOUT_MS = 300
 const BOT_RENDER_TO_STRING_TIMEOUT_MS = 2000
 
@@ -213,6 +209,9 @@ function getRouteFn ({ $app, config, colors, Lang, Model, gulpPaths }) {
       // but react async server-side rendering sucks atm (5/2020)
       cache = await (untilStable($tree, { timeout }))
     } catch (err) {
+      // If this times out, it should throw the hash of state object keys.
+      // Use that to figure out which components are hanging and fix
+      // eg a component could have a ReplaySubject that never gets a value
       console.log('untilStable err', err)
       cache = err?.cache
     }

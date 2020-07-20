@@ -23,7 +23,7 @@ export default function $dropdown (props) {
 
   const { valueStream, isOpenStream } = useMemo(() => {
     return {
-      valueStream: props.valueStream || new Rx.ReplaySubject(1),
+      valueStream: props.valueStream || new Rx.BehaviorSubject(null),
       isOpenStream: new Rx.BehaviorSubject(false)
     }
   }, [])
