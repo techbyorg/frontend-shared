@@ -124,7 +124,7 @@ export function getDefaultCssVariables ({ colors, router }) {
       '--primary-main': '#16d2aa', // primary500
       '--primary-main-8': 'rgba(22, 210, 170, 0.08)'
     }, cssColors)
-  } else if (router.getHost() === 'data.hackclub.com' || true) {
+  } else if (router.getHost() === 'numberwang.hackclub.com' || true) {
     cssColors = _.defaults({
       '--primary-50': '#FDE7EA',
       '--primary-100': '#F9C3CB',

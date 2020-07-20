@@ -4,6 +4,7 @@ import * as rx from 'rxjs/operators'
 
 import sharedConfig from '../shared_config'
 
+// TODO: clean this up
 export default class Auth {
   constructor (options) {
     ({
@@ -16,7 +17,7 @@ export default class Auth {
       const accessToken = this.cookie.get(this.authCookie)
       let newAccessToken
       if (accessToken) {
-        newAccessToken = await this.tryAccessToken(accessToken)
+        newAccessToken = await this.validateAccessToken(accessToken)
       } else {
         newAccessToken = await this.loginAnon()
       }
@@ -24,15 +25,31 @@ export default class Auth {
       if (newAccessToken) {
         this.setAccessToken(newAccessToken)
         if (!globalThis.window) {
-          await this.directGetMe() // so user is in exoid cache for client
+          // so user is in exoid cache for client
+          await this.getMe({ accessToken: newAccessToken })
+            .pipe(rx.take(1)).toPromise()
         }
       }
       return null
     }).pipe(rx.publishReplay(1), rx.refCount())
   }
 
+  getMe = ({ accessToken, fromCache } = {}) => {
+    // for ssr we want this to be consistent & cacheable
+    const req = {
+      query: 'query UserGetMe { me { id, name, data { bio } } }'
+    }
+    if (fromCache) {
+      return this.exoid.getCached('graphql', req)
+    } else if (accessToken) {
+      // bypass the waitValidAuthCookie
+      return this.exoid.stream('graphql', req)
+    } else {
+      return this.stream(req)
+    }
+  }
+
   loginAnon = async () => {
-    console.log('login anon')
     const { data } = await this.exoid.call('graphql', {
       query: `
         mutation LoginAnon {
@@ -44,37 +61,20 @@ export default class Auth {
     return data?.userLoginAnon.accessToken
   }
 
-  directGetMe = async () => {
-    return this.exoid.stream('graphql', {
-      // FIXME
-      query: 'query Query { me { id, name, data { bio } } }'.trim()
-    }).pipe(rx.take(1)).toPromise()
-  }
-
-  tryAccessToken = async (accessToken) => {
+  validateAccessToken = async (accessToken) => {
     try {
-      let user = await this.exoid.getCached('graphql', {
-        query: 'query Query { me { id, name, data { bio } } }'.trim()
-      })
-
+      let user = await this.getMe({ fromCache: true })
       console.log('user from cache', user, Date.now())
       if (!user?.data?.me) { // FIXME: only if user.data.user
-        user = await this.directGetMe()
+        user = await this.getMe({ accessToken }).pipe(rx.take(1)).toPromise()
       }
+      console.log('gottt', user)
       if (!user?.data?.me) {
         throw new Error('no user for accesstoken')
       }
     } catch (err) {
-      const { data } = await this.exoid.call('graphql', {
-        // FIXME: cleanup all this duplication
-        query: `
-          mutation LoginAnon {
-            userLoginAnon {
-              accessToken
-            }
-          }`
-      })
-      return data?.userLoginAnon.accessToken
+      console.log('caught err, logging in anon', err)
+      return this.loginAnon()
     }
   }
 
@@ -91,19 +91,11 @@ export default class Auth {
     })
   }
 
-  logout = () => {
+  logout = async () => {
     this.setAccessToken('')
-    return this.exoid.call('graphql', {
-      query: `
-        mutation LoginAnon {
-          userLoginAnon {
-            accessToken
-          }
-        }`
-    }).then(({ data }) => {
-      this.setAccessToken(data?.userLoginAnon.accessToken)
-      return this.exoid.invalidateAll()
-    })
+    const accessToken = await this.loginAnon()
+    this.setAccessToken(accessToken)
+    return this.exoid.invalidateAll()
   }
 
   join = (param) => {

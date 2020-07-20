@@ -4,13 +4,7 @@ export default class User {
       auth: this.auth, proxy: this.proxy, exoid: this.exoid, cookie: this.cookie, lang: this.lang,
       overlay: this.overlay, portal: this.portal, apiUrl: this.apiUrl
     } = options)
-  }
-
-  getMe = () => {
-    return this.auth.stream({
-      app: 'FIXME',
-      query: 'query UserGetMe { me { id, name, data { bio } } }'
-    })
+    this.getMe = this.auth.getMe
   }
 
   getById = (id) => {

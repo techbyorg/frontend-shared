@@ -143,7 +143,7 @@ export default class Model {
     console.warn(timeDiffMs)
     // allow for clock skew
     if (timeDiffMs < MAX_ACCEPTABLE_EXOID_TIME_DIFF_MS) {
-      console.warn('exoid cache up-to-date')
+      console.log('exoid cache up-to-date')
       return
     }
 

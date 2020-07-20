@@ -45,7 +45,7 @@ export default function $app (props) {
         let route
         if (host === 'data.upchieve.org') {
           route = hash.get(`/org/upchieve/${req.path}`)
-        } else if (host === 'data.hackclub.com') {
+        } else if (host === 'numberwang.hackclub.com') {
           route = hash.get(`/org/hackclub/${req.path}`)
         } else {
           route = hash.get(req.path)

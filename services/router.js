@@ -109,7 +109,10 @@ class RouterService {
 
     // replacements.orgSlug = orgSlug
     // TODO: non-hardcoded
-    const isCustomDomain = this.getHost() === 'data.upchieve.org'
+    const isCustomDomain = [
+      'data.upchieve.org',
+      'numberwang.hackclub.com'
+    ].includes(this.getHost())
     if (isCustomDomain) {
       route = route.replace('/org/:orgSlug', '')
     }
