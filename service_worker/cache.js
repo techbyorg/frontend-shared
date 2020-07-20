@@ -111,7 +111,10 @@ export default class Cache {
     } = event
     // console.log 'fetch'
     // console.log event.request.url
-    if (event.request.url.match(/((:\/\/|\.)techby.org|localhost:50340)([^.]*)$/i)) {
+    const regex = new RegExp(
+      `((://|.)${self.location.host})([^.]*)$`, 'i'
+    )
+    if (event.request.url.match(regex)) {
       request = `https://${this.host}/cache-shell`
     }
     // request = 'https://staging.techby.org/cache-shell'
@@ -125,7 +128,7 @@ export default class Cache {
         }).then(response => {
           return response || this.fetchViaNetwork(event.request)
         }).catch(function (err) { // throws when offline
-          console.log('fetch err.....', err)
+          console.log('fetch err', err, 'url:', event.request.url)
           return caches.open('recorded') // user-recorded requestsStream for offline mode
             .then(cache => cache.match(event.request)
               .then(function (recordedCache) {

@@ -85,10 +85,25 @@ export default function setup (options) {
     return res.end()
   })
 
+  let path
   if (config.ENV === config.ENVS.PROD) {
-  // service_worker.js max-age modified in load-balancer
-    app.use(express.static(gulpPaths.dist, { maxAge: '4h' }))
-  } else { app.use(express.static(gulpPaths.build, { maxAge: '4h' })) }
+    // service_worker.js max-age modified in load-balancer
+    path = gulpPaths.dist
+  } else {
+    path = gulpPaths.build
+  }
+
+  app.use(express.static(path, {
+    maxAge: '4h',
+    setHeaders: (res, path) => {
+      // impactdns.techby.org doesn't use haproxy load balancer.
+      // still not sure how to set cache for just service_worker.js from
+      // ingress, so we do it here.
+      if (path.indexOf('service_worker.js') !== -1) {
+        res.set('Cache-Control', 'no-cache, max-age=0')
+      }
+    }
+  }))
 
   app.use(getRouteFn(options))
 
