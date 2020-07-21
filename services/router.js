@@ -315,7 +315,7 @@ class RouterService {
 
   linkIfHref = (node) => {
     if (node.props.href) {
-      node.type = 'A'
+      node.type = 'a'
       this.link(node)
     }
 
