@@ -134,7 +134,7 @@ export function getDefaultCssVariables ({ colors, router }) {
       '--secondary-800': '#1F7BBC',
       '--secondary-900': '#136AB0'
     }, cssColors)
-  } else if (router.getHost() === 'numberwang.hackclub.com' || true) {
+  } else if (router.getHost() === 'numberwang.hackclub.com') {
     cssColors = _.defaults({
       '--primary-50': '#FDE7EA',
       '--primary-100': '#F9C3CB',

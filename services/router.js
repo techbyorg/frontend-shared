@@ -160,7 +160,9 @@ class RouterService {
   }
 
   openLink = (url, target) => {
-    const isAbsoluteUrl = url?.match(/^(?:[a-z-]+:)?\/\//i)
+    const isMailto = url?.indexOf('mailto:') === 0
+    const isAbsoluteUrl = isMailto || url?.match(/^(?:[a-z-]+:)?\/\//i)
+    console.log('abs', isAbsoluteUrl, isMailto)
     const webAppRegex = new RegExp(`https?://(${this.host})`, 'i')
     const isWebApp = url?.match(webAppRegex)
     const isNative = Environment.isNativeApp()

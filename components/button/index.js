@@ -8,7 +8,7 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $button (props) {
   const {
-    isPrimary, isSecondary, isFancy, isInverted, isDisabled, text, isOutline,
+    isPrimary, isSecondary, isDisplay, isInverted, isDisabled, text, isOutline,
     icon, onclick = () => null, isFullWidth = true, type = 'button',
     heightPx = 36, hasRipple = true
   } = props
@@ -20,7 +20,7 @@ export default function $button (props) {
       isOutline,
       isPrimary,
       isSecondary,
-      isFancy,
+      isDisplay,
       isInverted,
       isDisabled
     }),

@@ -98,19 +98,15 @@
       &:focus
         background: getColor('$secondaryMain')
 
-  &.is-fancy
+  &.is-display
     > .button
-      background: linear-gradient(106deg, #eb01f5 -28%, #f75448 106%)
-      color: getColor('$primaryMainText')
+      font-h5()
+      padding: 24px 48px
+      background: getColor('$bgColor')
+      color: getColor('$bgText')
 
       &:hover
-        background: linear-gradient(126deg, #eb01f5 -28%, #f75448 106%)
-
-      &:active
-        background: linear-gradient(106deg, #eb01f5 -28%, #f75448 106%)
-
-      &:focus
-        background: linear-gradient(106deg, #eb01f5 -28%, #f75448 106%)
+        background: getColor('$bgColorAlt1')
 
   &.is-inverted
     > .button

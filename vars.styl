@@ -33,6 +33,9 @@ shadow-upper-1()
   transition: box-shadow 0.25s
   box-shadow: 0 -1px 4px 0 rgba(0, 0, 0, 0.12)
 
+shadow-panel() // TODO: name?
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.08)
+
 shadow-2()
   transition: box-shadow 0.25s
   box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.18), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 4px 5px 0 rgba(0, 0, 0, 0.14)
@@ -49,11 +52,20 @@ shadow-5()
   transition: box-shadow 0.25s
   box-shadow: 0 17px 17px 0 rgba(0, 0, 0, 0.15), 0 27px 55px 0 rgba(0, 0, 0, 0.3)
 
+font-h1-heavy()
+  font-family: Montserrat
+  color: getColor('$bgText87')
+  font-size: 56px
+  font-weight: 700
+  line-height: 1.1em
+  letter-spacing: 0.25
+
 font-h1()
   font-family: Montserrat
   color: getColor('$bgText87')
   font-size: 56px
   font-weight: 400
+  line-height: 1.1em
   letter-spacing: 0.25
 
 font-h2()
@@ -61,6 +73,7 @@ font-h2()
   color: getColor('$bgText87')
   font-size: 36px
   font-weight: 400
+  line-height: 1.1em
   letter-spacing: 0.25px
 
 font-h3(state = high)
@@ -68,6 +81,7 @@ font-h3(state = high)
   color: getColor('$bgText87')
   font-size: 28px
   font-weight: 400
+  line-height: 1.1em
   letter-spacing: 0.24px
 
   if state is medium
@@ -78,6 +92,7 @@ font-h4()
   color: getColor('$bgText87')
   font-size: 24px
   font-weight: 600
+  line-height: 1.1em
   letter-spacing: 0.15px
 
 font-h5()
@@ -85,6 +100,7 @@ font-h5()
   color: getColor('$bgText87')
   font-size: 20px
   font-weight: 600
+  line-height: 1.1em
   letter-spacing: 0.13px
 
 font-button()
