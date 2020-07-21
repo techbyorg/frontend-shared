@@ -7,16 +7,18 @@ if (globalThis?.window) {
 }
 
 export default function (callback, dependencies) {
-  const cssVariables = useMemo(callback, (dependencies || []))
-  if (globalThis?.window) {
-    localStyle = getComputedStyle(document.body)
-    const $$style = document.getElementById('css-variables')
-    if ($$style) {
-      $$style.innerHTML = `:root {${cssVariables}}`
+  useMemo(() => {
+    const cssVariables = callback()
+    if (globalThis?.window) {
+      localStyle = getComputedStyle(document.body)
+      const $$style = document.getElementById('css-variables')
+      if ($$style) {
+        $$style.innerHTML = `:root {${cssVariables}}`
+      }
+    } else {
+      localCssVariables = cssVariables
     }
-  } else {
-    localCssVariables = cssVariables
-  }
+  }, dependencies || [])
 }
 
 export function getRawColor (cssVariable) {

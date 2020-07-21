@@ -1,7 +1,7 @@
-import { z, classKebab, useEffect, useRef, useStream } from 'zorium'
+import { z, classKebab, useContext, useEffect, useRef, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 
-import colors from '../../colors'
+import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
@@ -10,6 +10,7 @@ export default function $tabsBar (props) {
     selectedIndexStream, items, isPrimary,
     isFixed, isFlat, isArrow, tabWidth, tabHeight
   } = props
+  const { colors } = useContext(context)
 
   const $$ref = useRef()
 
