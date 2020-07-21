@@ -94,13 +94,17 @@ export default function setup (options) {
   }
 
   app.use(express.static(path, {
-    maxAge: '4h',
+    // cacheControl: false,
     setHeaders: (res, path) => {
       // impactdns.techby.org doesn't use haproxy load balancer.
       // still not sure how to set cache for just service_worker.js from
       // ingress, so we do it here.
       if (path.indexOf('service_worker.js') !== -1) {
-        res.set('Cache-Control', 'no-cache, max-age=0')
+        // TODO: figure out which of these is best
+        // res.set('Cache-Control', 'no-cache, max-age=0')
+        res.set('Cache-Control', 'no-store')
+      } else {
+        res.set('Cache-Control', 'public, max-age=14400') // 4hr
       }
     }
   }))

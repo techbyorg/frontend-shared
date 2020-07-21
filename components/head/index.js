@@ -122,7 +122,17 @@ export function getDefaultCssVariables ({ colors, router }) {
       '--primary-800': '#0CC190',
       '--primary-900': '#06B67F',
       '--primary-main': '#16d2aa', // primary500
-      '--primary-main-8': 'rgba(22, 210, 170, 0.08)'
+      '--primary-main-8': 'rgba(22, 210, 170, 0.08)',
+      '--secondary-50': '#E6F3F9',
+      '--secondary-100': '#C2E0F0',
+      '--secondary-200': '#99CCE7',
+      '--secondary-300': '#70B7DD',
+      '--secondary-400': '#51A7D5',
+      '--secondary-500': '#3298CE',
+      '--secondary-600': '#2D90C9',
+      '--secondary-700': '#2685C2',
+      '--secondary-800': '#1F7BBC',
+      '--secondary-900': '#136AB0'
     }, cssColors)
   } else if (router.getHost() === 'numberwang.hackclub.com' || true) {
     cssColors = _.defaults({
@@ -137,7 +147,17 @@ export function getDefaultCssVariables ({ colors, router }) {
       '--primary-800': '#E42337',
       '--primary-900': '#DF1627',
       '--primary-main': '#EC3750', // primary500
-      '--primary-main-8': 'rgba(236, 55, 80, 0.08)'
+      '--primary-main-8': 'rgba(236, 55, 80, 0.08)',
+      '--secondary-50': '#E4E6E8',
+      '--secondary-100': '#BCC0C5',
+      '--secondary-200': '#8F969E',
+      '--secondary-300': '#626C77',
+      '--secondary-400': '#414D5A',
+      '--secondary-500': '#1F2D3D',
+      '--secondary-600': '#1B2837',
+      '--secondary-700': '#17222F',
+      '--secondary-800': '#121C27',
+      '--secondary-900': '#0A111A'
     }, cssColors)
   }
   cssColors['--drawer-header-500'] = cssColors['--drawer-header-500'] ||
