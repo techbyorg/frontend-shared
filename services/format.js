@@ -125,6 +125,8 @@ class FormatService {
       value = Math.round(10 * value * 100) / 10
     } else if (unit === 'float') {
       value = Math.round(100 * value) / 100
+    } else if (unit === 'cents') {
+      value = this.abbreviateDollar(value / 100)
     } else {
       value = this.abbreviateNumber(value)
     }
