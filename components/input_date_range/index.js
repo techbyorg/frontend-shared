@@ -27,7 +27,9 @@ export default function $inputDateRange (props) {
 
   const $$ref = useRef()
 
-  const { dropdownOptions, isOpenStream } = useMemo(() => {
+  const {
+    dropdownOptions, isSettingStartStream, isOpenStream
+  } = useMemo(() => {
     return {
       dropdownOptions: getDropdownOptions({
         lang,
@@ -37,14 +39,18 @@ export default function $inputDateRange (props) {
         endDateStream,
         presetDateRangeStream
       }),
+      isSettingStartStream: new Rx.BehaviorSubject(true),
       isOpenStream: new Rx.BehaviorSubject(false)
     }
   }, [])
 
-  const { isOpen, startDate, endDate } = useStream(() => ({
+  const {
+    isOpen, startDate, endDate, isSettingStart
+  } = useStream(() => ({
     isOpen: isOpenStream,
     startDate: streamsOrStream(startDateStreams, startDateStream),
-    endDate: streamsOrStream(endDateStreams, endDateStream)
+    endDate: streamsOrStream(endDateStreams, endDateStream),
+    isSettingStart: isSettingStartStream
   }))
 
   const [error] = useErrorBoundary()
@@ -53,7 +59,6 @@ export default function $inputDateRange (props) {
   const isMobile = Environment.isMobile()
   const $container = isMobile ? $sheet : $positionedOverlay
 
-  console.log('open', isOpen)
   const startDateFormatted = DateService.format(
     DateService.dateToUTC(new Date(startDate)),
     'MMM D, YYYY'
@@ -65,11 +70,28 @@ export default function $inputDateRange (props) {
 
   return z('.z-input-date-range', { ref: $$ref }, [
     z('.input', {
-      onclick: () => isOpenStream.next(!isOpen)
+      onclick: () => {
+        isOpenStream.next(!isOpen)
+        isSettingStartStream.next(true)
+      }
     }, [
-      z('.start', startDateFormatted),
+      z('.start', {
+        className: classKebab({ isFocused: isOpen && isSettingStart }),
+        onclick: (e) => {
+          e.stopPropagation()
+          isOpenStream.next(true)
+          isSettingStartStream.next(true)
+        }
+      }, startDateFormatted),
       z('.divider'),
-      z('.end', endDateFormatted || '...')
+      z('.end', {
+        className: classKebab({ isFocused: isOpen && !isSettingStart }),
+        onclick: (e) => {
+          e.stopPropagation()
+          isOpenStream.next(true)
+          isSettingStartStream.next(false)
+        }
+      }, endDateFormatted || '...')
     ]),
     z($dropdown, {
       anchor: 'top-right',
@@ -93,7 +115,11 @@ export default function $inputDateRange (props) {
           className: classKebab({ isMobile })
         }, [
           z($calendar, {
-            startDateStreams, startDateStream, endDateStreams, endDateStream
+            startDateStreams,
+            startDateStream,
+            endDateStreams,
+            endDateStream,
+            isSettingStartStream
           })
         ])
       })
@@ -106,104 +132,7 @@ function getDropdownOptions (props) {
     presetDateRangeStream
   } = props
 
-  const rawOptions = [
-    {
-      value: 'today',
-      text: lang.get('inputDateRange.today'),
-      startDateFn: () => new Date(),
-      endDateFn: () => new Date()
-    },
-    {
-      value: '7days',
-      text: lang.get('inputDateRange.7days'),
-      startDateFn: () => {
-        const startDate = new Date()
-        startDate.setDate(startDate.getDate() - 8)
-        return startDate
-      },
-      endDateFn: () => {
-        const endDate = new Date()
-        endDate.setDate(endDate.getDate() - 1)
-        return endDate
-      }
-    },
-    {
-      value: '30days',
-      text: lang.get('inputDateRange.30days'),
-      startDateFn: () => {
-        const startDate = new Date()
-        startDate.setDate(startDate.getDate() - 31)
-        return startDate
-      },
-      endDateFn: () => {
-        const endDate = new Date()
-        endDate.setDate(endDate.getDate() - 1)
-        return endDate
-      }
-    },
-    {
-      value: 'thisMonth',
-      text: lang.get('inputDateRange.thisMonth'),
-      startDateFn: () => {
-        const startDate = new Date()
-        startDate.setDate(1)
-        return startDate
-      },
-      endDateFn: () => {
-        const endDate = new Date()
-        endDate.setMonth(endDate.getMonth() + 1)
-        endDate.setDate(0)
-        return endDate
-      }
-    },
-    {
-      value: 'lastMonth',
-      text: lang.get('inputDateRange.lastMonth'),
-      startDateFn: () => {
-        const startDate = new Date()
-        startDate.setMonth(startDate.getMonth() - 1)
-        startDate.setDate(1)
-        return startDate
-      },
-      endDateFn: () => {
-        const endDate = new Date()
-        endDate.setDate(0)
-        return endDate
-      }
-    },
-    {
-      value: 'last6Months',
-      text: lang.get('inputDateRange.last6Months'),
-      startDateFn: () => {
-        const startDate = new Date()
-        startDate.setMonth(startDate.getMonth() - 6)
-        startDate.setDate(1)
-        return startDate
-      },
-      endDateFn: () => {
-        const endDate = new Date()
-        endDate.setDate(0)
-        return endDate
-      }
-    },
-    {
-      value: 'last12Months',
-      text: lang.get('inputDateRange.last12Months'),
-      startDateFn: () => {
-        const startDate = new Date()
-        startDate.setMonth(startDate.getMonth() - 12)
-        startDate.setDate(1)
-        return startDate
-      },
-      endDateFn: () => {
-        const endDate = new Date()
-        endDate.setDate(0)
-        return endDate
-      }
-    }
-  ]
-
-  return _.map(rawOptions, (option) => {
+  return _.map(DateService.getPresetDateRangeOptions(), (option, key) => {
     const startDateFormatted = DateService.format(
       option.startDateFn(),
       'MMM D, YYYY'
@@ -213,12 +142,13 @@ function getDropdownOptions (props) {
       'MMM D, YYYY'
     )
     return _.defaults({
+      value: key,
       text: z('.z-input-date-range_option', [
-        z('.text', option.text),
+        z('.text', lang.get(`inputDateRange.${key}`)),
         z('.date', `${startDateFormatted} - ${endDateFormatted}`)
       ]),
       onSelect: () => {
-        presetDateRangeStream?.next(option.value)
+        presetDateRangeStream?.next(key)
         setStreamsOrStream(
           startDateStreams,
           startDateStream,

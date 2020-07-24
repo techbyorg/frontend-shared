@@ -1,10 +1,12 @@
-import { z, lazy, Suspense, useStream } from 'zorium'
+import * as Rx from 'rxjs'
+import { z, lazy, Suspense, useContext, useStream, useMemo } from 'zorium'
 
 import Environment from 'frontend-shared/services/environment'
 
 import { streamsOrStream, setStreamsOrStream } from '../../services/obs'
 import DateService from '../../services/date'
 import $spinner from '../spinner'
+import context from '../../context'
 
 const $dayPicker = lazy(() =>
   Promise.all([
@@ -18,10 +20,21 @@ export default function $calendar (props) {
   const {
     startDateStream, startDateStreams, endDateStream, endDateStreams
   } = props
+  const { cookie } = useContext(context)
 
-  const { startDate, endDate } = useStream(() => ({
+  const { isSettingStartStream } = useMemo(() => {
+    return {
+      isSettingStartStream:
+        props.isSettingStartStream || new Rx.BehaviorSubject(false)
+    }
+  }, [])
+
+  const {
+    startDate, endDate, isSettingStart
+  } = useStream(() => ({
     startDate: streamsOrStream(startDateStreams, startDateStream),
-    endDate: streamsOrStream(endDateStreams, endDateStream)
+    endDate: streamsOrStream(endDateStreams, endDateStream),
+    isSettingStart: isSettingStartStream
   }))
 
   // TODO: when preact rerender suspense bug is fixed, move this to
@@ -41,7 +54,10 @@ export default function $calendar (props) {
           numberOfMonths: Environment.isMobile() ? 1 : 2,
           month: Environment.isMobile() ? undefined : lastMonth,
           // TODO: prop
-          disabledDays: { after: new Date() },
+          disabledDays: {
+            before: isSettingStart ? undefined : startDateObj,
+            after: isSettingStart ? endDateObj : new Date()
+          },
           selectedDays: [startDateObj, {
             from: startDateObj,
             to: endDateObj
@@ -59,12 +75,20 @@ export default function $calendar (props) {
               'yyyy-mm-dd'
             )
 
-            if (startDate && endDate) {
+            // TODO: rm cookie.set when fixed in preact
+            // https://github.com/preactjs/preact/pull/2570
+            // ^^ "fix" was merged in, but still breaks (this time when trying
+            // to dismount lazy component)
+            if (isSettingStart) {
+              isSettingStartStream.next(false)
               // order matters (end before start) bc of metricStream rx.filter
-              setStreamsOrStream(endDateStreams, endDateStream, null)
+              // setStreamsOrStream(endDateStreams, endDateStream, null)
               setStreamsOrStream(startDateStreams, startDateStream, date)
+              cookie.set('startDate', date)
             } else {
+              isSettingStartStream.next(true)
               setStreamsOrStream(endDateStreams, endDateStream, date)
+              cookie.set('endDate', date)
             }
           }
         })

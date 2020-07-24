@@ -186,6 +186,110 @@ class DateService {
     }
     return ISOweekStart
   }
+
+  getDatesFromPresetDateRange = (presetDateRange) => {
+    const options = this.getPresetDateRangeOptions()[presetDateRange] ||
+        this.getPresetDateRangeOptions().last6Months
+    return {
+      startDate: options.startDateFn(),
+      endDate: options.endDateFn()
+    }
+  }
+
+  getPresetDateRangeOptions () {
+    return {
+      today: {
+        startDateFn: () => new Date(),
+        endDateFn: () => new Date()
+      },
+      '7days': {
+        startDateFn: () => {
+          const startDate = new Date()
+          startDate.setDate(startDate.getDate() - 8)
+          return startDate
+        },
+        endDateFn: () => {
+          const endDate = new Date()
+          endDate.setDate(endDate.getDate() - 1)
+          return endDate
+        }
+      },
+      '30days': {
+        startDateFn: () => {
+          const startDate = new Date()
+          startDate.setDate(startDate.getDate() - 31)
+          return startDate
+        },
+        endDateFn: () => {
+          const endDate = new Date()
+          endDate.setDate(endDate.getDate() - 1)
+          return endDate
+        }
+      },
+      thisMonth: {
+        startDateFn: () => {
+          const startDate = new Date()
+          startDate.setDate(1)
+          return startDate
+        },
+        endDateFn: () => {
+          const endDate = new Date()
+          return endDate
+        }
+      },
+      lastMonth: {
+        startDateFn: () => {
+          const startDate = new Date()
+          startDate.setMonth(startDate.getMonth() - 1)
+          startDate.setDate(1)
+          return startDate
+        },
+        endDateFn: () => {
+          const endDate = new Date()
+          endDate.setDate(0)
+          return endDate
+        }
+      },
+      last6Months: {
+        startDateFn: () => {
+          const startDate = new Date()
+          startDate.setMonth(startDate.getMonth() - 6)
+          startDate.setDate(1)
+          return startDate
+        },
+        endDateFn: () => {
+          const endDate = new Date()
+          endDate.setDate(0)
+          return endDate
+        }
+      },
+      last12Months: {
+        startDateFn: () => {
+          const startDate = new Date()
+          startDate.setMonth(startDate.getMonth() - 12)
+          startDate.setDate(1)
+          return startDate
+        },
+        endDateFn: () => {
+          const endDate = new Date()
+          endDate.setDate(0)
+          return endDate
+        }
+      },
+      thisYear: {
+        startDateFn: () => {
+          const startDate = new Date()
+          startDate.setMonth(0)
+          startDate.setDate(1)
+          return startDate
+        },
+        endDateFn: () => {
+          const endDate = new Date()
+          return endDate
+        }
+      }
+    }
+  }
 }
 
 export default new DateService()
