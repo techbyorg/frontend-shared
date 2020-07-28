@@ -46,6 +46,7 @@ export default function $chartLine ({ data, chartOptions }) {
       return z($chartTooltip, {
         color: point.serieColor,
         label: data.length > 1 && point.serieId,
+        // TODO: day of week
         x: point.data.xFormatted,
         y: point.data.yFormatted
       })

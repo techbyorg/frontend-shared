@@ -68,6 +68,7 @@ export default function setup ({ $app, Lang, Model, colors, config }) {
       document.cookie = cookieLib.serialize(key, value, options)
     }
   })
+  console.log('_---', config.ENVS.PROD, config.ENV)
   const lang = new LanguageService({
     language,
     cookie,
@@ -164,7 +165,6 @@ export default function setup ({ $app, Lang, Model, colors, config }) {
    */
 
   function init () {
-    console.log('INIIIIIIIT')
     const router = new RouterService({
       model,
       cookie,
@@ -346,12 +346,5 @@ export default function setup ({ $app, Lang, Model, colors, config }) {
     document.addEventListener('DOMContentLoaded', init)
   } else {
     init()
-  }
-  // ############################
-  // ENABLE WEBPACK HOT RELOAD #
-  // ############################
-
-  if (module.hot) {
-    return module.hot.accept()
   }
 }

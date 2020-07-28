@@ -47,7 +47,7 @@ class ServiceWorkerService {
   //
   // portal.call 'cache.getVersion'
   // .then (version) ->
-  //   if version isnt '|HASH|' # replaced by gulp build
+  //   if version isnt '|HASH|' # replaced by webpack build
   //     model.statusBar.open {
   //       text: lang.get 'status.newVersion'
   //     }

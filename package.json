@@ -6,8 +6,7 @@
     "dist": "./bin/dist.sh",
     "sw": "./bin/sw.sh",
     "start": "./bin/start.sh",
-    "dev": "./bin/dev.sh",
-    "watch": "./bin/watch.sh"
+    "dev": "./bin/dev.sh"
   },
   "devDependencies": {},
   "dependencies": {

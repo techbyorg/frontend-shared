@@ -4,9 +4,7 @@ import * as Rx from 'rxjs'
 import DateService from '../services/date'
 
 class Language {
-  constructor (param) {
-    if (param == null) { param = {} }
-    let { language, cookie, files } = param
+  constructor ({ language, cookie, files } = {}) {
     this.cookie = cookie
     this.files = files
     if (language == null) { language = 'en' }

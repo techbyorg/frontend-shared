@@ -28,7 +28,7 @@ const RENDER_TO_STRING_TIMEOUT_MS = 300
 const BOT_RENDER_TO_STRING_TIMEOUT_MS = 2000
 
 export default function setup (options) {
-  const { config, gulpPaths } = options
+  const { config, webpackPaths } = options
 
   Environment.setAppKey(config.APP_KEY)
 
@@ -88,9 +88,9 @@ export default function setup (options) {
   let path
   if (config.ENV === config.ENVS.PROD) {
     // service_worker.js max-age modified in load-balancer
-    path = gulpPaths.dist
+    path = webpackPaths.dist
   } else {
-    path = gulpPaths.build
+    path = webpackPaths.build
   }
 
   app.use(express.static(path, {
@@ -122,10 +122,10 @@ export default function setup (options) {
   // - dns.techby.org points to dynamic-reverse-proxy
 }
 
-function getRouteFn ({ $app, config, colors, Lang, Model, gulpPaths }) {
+function getRouteFn ({ $app, config, colors, Lang, Model, webpackPaths }) {
   return async function route (req, res, next) {
     const stats = JSON.parse(
-      fs.readFileSync(gulpPaths.dist + '/stats.json', 'utf-8')
+      fs.readFileSync(webpackPaths.dist + '/stats.json', 'utf-8')
     )
 
     let bundleCssPath, bundlePath, cache
