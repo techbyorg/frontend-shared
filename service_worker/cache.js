@@ -8,9 +8,9 @@ export default class Cache {
       deploy: {
         version: '|HASH|',
         files: [
-          'https://fdn.uno/d/scripts/bundle_|HASH|_en.js',
-          // 'https://fdn.uno/d/scripts/vendors~firebase_bundle_|HASH|.js'
-          'https://fdn.uno/d/scripts/bundle_|HASH|.css'
+          'https://tdn.one/d/scripts/bundle_|HASH|_en.js',
+          // 'https://tdn.one/d/scripts/vendors~firebase_bundle_|HASH|.js'
+          'https://tdn.one/d/scripts/bundle_|HASH|.css'
           // 'http://localhost:50341/bundle.js'
         ]
       },
@@ -22,15 +22,6 @@ export default class Cache {
       }
     }
   }
-  // sprites: {
-  //   version: 3 # bump when changing
-  //   files: [
-  //     'https://fdn.uno/d/images/maps/sprite_2019_12_04.json'
-  //     'https://fdn.uno/d/images/maps/sprite_2019_12_04.png'
-  //     'https://fdn.uno/d/images/maps/sprite_2019_12_04@2x.json'
-  //     'https://fdn.uno/d/images/maps/sprite_2019_12_04@2x.png'
-  //   ]
-  // }
 
   updateCache = ({ files, version }, cacheName) => {
     return caches.open(`${cacheName}:${version}`)
