@@ -8,9 +8,9 @@ export default class Cache {
       deploy: {
         version: '|HASH|',
         files: [
-          'https://tdn.one/d/scripts/bundle_|HASH|_en.js',
-          // 'https://tdn.one/d/scripts/vendors~firebase_bundle_|HASH|.js'
-          'https://tdn.one/d/scripts/bundle_|HASH|.css'
+          'https://tdn.one/scripts/bundle_|HASH|_en.js',
+          // 'https://tdn.one/scripts/vendors~firebase_bundle_|HASH|.js'
+          'https://tdn.one/scripts/bundle_|HASH|.css'
           // 'http://localhost:50341/bundle.js'
         ]
       },
