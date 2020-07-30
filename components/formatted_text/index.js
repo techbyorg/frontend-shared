@@ -79,7 +79,7 @@
 //             : 200
 
 //           const imageAspectRatioRegex = /%20=([0-9.]+)/ig
-//           const localImageRegex = new RegExp(`${config.USER_CDN_URL.replace('/', '\/')}/cm/(.*?)\\.`, 'ig')
+//           const localImageRegex = new RegExp(`${config.UGC_CDN_URL.replace('/', '\/')}/cm/(.*?)\\.`, 'ig')
 //           let imageSrc = props.src
 
 //           if (matches = imageAspectRatioRegex.exec(imageSrc)) {
@@ -90,8 +90,8 @@
 //           }
 
 //           if (matches = localImageRegex.exec(imageSrc)) {
-//             imageSrc = `${config.USER_CDN_URL}/cm/${matches[1]}.small.jpg`
-//             largeImageSrc = `${config.USER_CDN_URL}/cm/${matches[1]}.large.jpg`
+//             imageSrc = `${config.UGC_CDN_URL}/cm/${matches[1]}.small.jpg`
+//             largeImageSrc = `${config.UGC_CDN_URL}/cm/${matches[1]}.large.jpg`
 //           }
 
 //           if (supportsWebP && (imageSrc.indexOf('giphy.com') !== -1)) {

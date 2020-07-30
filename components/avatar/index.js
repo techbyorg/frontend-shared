@@ -12,7 +12,7 @@ export default function $avatar ({ user, src, rotation, size = DEFAULT_SIZE }) {
 
   const prefix = user?.avatarImage?.prefix
   if (prefix) {
-    if (!src) { src = `${config.USER_CDN_URL}/${prefix}.small.jpg` }
+    if (!src) { src = `${config.UGC_CDN_URL}/${prefix}.small.jpg` }
   }
 
   if (!src) { src = PLACEHOLDER_URL }
