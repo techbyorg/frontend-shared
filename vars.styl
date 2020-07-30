@@ -18,7 +18,7 @@ flex1()
   // TODO: figure out if can do min-width: 0 here too
 
 container()
-  max-width: 1280px
+  max-width: 1260px
   margin: 0 auto
 
 fix-overflow-shadows()
@@ -52,55 +52,63 @@ shadow-5()
   transition: box-shadow 0.25s
   box-shadow: 0 17px 17px 0 rgba(0, 0, 0, 0.15), 0 27px 55px 0 rgba(0, 0, 0, 0.3)
 
-font-h1-heavy()
-  font-family: Montserrat
-  color: getColor('$bgText87')
-  font-size: 56px
-  font-weight: 700
-  line-height: 1.1em
-  letter-spacing: 0.25
-
 font-h1()
   font-family: Montserrat
   color: getColor('$bgText87')
   font-size: 56px
   font-weight: 400
-  line-height: 1.1em
+  line-height: 1.4em
   letter-spacing: 0.25
+
+font-h1-heavy()
+  font-h1()
+  font-weight: 700
 
 font-h2()
   font-family: Montserrat
   color: getColor('$bgText87')
   font-size: 36px
   font-weight: 400
-  line-height: 1.1em
+  line-height: 1.4em
   letter-spacing: 0.25px
+
+font-h2-heavy()
+  font-h2()
+  font-weight: 600
 
 font-h3(state = high)
   font-family: Montserrat
   color: getColor('$bgText87')
   font-size: 28px
   font-weight: 400
-  line-height: 1.1em
+  line-height: 1.4em
   letter-spacing: 0.24px
 
   if state is medium
     color: getColor('$bgText60')
+
+font-h3-heavy()
+  font-h3()
+  font-weight: 600
 
 font-h4()
   font-family: Montserrat
   color: getColor('$bgText87')
   font-size: 24px
   font-weight: 600
-  line-height: 1.1em
+  line-height: 1.4em
   letter-spacing: 0.15px
+
+font-h4-heavy()
+  font-h4()
+  font-weight: 700
 
 font-h5()
   font-family: Montserrat
   color: getColor('$bgText87')
   font-size: 20px
   font-weight: 600
-  line-height: 1.1em
+  line-height: 1.4em
   letter-spacing: 0.13px
 
 font-button()

@@ -20,7 +20,7 @@ const cssColors = {
   '--primary-50': '#E8E4F1',
   '--primary-100': '#C5BDDD',
   '--primary-200': '#9E91C7',
-  '--primary-300': '#7764B0',
+  '--primary-300': '#4a29b3',
   '--primary-400': '#59439F',
   '--primary-500': '#3C228E',
   '--primary-main': '#3C228E',
