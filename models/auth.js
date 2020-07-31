@@ -36,8 +36,9 @@ export default class Auth {
 
   getMe = ({ accessToken, fromCache } = {}) => {
     // for ssr we want this to be consistent & cacheable
+    console.log('getting me', accessToken, fromCache)
     const req = {
-      query: 'query UserGetMe { me { id, name, data { bio } } }'
+      query: 'query UserGetMe { me { id } }'
     }
     if (fromCache) {
       return this.exoid.getCached('graphql', req)
@@ -65,7 +66,8 @@ export default class Auth {
     try {
       let user = await this.getMe({ fromCache: true })
       console.log('user from cache', user, Date.now())
-      if (!user?.data?.me) { // FIXME: only if user.data.user
+      if (!user?.data?.me) {
+        console.log('get')
         user = await this.getMe({ accessToken }).pipe(rx.take(1)).toPromise()
       }
       console.log('gottt', user)
