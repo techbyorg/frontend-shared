@@ -20,6 +20,8 @@ More to come soonish
   - useEffect
     - be explicity about return for beforeUnmount, or use beforeUnmount fn
     - always include return, even if no fn (return null)
+    - tbd if it's better to use this or rx.tap on a stream for side-effects
+      - probably this
   - useStream for state
   - usecallback functions
   - normal functions?

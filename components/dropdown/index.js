@@ -14,7 +14,7 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 export default function $dropdown (props) {
   const {
     valueStreams, errorStream, options, $$parentRef, isPrimary, $current,
-    isCondensedOptions, anchor = 'top-left', isDisabled = false,
+    onChange, isCondensedOptions, anchor = 'top-left', isDisabled = false,
     maxHeightPx = 200
   } = props
   const { colors } = useContext(context)
@@ -39,6 +39,8 @@ export default function $dropdown (props) {
       isOpen: isOpenStream
     }
   })
+
+  console.log('sel', selectedOption)
 
   const toggle = () => isOpenStream.next(!isOpen)
 
@@ -82,9 +84,11 @@ export default function $dropdown (props) {
           }, _.map(options, option =>
             z('label.option', {
               className: classKebab({ isSelected: `${value}` === option.value }),
-              onclick () {
+              onclick: () => {
                 if (option.onSelect) {
                   option.onSelect()
+                } else if (onChange) {
+                  onChange(option.value)
                 } else {
                   setStreamsOrStream(valueStreams, valueStream, option.value)
                 }
