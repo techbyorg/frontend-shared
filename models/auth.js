@@ -100,9 +100,7 @@ export default class Auth {
     return this.exoid.invalidateAll()
   }
 
-  join = (param) => {
-    if (param == null) { param = {} }
-    // const { name, email, password } = param
+  join = ({ name, email, password }) => {
     console.log('FIXME')
     return Promise.resolve(null)
   }
@@ -111,9 +109,7 @@ export default class Auth {
   //   @setAccessToken accessToken
   //   @exoid.invalidateAll()
 
-  resetPassword = (param) => {
-    if (param == null) { param = {} }
-    // const { email } = param
+  resetPassword = ({ email }) => {
     console.log('FIXME')
     return Promise.resolve(null)
   }
@@ -136,9 +132,7 @@ export default class Auth {
     }
   }
 
-  login = (param) => {
-    if (param == null) { param = {} }
-    const { email, password } = param
+  login = ({ email, password }) => {
     return this.exoid.call('graphql', {
       query: `
         mutation UserLoginEmail($email: String!, $password: String!) {
@@ -151,9 +145,7 @@ export default class Auth {
       .then(this.afterLogin)
   }
 
-  loginLink = (param) => {
-    if (param == null) { param = {} }
-    const { userId, tokenStr } = param
+  loginLink = ({ userId, tokenStr }) => {
     return this.exoid.call('graphql', {
       query: `
         mutation UserLoginLink($userId: ID!, $tokenStr: String!) {

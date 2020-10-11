@@ -24,7 +24,7 @@ class FormatService {
     }
     // terminate early
     fixed = !fixed || (fixed < 0) ? 0 : fixed
-    // valueber of decimal places to show
+    // number of decimal places to show
     const b = value.toPrecision(2).split('e')
     const k = b.length === 1 ? 0 : Math.floor(Math.min(b[1].slice(1), 14) / 3)
     const c = k < 1 ? value.toFixed(0 + fixed) : (value / Math.pow(10, (k * 3))).toFixed(1 + fixed)
@@ -127,6 +127,8 @@ class FormatService {
       value = Math.round(100 * value) / 100
     } else if (unit === 'cents') {
       value = this.abbreviateDollar(value / 100)
+    } else if (unit === 'dollars') {
+      value = this.abbreviateDollar(value)
     } else {
       value = this.abbreviateNumber(value)
     }

@@ -25,6 +25,8 @@ export default function $signIn (props) {
       passwordErrorStream: new Rx.BehaviorSubject(null),
       emailValueStream: new Rx.BehaviorSubject(''),
       emailErrorStream: new Rx.BehaviorSubject(null),
+      isLoadingStream: new Rx.BehaviorSubject(false),
+      hasErrorStream: new Rx.BehaviorSubject(false),
       modeStream: props.modeStream || new Rx.BehaviorSubject('signIn')
     }
   }, [])
@@ -227,6 +229,24 @@ export default function $signIn (props) {
             type: 'submit'
           })
         ])
+      ]),
+      z('.toggle', [
+        mode === 'join'
+          ? lang.get('signInOverlay.haveAccount')
+          : lang.get('signInOverlay.notHaveAccount'),
+        z('.link', {
+          onclick: () => {
+            if (mode === 'join') {
+              modeStream.next('signIn')
+            } else {
+              modeStream.next('join')
+            }
+          }
+        }, [
+          mode === 'join'
+            ? lang.get('general.signIn')
+            : lang.get('signInOverlay.createAccount')
+        ])
       ])
     ]),
     (hasError && mode === 'signIn') &&
@@ -234,7 +254,7 @@ export default function $signIn (props) {
         z($button, {
           isInverted: true,
           text: lang.get('signInOverlay.resetPassword'),
-          onclick: () => mode.next('reset')
+          onclick: () => modeStream.next('reset')
         })
       ])
   ])

@@ -31,6 +31,8 @@
   "pushNotificationsSheet.message": "Turn on notifications so you don't miss any events or messages",
   "pushNotificationsSheet.submitButtonText": "Turn on",
   "signIn.alreadyLoggedIn": "You're already logged in",
+  "signInOverlay.haveAccount": "Already have an account?",
+  "signInOverlay.notHaveAccount": "Need to create an account?",
   "signInOverlay.resetPassword": "Reset password",
   "signInOverlay.emailResetLink": "Email reset link",
   "signInOverlay.join": "Get started!",

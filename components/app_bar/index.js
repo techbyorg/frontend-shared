@@ -10,7 +10,7 @@ export default function $appBar (props) {
     isPrimary, isSecondary, hasLogo, isContained = true
   } = props
   let { color, bgColor } = props
-  const { colors } = useContext(context)
+  const { colors, lang } = useContext(context)
 
   if (isPrimary) {
     color = color || colors.$primaryMainText
@@ -34,7 +34,7 @@ export default function $appBar (props) {
           hasLogo
             ? [
               // z '.icon'
-              z('.span.logo-tech', 'Fundraise'),
+              z('.span.logo-tech', lang.get('appBar.title')),
               z('.span.logo-by', 'byTechBy')
             ]
             : title
