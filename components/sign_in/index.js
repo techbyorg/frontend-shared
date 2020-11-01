@@ -1,5 +1,6 @@
 import { z, useContext, useMemo, useStream } from 'zorium'
 import * as Rx from 'rxjs'
+import * as rx from 'rxjs/operators'
 
 import $input from '../input'
 import $button from '../button'
@@ -51,12 +52,13 @@ export default function $signIn (props) {
       password: passwordValueStream.getValue(),
       email: emailValueStream.getValue()
     })
-      .then(function () {
+      .then(() => {
         isLoadingStream.next(false)
         // give time for invalidate to work
-        return setTimeout(() => model.user.getMe().take(1).subscribe(() => model.overlay.close({ action: 'complete' }))
-          , 0)
-      }).catch(function (err) {
+        setTimeout(() => model.user.getMe().pipe(rx.take(1)).subscribe(() =>
+          model.overlay.close({ action: 'complete' })
+        ), 0)
+      }).catch((err) => {
         err = (() => {
           try {
             return JSON.parse(err.message)
@@ -65,7 +67,7 @@ export default function $signIn (props) {
           }
         })()
         const errorStream = (() => {
-          switch (err.info.field) {
+          switch (err.info?.field) {
             case 'name': return nameErrorStream
             case 'email': return emailErrorStream
             case 'password': return passwordErrorStream
@@ -73,7 +75,7 @@ export default function $signIn (props) {
           }
         })()
         errorStream.next(lang.get(err.info.langKey))
-        return isLoadingStream.next(false)
+        isLoadingStream.next(false)
       })
   }
 
@@ -86,11 +88,11 @@ export default function $signIn (props) {
     return model.auth.resetPassword({
       email: emailValueStream.getValue()
     })
-      .then(function () {
+      .then(() => {
         isLoadingStream.next(false)
         return model.overlay.close({ action: 'complete' })
       })
-      .catch(function (err) {
+      .catch((err) => {
         err = (() => {
           try {
             return JSON.parse(err.message)
@@ -120,15 +122,15 @@ export default function $signIn (props) {
       email: emailValueStream.getValue(),
       password: passwordValueStream.getValue()
     })
-      .then(function () {
+      .then(() => {
         isLoadingStream.next(false)
         // give time for invalidate to work
         return setTimeout(() =>
-          model.user.getMe().take(1).subscribe(() =>
+          model.user.getMe().pipe(rx.take(1)).subscribe(() =>
             model.overlay.close({ action: 'complete' })
           )
         , 0)
-      }).catch(function (err) {
+      }).catch((err) => {
         hasErrorStream.next(true)
         err = (() => {
           try {
@@ -148,9 +150,6 @@ export default function $signIn (props) {
         return isLoadingStream.next(false)
       })
   }
-
-  // cancel = ->
-  //   model.overlay.close 'cancel'
 
   const isMember = model.user.isMember(me)
 

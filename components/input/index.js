@@ -7,10 +7,11 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 
 // TODO: errorStream
 export default function $input (props) {
-  const { icon, placeholder, valueStream, valueStreams, type = 'text' } = props
+  const { icon, placeholder, valueStream, valueStreams, errorStream, type = 'text' } = props
 
-  const { value } = useStream(() => ({
-    value: streamsOrStream(valueStreams, valueStream)
+  const { value, error } = useStream(() => ({
+    value: streamsOrStream(valueStreams, valueStream),
+    error: errorStream
   }))
 
   return z('.z-input', {
@@ -24,6 +25,7 @@ export default function $input (props) {
         setStreamsOrStream(valueStreams, valueStream, e.target.value)
       }
     }),
-    icon && z('.icon', z($icon, { icon }))
+    icon && z('.icon', z($icon, { icon })),
+    error && z('.error', error)
   ])
 }

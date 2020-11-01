@@ -70,5 +70,20 @@
   "months.11": "December",
 
   "status.newVersion": "Refresh to get the latest app update",
-  "status.offline": "You are offline, some features may not work"
+  "status.offline": "You are offline, some features may not work",
+
+  "error.usernameTaken": "Username is taken",
+  "error.emailTaken": "Email is taken",
+  "error.emailMismatch": "Email doesn't match",
+  "error.emailNotFound": "Email not found",
+  "error.emptyReview": "Review cannot be blank",
+  "error.invalid": "Invalid",
+  "error.invalidCoordinates": "Invalid coordinates",
+  "error.invalidUsername": "Username must be alphanumeric, without spaces",
+  "error.invalidPassword": "Invalid password",
+  "error.invalidCurrentPassword": "Invalid current password",
+  "error.usernameNotFound": "Username not found",
+  "error.incorrectPassword": "Incorrect password",
+  "error.invalidEmail": "Invalid email",
+  "error.passwordSet": "Password is already set"
 }

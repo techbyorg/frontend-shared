@@ -6,6 +6,7 @@ import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
+// TODO: adding isLoading prop
 export default function $button (props) {
   const {
     isPrimary, isSecondary, isDisplay, isInverted, isDisabled, text, isOutline,

@@ -8,7 +8,7 @@ export default class Org {
       query: `
         query OrgById($id: ID!) {
           org(id: $id) {
-            id, slug
+            id, slug, orgUser { id, userId, orgId, roleIds, roles { nodes { name, permissions } } }
           }
         }`,
       variables: { id },
@@ -21,7 +21,7 @@ export default class Org {
       query: `
         query OrgBySlug($slug: String!) {
           org(slug: $slug) {
-            id, slug
+            id, slug, orgUser { id, userId, orgId, roleIds, roles { nodes { name, permissions } } }
           }
         }`,
       variables: { slug },

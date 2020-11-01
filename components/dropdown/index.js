@@ -40,8 +40,6 @@ export default function $dropdown (props) {
     }
   })
 
-  console.log('sel', selectedOption)
-
   const toggle = () => isOpenStream.next(!isOpen)
 
   return z('.z-dropdown', {

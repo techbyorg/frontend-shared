@@ -36,7 +36,6 @@ export default class Auth {
 
   getMe = ({ accessToken, fromCache } = {}) => {
     // for ssr we want this to be consistent & cacheable
-    console.log('getting me', accessToken, fromCache)
     const req = {
       query: 'query UserGetMe { me { id } }'
     }
@@ -65,12 +64,9 @@ export default class Auth {
   validateAccessToken = async (accessToken) => {
     try {
       let user = await this.getMe({ fromCache: true })
-      console.log('user from cache', user, Date.now())
       if (!user?.data?.me) {
-        console.log('get')
         user = await this.getMe({ accessToken }).pipe(rx.take(1)).toPromise()
       }
-      console.log('gottt', user)
       if (!user?.data?.me) {
         throw new Error('no user for accesstoken')
       }
@@ -86,7 +82,6 @@ export default class Auth {
       : this.host.indexOf('techby.org') !== -1 // FIXME: var?
         ? _.takeRight(this.host.split('.'), 2).join('.')
         : this.host // 3rd part domains
-    console.log('setAccessToken', this.authCookie, domain, accessToken)
     return this.cookie.set(this.authCookie, accessToken, {
       // top level domain
       host: domain
@@ -100,14 +95,18 @@ export default class Auth {
     return this.exoid.invalidateAll()
   }
 
-  join = ({ name, email, password }) => {
-    console.log('FIXME')
-    return Promise.resolve(null)
+  join = async ({ name, email, password }) => {
+    const { data } = this.exoid.call('graphql', {
+      query: `
+        mutation UserJoin($name: String!, $email: String!, $password: String!) {
+          userJoin(name: $name, email: $email, password: $password) {
+            accessToken
+          }
+        }`,
+      variables: { name, email, password }
+    })
+    return this.afterLogin(data.userJoin)
   }
-  // @exoid.call 'auth.join', {name, email, password}
-  // .then ({accessToken}) =>
-  //   @setAccessToken accessToken
-  //   @exoid.invalidateAll()
 
   resetPassword = ({ email }) => {
     console.log('FIXME')
@@ -115,7 +114,10 @@ export default class Auth {
   }
   // @exoid.call 'auth.resetPassword', {email}
 
-  afterLogin = ({ accessToken }) => {
+  afterLogin = (r) => {
+    const { accessToken } = r
+    console.log('r', r)
+    console.log('afterLogin', accessToken)
     this.setAccessToken(accessToken)
     this.exoid.invalidateAll()
     let pushToken = this.pushToken.getValue()
@@ -132,8 +134,8 @@ export default class Auth {
     }
   }
 
-  login = ({ email, password }) => {
-    return this.exoid.call('graphql', {
+  login = async ({ email, password }) => {
+    const { data } = await this.exoid.call('graphql', {
       query: `
         mutation UserLoginEmail($email: String!, $password: String!) {
           userLoginEmail(email: $email, password: $password) {
@@ -142,11 +144,11 @@ export default class Auth {
         }`,
       variables: { email, password }
     })
-      .then(this.afterLogin)
+    return this.afterLogin(data.userLoginEmail)
   }
 
-  loginLink = ({ userId, tokenStr }) => {
-    return this.exoid.call('graphql', {
+  loginLink = async ({ userId, tokenStr }) => {
+    const { data } = await this.exoid.call('graphql', {
       query: `
         mutation UserLoginLink($userId: ID!, $tokenStr: String!) {
           userLoginLink(userId: $userId, tokenStr: $tokenStr) {
@@ -155,7 +157,7 @@ export default class Auth {
         }`,
       variables: { userId, tokenStr }
     })
-      .then(this.afterLogin)
+    return this.afterLogin(data.userLoginLink)
   }
 
   // accessToken, userAgent, product added in model/index.js ioEmit
