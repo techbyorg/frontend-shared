@@ -48,9 +48,7 @@ export default class User {
     })
   }
 
-  upsert = (diff, param) => {
-    if (param == null) { param = {} }
-    const { file } = param
+  upsert = (diff, { file } = {}) => {
     if (file) {
       const formData = new FormData()
       formData.append('file', file, file.name)

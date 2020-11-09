@@ -58,6 +58,7 @@ export default class Auth {
           }
         }`
     })
+    console.log('data', data)
     return data?.userLoginAnon.accessToken
   }
 
@@ -68,6 +69,7 @@ export default class Auth {
         user = await this.getMe({ accessToken }).pipe(rx.take(1)).toPromise()
       }
       if (!user?.data?.me) {
+        console.log('user', user)
         throw new Error('no user for accesstoken')
       }
     } catch (err) {
@@ -160,14 +162,17 @@ export default class Auth {
     return this.afterLogin(data.userLoginLink)
   }
 
-  // accessToken, userAgent, product added in model/index.js ioEmit
   stream = ({ query, variables, pull }, options = {}) => {
     options = _.pick(options, [
       'isErrorable', 'clientChangesStream', 'ignoreCache', 'initialSortFn',
       'isStreamed', 'limit'
     ])
-    return this.waitValidAuthCookie
-      .pipe(rx.switchMap(() => {
+    return Rx.combineLatest(
+      this.waitValidAuthCookie,
+      this.orgSlugStream
+    )
+      .pipe(rx.switchMap(([cookie, orgSlug]) => {
+      // accessToken, userAgent, product added in model/index.js ioEmit
         const stream = this.exoid.stream('graphql', { query, variables }, options)
         if (pull) {
           return stream.pipe(rx.map(({ data }) => data[pull]))
@@ -177,25 +182,26 @@ export default class Auth {
       }))
   }
 
-  // accessToken, userAgent, product added in model/index.js ioEmit
-  call = ({ query, variables }, options = {}) => {
+  call = async ({ query, variables }, options = {}) => {
     const { invalidateAll, invalidateSingle, additionalDataStream } = options
 
-    return this.waitValidAuthCookie.pipe(rx.take(1)).toPromise()
-      .then(() => {
-        return this.exoid.call('graphql', { query, variables }, {
-          additionalDataStream
-        })
-      })
-      .then(response => {
-        if (invalidateAll) {
-          console.log('Invalidating all')
-          this.exoid.invalidateAll()
-        } else if (invalidateSingle) {
-          console.log('Invalidating single', invalidateSingle)
-          this.exoid.invalidate(invalidateSingle.path, invalidateSingle.body)
-        }
-        return response
-      })
+    // accessToken, userAgent, product added in model/index.js ioEmit
+    await this.waitValidAuthCookie.pipe(rx.take(1)).toPromise()
+    await this.orgSlugStream.pipe(rx.take(1)).toPromise()
+    const response = await this.exoid.call('graphql', { query, variables }, {
+      additionalDataStream
+    })
+    if (invalidateAll) {
+      console.log('Invalidating all')
+      this.exoid.invalidateAll()
+    } else if (invalidateSingle) {
+      console.log('Invalidating single', invalidateSingle)
+      this.exoid.invalidate(invalidateSingle.path, invalidateSingle.body)
+    }
+    return response
+  }
+
+  setOrgSlugStream = (orgSlugStream) => {
+    this.orgSlugStream = orgSlugStream
   }
 }

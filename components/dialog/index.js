@@ -43,7 +43,7 @@ export default function $dialog (props) {
       z('.dialog', [
         $title &&
           z('.title', [
-            $title,
+            z('.text', $title),
             z('.close', [
               z($icon, {
                 icon: closeIconPath,

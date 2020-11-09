@@ -41,14 +41,16 @@ export default class Model {
 
     const ioEmit = (event, opts) => {
       const accessToken = this.cookie.get('accessToken')
+      const orgSlug = this.cookie.get('orgSlug')
       return io.emit(
         event,
-        _.defaults({ accessToken, userAgent, product }, opts)
+        _.defaults({ accessToken, orgSlug, userAgent, product }, opts)
       )
     }
 
     const proxy = async (url, opts) => {
       const accessToken = this.cookie.get('accessToken')
+      const orgSlug = this.cookie.get('orgSlug')
       const proxyHeaders = _.pick(serverHeaders, [
         'cookie',
         'user-agent',
@@ -57,6 +59,9 @@ export default class Model {
       ])
       if (accessToken) {
         url += `?accessToken=${accessToken}`
+        if (orgSlug) {
+          url += `&orgSlug=${orgSlug}`
+        }
       }
       const response = await window.fetch(url, _.merge({
         responseType: 'json',
@@ -127,8 +132,7 @@ export default class Model {
       cookie: this.cookie,
       lang,
       overlay: this.overlay,
-      portal: this.portal,
-      router: this.router
+      portal: this.portal
     })
 
     this.drawer = new Drawer()

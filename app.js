@@ -63,6 +63,24 @@ export default function $app (props) {
       rx.refCount()
     )
 
+    model.auth.setOrgSlugStream(
+      requestsStream.pipe(
+        rx.map(({ route }) => {
+          let slug
+          if (route.params.orgSlug) {
+            slug = route.params.orgSlug
+          } else if (router.getHost() === 'data.upchieve.org') {
+            // FIXME: non-hardcoded
+            slug = 'upchieve'
+          } else if (router.getHost() === 'numberwang.hackclub.com') {
+            slug = 'hackclub'
+          }
+          cookie.set('orgSlug', slug)
+          return slug
+        })
+      )
+    )
+
     return {
       hash,
       requestsStream

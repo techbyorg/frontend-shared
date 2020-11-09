@@ -9,7 +9,8 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $fab (props) {
   const {
-    icon, colors, isPrimary, isSecondary, onclick, isImmediate,
+    icon, colors, isPrimary, isSecondary, isInverted, onclick,
+    isImmediate = true,
     sizePx = 56
   } = props
   const allColors = useContext(context).colors
@@ -19,10 +20,12 @@ export default function $fab (props) {
       colorsMemo: _.defaults(colors, {
         c500: isPrimary ? allColors.$primaryMain
           : isSecondary ? allColors.$secondaryMain
-            : allColors.$white,
+            : isInverted ? allColors.$bgText87
+              : allColors.$white,
         cText: isPrimary ? allColors.$primaryMainText
           : isSecondary ? allColors.$secondaryMainText
-            : allColors.$bgText87,
+            : isInverted ? allColors.$bgColor
+              : allColors.$bgText87,
         ripple: allColors.$white
       })
     }

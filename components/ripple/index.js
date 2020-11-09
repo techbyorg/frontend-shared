@@ -40,12 +40,12 @@ function ripple (param) {
     ? 'wave fade-in is-visible'
     : 'wave is-visible'
 
-  return new Promise((resolve, reject) => setTimeout(function () {
-    onComplete?.()
+  return new Promise((resolve, reject) => setTimeout(() => {
+    console.log('complete', onComplete)
+    onComplete && onComplete()
     resolve()
     setTimeout(() => { $$wave.className = 'wave' }, 100)
-  } // give some time for onComplete to render
-  , ANIMATION_TIME_MS))
+  }, ANIMATION_TIME_MS)) // give some time for onComplete to render
 }
 
 export default function $ripple (props) {

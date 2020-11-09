@@ -1,4 +1,5 @@
-import { z, classKebab, useContext } from 'zorium'
+import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
+import * as Rx from 'rxjs'
 
 import $ripple from '../ripple'
 import $icon from '../icon'
@@ -10,10 +11,22 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 export default function $button (props) {
   const {
     isPrimary, isSecondary, isDisplay, isInverted, isDisabled, text, isOutline,
-    icon, onclick = () => null, isFullWidth = true, type = 'button',
-    heightPx = 36, hasRipple = true
+    icon, shouldHandleLoading, onclick = () => null, isFullWidth = true,
+    type = 'button', heightPx = 36, hasRipple = true
   } = props
-  const { colors } = useContext(context)
+  const { colors, lang } = useContext(context)
+
+  const { isLoadingStream } = useMemo(() => {
+    return {
+      isLoadingStream: new Rx.BehaviorSubject(false)
+    }
+  }, [])
+
+  const { isLoading } = useStream(() => ({
+    isLoading: isLoadingStream
+  }))
+
+  console.log('isloading', isLoading)
 
   return z('.z-button', {
     className: classKebab({
@@ -25,9 +38,16 @@ export default function $button (props) {
       isInverted,
       isDisabled
     }),
-    onclick: (e) => {
+    onclick: async (e) => {
       if (!isDisabled) {
-        return onclick(e)
+        shouldHandleLoading && isLoadingStream.next(true)
+        try {
+          await onclick(e)
+          shouldHandleLoading && isLoadingStream.next(false)
+        } catch (err) {
+          shouldHandleLoading && isLoadingStream.next(false)
+          throw err
+        }
       }
     }
   }, [
@@ -46,7 +66,7 @@ export default function $button (props) {
             color: isPrimary ? colors.$primaryMainText : colors.$primaryMain
           })
         ]),
-      text,
+      isLoading ? lang.get('general.loading') : text,
       hasRipple &&
         z($ripple, {
           color: isPrimary ? colors.$primaryMainText : colors.$bgText26

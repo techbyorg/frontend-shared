@@ -1,7 +1,6 @@
 import { z, classKebab, useContext, useMemo, useRef, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
 
 import $icon from '../icon'
 import $positionedOverlay from '../positioned_overlay'
@@ -28,17 +27,16 @@ export default function $dropdown (props) {
     }
   }, [])
 
-  const { value, selectedOption, isOpen } = useStream(() => {
+  const { value, isOpen } = useStream(() => {
     const _valueStream = streamsOrStream(valueStreams, valueStream)
     return {
       value: _valueStream,
-      selectedOption: _valueStream.pipe(rx.map((value) =>
-        _.find(options, { value: `${value}` }))
-      ),
       error: errorStream,
       isOpen: isOpenStream
     }
   })
+
+  const selectedOption = useMemo(() => _.find(options, { value: `${value}` }), [value, options])
 
   const toggle = () => isOpenStream.next(!isOpen)
 
@@ -73,7 +71,7 @@ export default function $dropdown (props) {
         $$targetRef: $$ref,
         fillTargetWidth: true,
         anchor,
-        zIndex: 999,
+        zIndex: 9999999,
         $$parentRef,
         $content:
           z('.z-dropdown_options', {

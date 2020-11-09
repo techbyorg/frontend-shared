@@ -179,6 +179,10 @@ class RouterService {
     }
   }
 
+  setModel = (model) => {
+    this.model = model
+  }
+
   back = (param) => {
     if (param == null) { param = {} }
     const { fromNative, fallbackPath } = param
