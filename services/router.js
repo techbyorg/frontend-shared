@@ -65,35 +65,6 @@ class RouterService {
     return this.goPath(path, options)
   }
 
-  // FIXME: this should be in fundraise repo, not frontend-shared
-  getFund = (fund, tab) => {
-    if (tab) {
-      return this.get('fundByEinWithTab', {
-        tab, slug: _.kebabCase(fund?.name), ein: fund?.ein
-      })
-    } else {
-      return this.get('fundByEin', { slug: _.kebabCase(fund?.name), ein: fund?.ein })
-    }
-  }
-
-  goFund = (fund) => {
-    return this.goPath(this.getFund(fund))
-  }
-
-  getNonprofit = (nonprofit, tab) => {
-    if (tab) {
-      return this.get('nonprofitByEinWithTab', {
-        tab, slug: _.kebabCase(nonprofit?.name), ein: nonprofit?.ein
-      })
-    } else {
-      return this.get('nonprofitByEin', { slug: _.kebabCase(nonprofit?.name), ein: nonprofit?.ein })
-    }
-  }
-
-  goNonprofit = (nonprofit) => {
-    return this.goPath(this.getNonprofit(nonprofit))
-  }
-
   get = (routeKey, replacements, options) => {
     if (replacements == null) { replacements = {} }
 
