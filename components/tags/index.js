@@ -9,7 +9,7 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 const TAG_WIDTH = 150
 
 export default function $tags (props) {
-  const { fitToContent, isNoWrap = true } = props
+  const { fitToContent, isNoWrap = true } = props // props.tags, maxVisibleCount
 
   let $$ref, tagChunks, size, maxVisibleCount
   if (fitToContent) {
@@ -28,6 +28,8 @@ export default function $tags (props) {
   if (!isNoWrap && fitToContent) {
     tagChunks = _.chunk(tags, Math.round(size?.width / TAG_WIDTH))
   }
+
+  console.log('tags', tags)
 
   // TODO: get width, show +X if it goes past width
   return z('.z-tags', {

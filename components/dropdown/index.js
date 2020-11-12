@@ -13,8 +13,8 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 export default function $dropdown (props) {
   const {
     valueStreams, errorStream, options, $$parentRef, isPrimary, $current,
-    onChange, isCondensedOptions, anchor = 'top-left', isDisabled = false,
-    maxHeightPx = 200
+    onChange, isCondensedOptions, isFullWidth, anchor = 'top-left',
+    isDisabled = false, maxHeightPx = 200
   } = props
   const { colors } = useContext(context)
 
@@ -46,7 +46,8 @@ export default function $dropdown (props) {
       hasValue: value !== '',
       isPrimary,
       isDisabled,
-      isOpen
+      isOpen,
+      isFullWidth
     })
   }, [
     z('.wrapper', { onclick: toggle },

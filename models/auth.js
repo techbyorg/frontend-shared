@@ -37,15 +37,16 @@ export default class Auth {
   getMe = ({ accessToken, fromCache } = {}) => {
     // for ssr we want this to be consistent & cacheable
     const req = {
-      query: 'query UserGetMe { me { id } }'
+      query: 'query UserGetMe { me { id, email } }'
     }
     if (fromCache) {
       return this.exoid.getCached('graphql', req)
+        .then((res) => { return res?.data?.me })
     } else if (accessToken) {
       // bypass the waitValidAuthCookie
-      return this.exoid.stream('graphql', req)
+      return this.exoid.stream('graphql', req).pipe(rx.map(({ data }) => data.me))
     } else {
-      return this.stream(req)
+      return this.stream(req).pipe(rx.map(({ data }) => data.me))
     }
   }
 
@@ -64,12 +65,12 @@ export default class Auth {
 
   validateAccessToken = async (accessToken) => {
     try {
-      let user = await this.getMe({ fromCache: true })
-      if (!user?.data?.me) {
-        user = await this.getMe({ accessToken }).pipe(rx.take(1)).toPromise()
+      let me = await this.getMe({ fromCache: true })
+      if (!me) {
+        me = await this.getMe({ accessToken }).pipe(rx.take(1)).toPromise()
       }
-      if (!user?.data?.me) {
-        console.log('user', user)
+      if (!me) {
+        console.log('user', me)
         throw new Error('no user for accesstoken')
       }
     } catch (err) {

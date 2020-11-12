@@ -9,45 +9,50 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $dropdownMultiple (props) {
   const {
-    valueStreams, errorStream, currentText, isDisabled = false
+    valuesStreams, errorStream, $current, optionsStream, isDisabled = false
   } = props
 
-  const { isOpenStream, options } = useMemo(() => {
-    const options = _.map(props.options, function (option) {
-      const isCheckedStreams = new Rx.ReplaySubject(1)
-      isCheckedStreams.next(Rx.of(false))
-      return { option, isCheckedStreams }
-    })
+  const { isOpenStream, optionsWithIsCheckedStream } = useMemo(() => {
+    const optionsAndValuesStreams = Rx.combineLatest(
+      optionsStream,
+      // don't want to generate new isCheckedStreams as value changes
+      valuesStreams.pipe(rx.switchAll(), rx.take(1))
+    )
+    const optionsWithIsCheckedStream = optionsAndValuesStreams.pipe(
+      rx.map(([options, values]) => {
+        values = values || []
+        return _.map(options, (option) => {
+          const isCheckedStreams = new Rx.ReplaySubject(1)
+          isCheckedStreams.next(Rx.of(values.indexOf(option.value) !== -1))
+          return { option, isCheckedStreams }
+        })
+      })
+    )
+
     return {
       isOpenStream: new Rx.BehaviorSubject(false),
-      options: options,
-      valueStream: Rx.combineLatest(
-        _.map(options, ({ isCheckedStreams }) =>
-          isCheckedStreams.pipe(rx.switchAll())
-        )
-      ).pipe(rx.map((values) =>
-        _.filter(_.map(options, ({ option }, i) => {
-          if (values[i]) {
-            return option
-          }
-        }))
-      ))
+      optionsWithIsCheckedStream
     }
   }, [])
 
-  const { value, isOpen, error } = useStream(() => ({
-    value: valueStreams.pipe(rx.switchAll()),
+  const { optionsWithIsChecked, values, isOpen, error } = useStream(() => ({
+    optionsWithIsChecked: optionsWithIsCheckedStream,
+    values: valuesStreams.pipe(rx.switchAll(), rx.map((values) => values || [])),
     isOpen: isOpenStream,
     error: errorStream
   }))
 
   const toggle = () => isOpenStream.next(!isOpen)
 
+  const currentText = _.filter(_.map(optionsWithIsChecked, ({ option }) =>
+    values.indexOf(option.value) !== -1 && option.text
+  )).join(', ')
+
   return z('.z-dropdown-multiple', {
     // vdom doesn't key defaultValue correctly if elements are switched
     // key: _.kebabCase hintText
     className: classKebab({
-      hasValue: value !== '',
+      hasValue: !_.isEmpty(values),
       isDisabled,
       isOpen,
       isError: (error != null)
@@ -55,14 +60,27 @@ export default function $dropdownMultiple (props) {
   }, [
     z('.wrapper', { onclick: () => { toggle() } }),
     z('.current', { onclick: toggle }, [
-      currentText,
-      z('.arrow')
+      $current || [
+        z('.text', currentText),
+        z('.arrow')
+      ]
     ]),
     z('.options',
-      _.map(options, ({ option }) =>
+      _.map(optionsWithIsChecked, ({ option, isCheckedStreams }) =>
         z('label.option', [
           z('.text', option?.text),
-          z('.checkbox', z($checkbox, { onChange: toggle }))
+          z('.checkbox', z($checkbox, {
+            onChange: (isChecked) => {
+              let newValues
+              if (isChecked) {
+                newValues = values.concat(option.value)
+              } else {
+                newValues = _.filter(values, (value) => value !== option.value)
+              }
+              valuesStreams.next(Rx.of(newValues))
+            },
+            valueStreams: isCheckedStreams
+          }))
         ])
       )
     ),

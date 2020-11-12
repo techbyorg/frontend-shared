@@ -10,15 +10,16 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 // TODO: adding isLoading prop
 export default function $button (props) {
   const {
-    isPrimary, isSecondary, isDisplay, isInverted, isDisabled, text, isOutline,
-    icon, shouldHandleLoading, onclick = () => null, isFullWidth = true,
-    type = 'button', heightPx = 36, hasRipple = true
+    isPrimary, isSecondary, isDisplay, isInverted, isDisabled, text,
+    isBgColor, isOutline, icon, shouldHandleLoading, onclick = () => null,
+    isFullWidth = true, type = 'button', heightPx = 36, hasRipple = true
+    // isLoadingStream (accessed via props)
   } = props
   const { colors, lang } = useContext(context)
 
   const { isLoadingStream } = useMemo(() => {
     return {
-      isLoadingStream: new Rx.BehaviorSubject(false)
+      isLoadingStream: props.isLoadingStream || new Rx.BehaviorSubject(false)
     }
   }, [])
 
@@ -34,6 +35,7 @@ export default function $button (props) {
       isOutline,
       isPrimary,
       isSecondary,
+      isBgColor,
       isDisplay,
       isInverted,
       isDisabled

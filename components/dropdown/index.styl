@@ -10,6 +10,9 @@
   max-width: 360px
   cursor: pointer
 
+  &.is-full-width
+    max-width: none
+
   &.is-open
     > .options
        display: block
@@ -54,7 +57,7 @@
 
       > .text
         flex1()
-        text-align: center
+        // text-align: center
         white-space: nowrap
 
       > .arrow

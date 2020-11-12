@@ -27,8 +27,8 @@ export default function $toggle (props) {
   }))
 
   function toggle ({ onToggle } = {}) {
-    if (isSelected) {
-      isSelected.next(!isSelected)
+    if (isSelectedStream) {
+      isSelectedStream.next(!isSelected)
     } else {
       isSelectedStreams.next(Rx.of(!isSelected))
     }

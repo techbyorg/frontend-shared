@@ -13,11 +13,38 @@ export default class OrgUser {
       query: `
         query OrgUserMeByOrgId($orgId: ID!) {
           orgUser(orgId: $orgId) {
-            orgId, roleIds, roles { nodes { name, permissions } }
+            id
+            orgId
+            roleIds
+            roles { nodes { id, name, permissions } }
+            partners { nodes { name } }
           }
-        }`,
+        }
+`,
       variables: { orgId },
       pull: 'orgUser'
+    })
+  }
+
+  getAll = () => {
+    return this.auth.stream({
+      query: `
+        query OrgUserGetAll {
+          orgUsers {
+            nodes {
+              id
+              orgId
+              user { id, email, name }
+              roleIds
+              roles { nodes { id, name } }
+              partnerIds
+              partners { nodes { name } }
+            }
+          }
+        }
+`,
+      // variables: {},
+      pull: 'orgUsers'
     })
   }
 
@@ -36,5 +63,23 @@ export default class OrgUser {
         return _.find(permissions, { permission })?.value
       })
     )
+  }
+
+  upsert = ({ id, partnerIds, roleIds }) => {
+    return this.auth.call({
+      query: `
+        mutation OrgUserUpsert(
+          $id: ID
+          $partnerIds: [ID]
+          $roleIds: [ID]
+        ) {
+          orgUserUpsert(id: $id, partnerIds: $partnerIds, roleIds: $roleIds) {
+            roleIds
+          }
+        }
+`,
+      variables: { id, partnerIds, roleIds },
+      pull: 'orgUser'
+    }, { invalidateAll: true })
   }
 }

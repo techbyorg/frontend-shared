@@ -5,9 +5,11 @@ import { streamsOrStream, setStreamsOrStream } from '../../services/obs'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
-// TODO: errorStream
 export default function $input (props) {
-  const { icon, placeholder, valueStream, valueStreams, errorStream, type = 'text' } = props
+  const {
+    icon, placeholder, valueStream, valueStreams, errorStream, isFullWidth,
+    type = 'text'
+  } = props
 
   const { value, error } = useStream(() => ({
     value: streamsOrStream(valueStreams, valueStream),
@@ -15,7 +17,7 @@ export default function $input (props) {
   }))
 
   return z('.z-input', {
-    className: classKebab({ hasIcon: icon })
+    className: classKebab({ isFullWidth, hasIcon: icon })
   }, [
     z('input.input', {
       placeholder,

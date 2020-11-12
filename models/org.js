@@ -3,6 +3,19 @@ export default class Org {
     this.auth = auth
   }
 
+  getMe = () => {
+    return this.auth.stream({
+      query: `
+        query OrgByMe {
+          org {
+            id, slug, orgUser { id, userId, orgId, roleIds, roles { nodes { name, permissions } } }
+          }
+        }`,
+      // variables: {},
+      pull: 'org'
+    })
+  }
+
   getById = (id) => {
     return this.auth.stream({
       query: `

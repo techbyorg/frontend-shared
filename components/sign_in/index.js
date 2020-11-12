@@ -12,7 +12,7 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 // since state updates in 2 places
 
 export default function $signIn (props) {
-  const { model, portal, lang, config } = useContext(context)
+  const { model, lang, router } = useContext(context)
 
   const {
     nameValueStream, nameErrorStream, passwordValueStream, passwordErrorStream,
@@ -32,145 +32,97 @@ export default function $signIn (props) {
     }
   }, [])
 
-  const { me, mode, isLoading, hasError } = useStream(() => ({
+  const { me, mode, hasError } = useStream(() => ({
     me: model.user.getMe(),
     mode: modeStream,
     isLoading: isLoadingStream,
     hasError: hasErrorStream
   }))
 
-  function join (e) {
-    e?.preventDefault()
+  const action = async (method) => {
     isLoadingStream.next(true)
     hasErrorStream.next(false)
     nameErrorStream.next(null)
     emailErrorStream.next(null)
     passwordErrorStream.next(null)
 
-    return model.auth.join({
-      name: nameValueStream.getValue(),
-      password: passwordValueStream.getValue(),
-      email: emailValueStream.getValue()
-    })
-      .then(() => {
-        isLoadingStream.next(false)
-        // give time for invalidate to work
-        setTimeout(() => model.user.getMe().pipe(rx.take(1)).subscribe(() =>
-          model.overlay.close({ action: 'complete' })
-        ), 0)
-      }).catch((err) => {
-        err = (() => {
-          try {
-            return JSON.parse(err.message)
-          } catch (error) {
-            return {}
-          }
-        })()
-        const errorStream = (() => {
-          switch (err.info?.field) {
-            case 'name': return nameErrorStream
-            case 'email': return emailErrorStream
-            case 'password': return passwordErrorStream
-            default: return emailErrorStream
-          }
-        })()
-        errorStream.next(lang.get(err.info.langKey))
-        isLoadingStream.next(false)
+    try {
+      await method({
+        name: nameValueStream.getValue(),
+        password: passwordValueStream.getValue(),
+        email: emailValueStream.getValue()
       })
+      setTimeout(() => // give time for invalidate to work
+        model.user.getMe().pipe(rx.take(1)).subscribe(() =>
+          null
+          // router.get('orgHome', { orgSlug: org?.slug }) // FIXME
+        )
+      , 0)
+      isLoadingStream.next(false)
+    } catch (err) {
+      isLoadingStream.next(false)
+      let error
+      try {
+        error = JSON.parse(err.message)
+      } catch {
+        error = {}
+      }
+      let errorStream
+      switch (error.info?.field) {
+        case 'name': errorStream = nameErrorStream; break
+        case 'email': errorStream = emailErrorStream; break
+        case 'password': errorStream = passwordErrorStream; break
+        default: errorStream = emailErrorStream; break
+      }
+      errorStream.next(lang.get(error.info?.langKey))
+    }
   }
 
-  function reset (e) {
+  const join = (e) => {
     e?.preventDefault()
-    isLoadingStream.next(true)
-    hasErrorStream.next(false)
-    emailErrorStream.next(null)
-
-    return model.auth.resetPassword({
-      email: emailValueStream.getValue()
-    })
-      .then(() => {
-        isLoadingStream.next(false)
-        return model.overlay.close({ action: 'complete' })
-      })
-      .catch((err) => {
-        err = (() => {
-          try {
-            return JSON.parse(err.message)
-          } catch (error) {
-            return {}
-          }
-        })()
-        const errorStream = (() => {
-          switch (err.info.field) {
-            case 'email': return emailErrorStream
-            default: return emailErrorStream
-          }
-        })()
-        errorStream.next(lang.get(err.info.langKey))
-        return isLoadingStream.next(false)
-      })
+    action(model.auth.join)
   }
 
-  function signIn (e) {
+  const reset = (e) => {
     e?.preventDefault()
-    isLoadingStream.next(true)
-    hasErrorStream.next(false)
-    emailErrorStream.next(null)
-    passwordErrorStream.next(null)
+    action(model.auth.resetPassword)
+  }
 
-    return model.auth.login({
-      email: emailValueStream.getValue(),
-      password: passwordValueStream.getValue()
-    })
-      .then(() => {
-        isLoadingStream.next(false)
-        // give time for invalidate to work
-        return setTimeout(() =>
-          model.user.getMe().pipe(rx.take(1)).subscribe(() =>
-            model.overlay.close({ action: 'complete' })
-          )
-        , 0)
-      }).catch((err) => {
-        hasErrorStream.next(true)
-        err = (() => {
-          try {
-            return JSON.parse(err.message)
-          } catch (error) {
-            return {}
-          }
-        })()
-        const errorStream = (() => {
-          switch (err.info?.field) {
-            case 'password': return passwordErrorStream
-            default: return emailErrorStream
-          }
-        })()
-
-        errorStream.next(lang.get(err.info?.langKey))
-        return isLoadingStream.next(false)
-      })
+  const signIn = (e) => {
+    e?.preventDefault()
+    action(model.auth.login)
   }
 
   const isMember = model.user.isMember(me)
 
+  console.log('me', me, isMember)
+
   return z('.z-sign-in', [
-    z('.title',
-      mode === 'join'
-        ? lang.get('signInOverlay.join')
-        : lang.get('signInOverlay.signIn')
-    ),
-    ((mode === 'join') && isMember) &&
-      z('.content', lang.get('signIn.alreadyLoggedIn')),
-    z('form.content', [
-      mode === 'join' &&
-        z('.input', [
-          z($input, {
-            valueStream: nameValueStream,
-            errorStream: nameErrorStream,
-            placeholder: lang.get('general.name'),
-            type: 'text'
-          })
-        ]),
+    z('.title', lang.get('signIn.title')),
+    z('form.content', {
+      onsubmit: (e) => {
+        e?.preventDefault()
+        console.log('go', mode)
+        if (mode === 'reset') {
+          return reset(e)
+        } else if (mode === 'join') {
+          return join(e)
+        } else {
+          return signIn(e)
+        }
+      }
+    }, [
+      z('.title',
+        mode === 'join' ? lang.get('signIn.join') : lang.get('signIn.signIn')
+      ),
+      mode === 'join' && z('.input', [
+        z($input, {
+          valueStream: nameValueStream,
+          errorStream: nameErrorStream,
+          placeholder: lang.get('general.name'),
+          type: 'text'
+        })
+      ]),
       z('.input', [
         z($input, {
           valueStream: emailValueStream,
@@ -179,80 +131,65 @@ export default function $signIn (props) {
           type: 'email'
         })
       ]),
-      mode !== 'reset' &&
-        z('.input', { key: 'password-input' }, [
-          z($input, {
-            valueStream: passwordValueStream,
-            errorStream: passwordErrorStream,
-            placeholder: lang.get('general.password'),
-            type: 'password'
-          })
-        ]),
-      mode === 'join' &&
-        z('.terms', [
-          lang.get('signInOverlay.terms', {
-            replacements: { tos: ' ' }
-          }),
-          z('a', {
-            href: `https://${config.HOST}/policies`,
-            target: '_system',
-            onclick (e) {
-              e.preventDefault()
-              return portal.call('browser.openWindow', {
-                url: `https://${config.HOST}/policies`,
-                target: '_system'
-              })
-            }
-          }, 'TOS')
-        ]),
-      z('.actions', [
+      mode !== 'reset' && z('.input', { key: 'password-input' }, [
+        z($input, {
+          valueStream: passwordValueStream,
+          errorStream: passwordErrorStream,
+          placeholder: lang.get('general.password'),
+          type: 'password'
+        })
+      ]),
+      // mode === 'join' && z('.terms', [
+      //   lang.get('signIn.terms', {
+      //     replacements: { tos: ' ' }
+      //   }),
+      //   z('a', {
+      //     href: `https://${config.HOST}/policies`,
+      //     target: '_system',
+      //     onclick (e) {
+      //       e.preventDefault()
+      //       return portal.call('browser.openWindow', {
+      //         url: `https://${config.HOST}/policies`,
+      //         target: '_system'
+      //       })
+      //     }
+      //   }, 'TOS')
+      // ]),
+      isMember && z('.actions', {
+        onclick: () => {
+          model.auth.logout()
+        }
+      }, lang.get('signIn.alreadyLoggedIn')),
+      !isMember && z('.actions', [
         z('.button', [
           z($button, {
             isPrimary: true,
-            text: isLoading
-              ? lang.get('general.loading')
-              : mode === 'reset'
-                ? lang.get('signInOverlay.emailResetLink')
-                : mode === 'join'
-                  ? lang.get('signInOverlay.createAccount')
-                  : lang.get('general.signIn'),
-            onclick (e) {
-              if (mode === 'reset') {
-                return reset(e)
-              } else if (mode === 'join') {
-                return join(e)
-              } else {
-                return signIn(e)
-              }
-            },
+            isLoadingStream,
+            text: mode === 'reset'
+              ? lang.get('signIn.emailResetLink')
+              : mode === 'join'
+                ? lang.get('signIn.join')
+                : lang.get('general.signIn'),
             type: 'submit'
           })
         ])
       ]),
       z('.toggle', [
         mode === 'join'
-          ? lang.get('signInOverlay.haveAccount')
-          : lang.get('signInOverlay.notHaveAccount'),
+          ? lang.get('signIn.haveAccount')
+          : lang.get('signIn.notHaveAccount'),
         z('.link', {
           onclick: () => {
-            if (mode === 'join') {
-              modeStream.next('signIn')
-            } else {
-              modeStream.next('join')
-            }
+            modeStream.next(mode === 'join' ? 'signIn' : 'join')
           }
-        }, [
-          mode === 'join'
-            ? lang.get('general.signIn')
-            : lang.get('signInOverlay.createAccount')
-        ])
+        }, mode === 'join' ? lang.get('general.signIn') : lang.get('signIn.join'))
       ])
     ]),
     (hasError && mode === 'signIn') &&
       z('.button', [
         z($button, {
           isInverted: true,
-          text: lang.get('signInOverlay.resetPassword'),
+          text: lang.get('signIn.resetPassword'),
           onclick: () => modeStream.next('reset')
         })
       ])

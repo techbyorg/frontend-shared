@@ -58,25 +58,20 @@ class RouterService {
     }
   }
 
-  go = (routeKey, replacements, options) => {
-    if (options == null) { options = {} }
+  go = (routeKey, replacements, options = {}) => {
     const path = this.get(routeKey, replacements, options)
-    console.log('gott', path, routeKey)
     return this.goPath(path, options)
   }
 
-  get = (routeKey, replacements, options) => {
-    if (replacements == null) { replacements = {} }
-
+  get = (routeKey, replacements = {}, options = {}) => {
     let route = this.lang.get(routeKey, { file: 'paths', language: options?.language })
 
-    // const isOrganizationPage = route?.indexOf(':orgSlug') !== -1
+    const isOrganizationPage = route?.indexOf(':orgSlug') !== -1
 
-    // const orgSlug = replacements.orgSlug || this.orgSlug
-    // if (isOrganizationPage && !orgSlug) {
-    //   console.log('organization not set yet')
-    //   return
-    // }
+    const orgSlug = replacements.orgSlug || this.orgSlug
+    if (isOrganizationPage && !orgSlug) {
+      replacements.orgSlug = this.cookie.get('orgSlug')
+    }
 
     // replacements.orgSlug = orgSlug
     // TODO: non-hardcoded
@@ -239,28 +234,6 @@ class RouterService {
     }, data => {
       return this.portal.portal.onMessageInAppBrowserWindow(data)
     })
-  }
-
-  openAddon = (addon, param) => {
-    if (param == null) { param = {} }
-    const { replacements } = param
-    const isNative = Environment.isNativeApp()
-    const appVersion = isNative && Environment.getAppVersion()
-    const isNewIAB = isNative && SemverService.gte(appVersion, '1.4.0')
-    const isExternalAddon = addon.url.substr(0, 4) === 'http'
-    const shouldUseIAB = isNative && isNewIAB && isExternalAddon
-
-    if (shouldUseIAB || addon.data?.isUnframeable) {
-      return this.openInAppBrowser(addon, { replacements })
-    } else {
-      return this.go('toolByKey', {
-        key: _.kebabCase(addon.key)
-      }, {
-        query: {
-          replacements: JSON.stringify(replacements)
-        }
-      })
-    }
   }
 
   getStream = () => {
