@@ -10,6 +10,9 @@
   max-width: 360px
   cursor: pointer
 
+  &.is-full-width
+    width: 100%
+
   &.is-open
     > .wrapper
       display: block
@@ -36,7 +39,7 @@
   > .current
     color: getColor('$bgText')
     border-bottom: 1px solid getColor('$bgText')
-    padding: 8px 0
+    padding: 8px 24px 8px 0
 
     > .arrow
       position: absolute

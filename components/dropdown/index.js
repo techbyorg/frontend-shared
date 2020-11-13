@@ -13,7 +13,7 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 export default function $dropdown (props) {
   const {
     valueStreams, errorStream, options, $$parentRef, isPrimary, $current,
-    onChange, isCondensedOptions, isFullWidth, anchor = 'top-left',
+    onChange, isCondensedOptions, isFullWidth, placeholder, anchor = 'top-left',
     isDisabled = false, maxHeightPx = 200
   } = props
   const { colors } = useContext(context)
@@ -52,7 +52,7 @@ export default function $dropdown (props) {
   }, [
     z('.wrapper', { onclick: toggle },
       $current || z('.current', [
-        z('.text', selectedOption?.text),
+        z('.text', selectedOption?.text || placeholder),
         z('.arrow', [
           z($icon, {
             icon: chevronDownIconPath,

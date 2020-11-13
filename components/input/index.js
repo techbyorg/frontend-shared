@@ -8,7 +8,7 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 export default function $input (props) {
   const {
     icon, placeholder, valueStream, valueStreams, errorStream, isFullWidth,
-    type = 'text'
+    onclick, type = 'text'
   } = props
 
   const { value, error } = useStream(() => ({
@@ -23,6 +23,7 @@ export default function $input (props) {
       placeholder,
       value,
       type,
+      onclick,
       oninput: (e) => {
         setStreamsOrStream(valueStreams, valueStream, e.target.value)
       }

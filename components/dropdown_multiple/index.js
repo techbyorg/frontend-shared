@@ -9,7 +9,8 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $dropdownMultiple (props) {
   const {
-    valuesStreams, errorStream, $current, optionsStream, isDisabled = false
+    valuesStreams, errorStream, $current, optionsStream, placeholder,
+    isFullWidth, isDisabled = false
   } = props
 
   const { isOpenStream, optionsWithIsCheckedStream } = useMemo(() => {
@@ -46,7 +47,7 @@ export default function $dropdownMultiple (props) {
 
   const currentText = _.filter(_.map(optionsWithIsChecked, ({ option }) =>
     values.indexOf(option.value) !== -1 && option.text
-  )).join(', ')
+  )).join(', ') || placeholder
 
   return z('.z-dropdown-multiple', {
     // vdom doesn't key defaultValue correctly if elements are switched
@@ -54,6 +55,7 @@ export default function $dropdownMultiple (props) {
     className: classKebab({
       hasValue: !_.isEmpty(values),
       isDisabled,
+      isFullWidth,
       isOpen,
       isError: (error != null)
     })

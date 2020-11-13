@@ -10,6 +10,7 @@ import LoginLink from './login_link'
 import OfflineData from './offline_data'
 import Org from './org'
 import OrgUser from './org_user'
+import OrgUserInvite from './org_user_invite'
 import Overlay from './overlay'
 import StatusBar from './status_bar'
 import Time from './time'
@@ -122,6 +123,7 @@ export default class Model {
     this.image = new Image({ additionalScript: this.additionalScript })
     this.org = new Org({ auth: this.auth })
     this.orgUser = new OrgUser({ auth: this.auth })
+    this.orgUserInvite = new OrgUserInvite({ auth: this.auth })
     this.loginLink = new LoginLink({ auth: this.auth })
     this.statusBar = new StatusBar()
     this.time = new Time({ auth: this.auth })
