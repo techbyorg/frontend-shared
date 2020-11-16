@@ -51,7 +51,6 @@ export default class OrgUser {
   // sourceType/sourceId ex: sourceType: dashboard, sourceId: <dashboard id>
   hasPermission = ({ orgUser, me, permissions, sourceType, sourceId, roles }) => {
     roles = roles || orgUser?.roles?.nodes
-    console.log('roles', roles)
     return _.every(permissions, (permission) =>
       _.find(roles, (role) => {
         const customPermissions = sourceId && _.filter(role.permissions, { sourceType, sourceId })
@@ -59,7 +58,6 @@ export default class OrgUser {
         permissions = [].concat(
           customPermissions, globalPermissions, DEFAULT_PERMISSIONS
         )
-        console.log('find', permissions, permission)
         return _.find(permissions, { permission })?.value
       })
     )

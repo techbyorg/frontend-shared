@@ -42,7 +42,7 @@ export default function $icon (props) {
     onclick,
     onmousedown,
     style: {
-      minWidth: isTouchTarget ? touchWidth : '100%',
+      minWidth: isTouchTarget ? touchWidth : '0', // 100% makes having a wrapper div necessary
       minHeight: isTouchTarget ? touchHeight : '100%', // nec to center
       width: size,
       height: size?.indexOf?.('%') !== -1

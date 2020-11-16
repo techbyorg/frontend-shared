@@ -47,7 +47,7 @@ export default function $dropdownMultiple (props) {
 
   const currentText = _.filter(_.map(optionsWithIsChecked, ({ option }) =>
     values.indexOf(option.value) !== -1 && option.text
-  )).join(', ') || placeholder
+  )).join(', ') || placeholder || ''
 
   return z('.z-dropdown-multiple', {
     // vdom doesn't key defaultValue correctly if elements are switched

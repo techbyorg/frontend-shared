@@ -2,196 +2,55 @@ import { z, useContext, useMemo, useStream } from 'zorium'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
-import $input from '../input'
-import $button from '../button'
+import $signInForm from '../sign_in_form'
 import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
-// FIXME: passing stream to child component causes 2 renders of child
-// since state updates in 2 places
+export default function $signIn ({ inviteTokenStrStream, ...props }) {
+  const { model, lang } = useContext(context)
 
-export default function $signIn (props) {
-  const { model, lang, router } = useContext(context)
+  const { modeStreams } = useMemo(() => {
+    const orgUserInviteStream = inviteTokenStrStream.pipe(
+      rx.switchMap((inviteTokenStr) =>
+        inviteTokenStr
+          ? model.orgUserInvite.getByTokenStr(inviteTokenStr)
+          : Rx.of(null)
+      )
+    )
 
-  const {
-    nameValueStream, nameErrorStream, passwordValueStream, passwordErrorStream,
-    emailValueStream, emailErrorStream, isLoadingStream, hasErrorStream,
-    modeStream
-  } = useMemo(() => {
+    const modeStreams = new Rx.ReplaySubject(1)
+    modeStreams.next(orgUserInviteStream.pipe(rx.map((orgUserInvite) => {
+      return orgUserInvite
+        ? 'join'
+        : inviteTokenStrStream
+          ? 'failedInvite'
+          : 'signIn'
+    })))
+
     return {
-      nameValueStream: new Rx.BehaviorSubject(''),
-      nameErrorStream: new Rx.BehaviorSubject(null),
-      passwordValueStream: new Rx.BehaviorSubject(''),
-      passwordErrorStream: new Rx.BehaviorSubject(null),
-      emailValueStream: new Rx.BehaviorSubject(''),
-      emailErrorStream: new Rx.BehaviorSubject(null),
-      isLoadingStream: new Rx.BehaviorSubject(false),
-      hasErrorStream: new Rx.BehaviorSubject(false),
-      modeStream: props.modeStream || new Rx.BehaviorSubject('signIn')
+      modeStreams: modeStreams
     }
   }, [])
 
-  const { me, mode, hasError } = useStream(() => ({
-    me: model.user.getMe(),
-    mode: modeStream,
-    isLoading: isLoadingStream,
-    hasError: hasErrorStream
+  const { org, mode } = useStream(() => ({
+    org: model.org.getMe(),
+    mode: modeStreams.pipe(rx.switchAll())
   }))
 
-  const action = async (method) => {
-    isLoadingStream.next(true)
-    hasErrorStream.next(false)
-    nameErrorStream.next(null)
-    emailErrorStream.next(null)
-    passwordErrorStream.next(null)
-
-    try {
-      await method({
-        name: nameValueStream.getValue(),
-        password: passwordValueStream.getValue(),
-        email: emailValueStream.getValue()
-      })
-      setTimeout(() => // give time for invalidate to work
-        model.user.getMe().pipe(rx.take(1)).subscribe(() =>
-          null
-          // router.get('orgHome', { orgSlug: org?.slug }) // FIXME
-        )
-      , 0)
-      isLoadingStream.next(false)
-    } catch (err) {
-      isLoadingStream.next(false)
-      let error
-      try {
-        error = JSON.parse(err.message)
-      } catch {
-        error = {}
-      }
-      let errorStream
-      switch (error.info?.field) {
-        case 'name': errorStream = nameErrorStream; break
-        case 'email': errorStream = emailErrorStream; break
-        case 'password': errorStream = passwordErrorStream; break
-        default: errorStream = emailErrorStream; break
-      }
-      errorStream.next(lang.get(error.info?.langKey))
-    }
-  }
-
-  const join = (e) => {
-    e?.preventDefault()
-    action(model.auth.join)
-  }
-
-  const reset = (e) => {
-    e?.preventDefault()
-    action(model.auth.resetPassword)
-  }
-
-  const signIn = (e) => {
-    e?.preventDefault()
-    action(model.auth.login)
-  }
-
-  const isMember = model.user.isMember(me)
-
-  console.log('me', me, isMember)
+  console.log('mode', mode)
 
   return z('.z-sign-in', [
-    z('.title', lang.get('signIn.title')),
-    z('form.content', {
-      onsubmit: (e) => {
-        e?.preventDefault()
-        console.log('go', mode)
-        if (mode === 'reset') {
-          return reset(e)
-        } else if (mode === 'join') {
-          return join(e)
-        } else {
-          return signIn(e)
-        }
-      }
-    }, [
-      z('.title',
-        mode === 'join' ? lang.get('signIn.join') : lang.get('signIn.signIn')
-      ),
-      mode === 'join' && z('.input', [
-        z($input, {
-          valueStream: nameValueStream,
-          errorStream: nameErrorStream,
-          placeholder: lang.get('general.name'),
-          type: 'text'
-        })
-      ]),
-      z('.input', [
-        z($input, {
-          valueStream: emailValueStream,
-          errorStream: emailErrorStream,
-          placeholder: lang.get('general.email'),
-          type: 'email'
-        })
-      ]),
-      mode !== 'reset' && z('.input', { key: 'password-input' }, [
-        z($input, {
-          valueStream: passwordValueStream,
-          errorStream: passwordErrorStream,
-          placeholder: lang.get('general.password'),
-          type: 'password'
-        })
-      ]),
-      // mode === 'join' && z('.terms', [
-      //   lang.get('signIn.terms', {
-      //     replacements: { tos: ' ' }
-      //   }),
-      //   z('a', {
-      //     href: `https://${config.HOST}/policies`,
-      //     target: '_system',
-      //     onclick (e) {
-      //       e.preventDefault()
-      //       return portal.call('browser.openWindow', {
-      //         url: `https://${config.HOST}/policies`,
-      //         target: '_system'
-      //       })
-      //     }
-      //   }, 'TOS')
-      // ]),
-      isMember && z('.actions', {
-        onclick: () => {
-          model.auth.logout()
-        }
-      }, lang.get('signIn.alreadyLoggedIn')),
-      !isMember && z('.actions', [
-        z('.button', [
-          z($button, {
-            isPrimary: true,
-            isLoadingStream,
-            text: mode === 'reset'
-              ? lang.get('signIn.emailResetLink')
-              : mode === 'join'
-                ? lang.get('signIn.join')
-                : lang.get('general.signIn'),
-            type: 'submit'
-          })
-        ])
-      ]),
-      z('.toggle', [
-        mode === 'join'
-          ? lang.get('signIn.haveAccount')
-          : lang.get('signIn.notHaveAccount'),
-        z('.link', {
-          onclick: () => {
-            modeStream.next(mode === 'join' ? 'signIn' : 'join')
-          }
-        }, mode === 'join' ? lang.get('general.signIn') : lang.get('signIn.join'))
-      ])
+    z('.title', [
+      lang.get('signIn.title', { replacements: { orgName: org?.name } })
     ]),
-    (hasError && mode === 'signIn') &&
-      z('.button', [
-        z($button, {
-          isInverted: true,
-          text: lang.get('signIn.resetPassword'),
-          onclick: () => modeStream.next('reset')
-        })
-      ])
+    z('.content', [
+      mode === 'failedInvite'
+        ? z('.invalid-invite', [
+          z('.title', lang.get('signIn.invalidInviteTitle')),
+          z('.description', lang.get('signIn.invalidInviteDescription'))
+        ])
+        : z($signInForm, { inviteTokenStrStream, modeStreams, ...props })
+    ])
   ])
 }

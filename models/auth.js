@@ -98,15 +98,15 @@ export default class Auth {
     return this.exoid.invalidateAll()
   }
 
-  join = async ({ name, email, password }) => {
-    const { data } = this.exoid.call('graphql', {
+  join = async ({ name, email, password, inviteTokenStr }) => {
+    const { data } = await this.exoid.call('graphql', {
       query: `
-        mutation UserJoin($name: String!, $email: String!, $password: String!) {
-          userJoin(name: $name, email: $email, password: $password) {
+        mutation UserJoin($name: String!, $email: String!, $password: String!, $inviteTokenStr: String) {
+          userJoin(name: $name, email: $email, password: $password, inviteTokenStr: $inviteTokenStr) {
             accessToken
           }
         }`,
-      variables: { name, email, password }
+      variables: { name, email, password, inviteTokenStr }
     })
     return this.afterLogin(data.userJoin)
   }
@@ -183,7 +183,7 @@ export default class Auth {
       }))
   }
 
-  call = async ({ query, variables }, options = {}) => {
+  call = async ({ query, variables, pull }, options = {}) => {
     const { invalidateAll, invalidateSingle, additionalDataStream } = options
 
     // accessToken, userAgent, product added in model/index.js ioEmit
@@ -199,7 +199,11 @@ export default class Auth {
       console.log('Invalidating single', invalidateSingle)
       this.exoid.invalidate(invalidateSingle.path, invalidateSingle.body)
     }
-    return response
+    if (pull) {
+      return response.data[pull]
+    } else {
+      return response
+    }
   }
 
   setOrgSlugStream = (orgSlugStream) => {

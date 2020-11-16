@@ -27,7 +27,7 @@ export default function $button (props) {
     isLoading: isLoadingStream
   }))
 
-  console.log('isloading', isLoading)
+  console.log('button render', text)
 
   return z('.z-button', {
     className: classKebab({

@@ -1,0 +1,29 @@
+@require '../../vars'
+
+.z-textarea
+  position: relative
+
+  > .icon
+    position: absolute
+    left: 16px
+    top: 12px
+
+  > .textarea
+    font-body1()
+    border 2px solid getColor('$bgText6')
+    border-radius: 8px
+    padding: 8px 16px
+    font: inherit
+    color: inherit
+    background-color: transparent
+    outline: none
+    -webkit-tap-highlight-color: transparent
+    width: 100%
+    box-sizing: border-box
+
+    &::placeholder
+      font-body1()
+
+    // rm chrome autofill styles
+    &:-internal-autofill-selected
+      background-color: transparent !important

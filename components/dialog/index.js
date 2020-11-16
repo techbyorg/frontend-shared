@@ -1,3 +1,9 @@
+/*
+dialogs should have their own component that imports/renders this component.
+dialog components should be conditionally rendered by parents, so the
+components don't get mounted until visible
+*/
+
 import { z, classKebab, createPortal, useContext, useEffect, useMemo, useRef } from 'zorium'
 
 import $icon from '../icon'

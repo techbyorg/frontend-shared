@@ -1,0 +1,30 @@
+@require '../../vars'
+
+.z-org-users
+  display: flex
+
+  > .sidebar
+    padding: 24px 8px 24px 16px
+
+  > .content
+    container()
+
+    > .top
+      display: flex
+      margin-bottom: 16px
+
+      &.invited-top
+        margin-top: 32px
+
+      > .left
+        > .title
+          font-h4()
+
+        > .description
+          font-body2()
+
+      > .right
+        margin-left: auto
+
+.z-org-users_icons
+  display: flex

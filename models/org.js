@@ -8,7 +8,7 @@ export default class Org {
       query: `
         query OrgByMe {
           org {
-            id, slug, orgUser { id, userId, orgId, roleIds, roles { nodes { name, permissions } } }
+            id, slug, name, domain, orgUser { id, userId, orgId, roleIds, roles { nodes { name, permissions } } }
           }
         }`,
       // variables: {},

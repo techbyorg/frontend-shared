@@ -22,7 +22,13 @@ container()
   max-width: 1260px
   margin: 0 auto
   padding: 16px
-  // box-sizing: border-box
+  box-sizing: border-box
+
+// height is 0 when no text, this fixes
+dont-collapse-when-empty()
+  &:empty::after
+    content: '.'
+    visibility: hidden
 
 fix-overflow-shadows()
   margin: -8px
@@ -70,7 +76,7 @@ font-h1-heavy()
 font-h2()
   font-family: Montserrat
   color: getColor('$bgText87')
-  font-size: 36px
+  font-size: 44px
   font-weight: 400
   line-height: 1.4em
   letter-spacing: 0.25px
@@ -82,7 +88,7 @@ font-h2-heavy()
 font-h3(state = high)
   font-family: Montserrat
   color: getColor('$bgText87')
-  font-size: 28px
+  font-size: 36px
   font-weight: 400
   line-height: 1.4em
   letter-spacing: 0.24px
@@ -97,7 +103,7 @@ font-h3-heavy()
 font-h4()
   font-family: Montserrat
   color: getColor('$bgText87')
-  font-size: 24px
+  font-size: 28px
   font-weight: 600
   line-height: 1.4em
   letter-spacing: 0.15px
@@ -105,6 +111,14 @@ font-h4()
 font-h4-heavy()
   font-h4()
   font-weight: 700
+
+font-h5()
+  font-family: Montserrat
+  color: getColor('$bgText87')
+  font-size: 24px
+  font-weight: 600
+  line-height: 1.4em
+  letter-spacing: 0.13px
 
 font-h5()
   font-family: Montserrat
@@ -117,7 +131,7 @@ font-h5()
 font-button()
   font-family: Montserrat
   color: getColor('$bgText87')
-  font-size: 15px
+  font-size: 14px
   font-weight: 700
   line-height: 16px
   letter-spacing: 1.25px
@@ -136,7 +150,7 @@ font-body1(state = high)
 font-body2(state = high)
   font-family: Montserrat
   color: getColor('$bgText87')
-  font-size: 15px
+  font-size: 14px
   font-weight: 400
   letter-spacing: 0.23px
 
@@ -157,7 +171,7 @@ font-subtitle1(state = high)
 font-subtitle2(state = high)
   font-family: Montserrat
   color: getColor('$bgText87')
-  font-size: 15px
+  font-size: 14px
   font-weight: 600
   letter-spacing: 0.1px
 
@@ -182,7 +196,7 @@ font-tbd2-name() // FIXME name
 font-caption1(state = disabled) // primary, disabled, italic
   font-family: Montserrat
   color: getColor('$bgText60')
-  font-size: 13px
+  font-size: 12px
   line-height: 1.23
   letter-spacing: 0.37px
 
@@ -337,6 +351,24 @@ defaultPadding()
   @media (min-width: $breakPointMedium)
     padding: 32px
 
+menu-item()
+  font-subtitle2()
+  padding: 10px 12px
+  display: block
+  border-radius: 6px
+  cursor: pointer
+
+  &:hover
+    background: getColor('$bgText6')
+
+  &.is-selected
+    background: getColor('$primary100')
+
+divider()
+  height: 1px
+  width: 100%
+  background: getColor('$bgText12')
+  margin: 8px 0
 
 tooltip(isDark = false)
   if isDark
