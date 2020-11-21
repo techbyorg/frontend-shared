@@ -28,3 +28,11 @@ More to come soonish
   - z
 
 In general don't use wildcard imports, but for lodash and RxJS do (tree shaking means it's the same as explicit imports, and naming / collisions (map, filter, etc...) of the two would be annoying)
+
+
+# TODO:
+- figure out better solution for stream arrays that have components with a stream.
+  - eg array of items that have a checkbox with default value
+  - ex edit_role/index.js, see `HACK` comments
+    - currently just remounting components so it uses the new stream
+  - also think fundraise filter_dialog has same issue (resetValueStream)

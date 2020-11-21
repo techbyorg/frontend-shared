@@ -13,29 +13,32 @@ export default function $roles () {
   const { model, lang } = useContext(context)
 
   const {
-    currentMenuItemStream, rolesStream, currentRoleStream
+    currentMenuItemStream, rolesStream, roleStreams
   } = useMemo(() => {
     const currentMenuItemStream = new Rx.BehaviorSubject('everyone')
     const rolesStream = model.role.getAll()
-    const currentRoleStream = Rx.combineLatest(
-      currentMenuItemStream, rolesStream
-    ).pipe(rx.map(([currentMenuItem, roles]) =>
-      _.find(roles?.nodes, { slug: currentMenuItem })
-    ))
+    const roleStreams = new Rx.ReplaySubject(1)
+    roleStreams.next(
+      Rx.combineLatest(currentMenuItemStream, rolesStream).pipe(
+        rx.map(([currentMenuItem, roles]) =>
+          _.find(roles?.nodes, { slug: currentMenuItem })
+        )
+      )
+    )
+
     return {
       currentMenuItemStream,
       rolesStream,
-      currentRoleStream
+      roleStreams
     }
   }, [])
 
-  const { menuItems, currentRole } = useStream(() => ({
+  const { menuItems } = useStream(() => ({
     menuItems: rolesStream.pipe(rx.map((roles) =>
       _.map(roles?.nodes, (role) => ({
         menuItem: role.slug, text: role.name
       }))
-    )),
-    currentRole: currentRoleStream
+    ))
   }))
 
   return z('.z-roles', [
@@ -47,7 +50,7 @@ export default function $roles () {
       })
     ]),
     z('.content', [
-      z($editRole, { role: currentRole })
+      z($editRole, { roleStreams })
     ])
   ])
 }

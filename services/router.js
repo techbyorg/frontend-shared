@@ -29,8 +29,7 @@ class RouterService {
     this.orgSlug = null
   }
 
-  goPath = (path, options) => {
-    if (options == null) { options = {} }
+  goPath = (path, options = {}) => {
     const { ignoreHistory, reset, keepPreserved, skipBlur } = options
     if (this.preservedRequest && !keepPreserved) {
       this.removeOverlay()
@@ -81,6 +80,9 @@ class RouterService {
     ].includes(this.getHost())
     if (isCustomDomain) {
       route = route.replace('/org/:orgSlug', '')
+      if (!route) {
+        route = '/'
+      }
     }
 
     _.forEach(replacements, (value, key) => {
@@ -128,7 +130,6 @@ class RouterService {
   openLink = (url, target) => {
     const isMailto = url?.indexOf('mailto:') === 0
     const isAbsoluteUrl = isMailto || url?.match(/^(?:[a-z-]+:)?\/\//i)
-    console.log('abs', isAbsoluteUrl, isMailto)
     const webAppRegex = new RegExp(`https?://(${this.host})`, 'i')
     const isWebApp = url?.match(webAppRegex)
     const isNative = Environment.isNativeApp()

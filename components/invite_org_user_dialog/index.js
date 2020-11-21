@@ -82,7 +82,7 @@ export default function $inviteOrgUserDialog ({ orgUserInvite, onClose }) {
           z('.description',
             lang.get('inviteOrgUserDialog.rolesDescription')
           ),
-          z('.section', z($rolePicker, { roleIdsStreams })),
+          z('.section', z($rolePicker, { roleIdsStreams, omitEveryone: true })),
           !inviteLink && z('.invite-section.email', [
             z('.title',
               lang.get('inviteOrgUserDialog.inviteEmailTitle')
@@ -128,13 +128,14 @@ export default function $inviteOrgUserDialog ({ orgUserInvite, onClose }) {
             inviteLink && z('.action.link', [
               z('.input#invite-link', z($input, {
                 valueStream: inviteLinkStream,
-                disabled: true,
+                readonly: true,
                 onclick: (e) => e.target.select()
               })),
               z('.icon', z($icon, {
                 icon: copyIconPath,
                 isCircled: true,
                 onclick: () => {
+                  console.log('click', document.querySelector('#invite-link input'))
                   document.querySelector('#invite-link input').select()
                   document.execCommand('copy')
                 }

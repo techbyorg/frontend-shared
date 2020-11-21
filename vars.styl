@@ -141,7 +141,7 @@ font-body1(state = high)
   color: getColor('$bgText87')
   font-size: 16px
   font-weight: 400
-  line-height: 28px
+  line-height: 20px
   letter-spacing: 0.47px
 
   if state is medium
@@ -162,7 +162,7 @@ font-subtitle1(state = high)
   color: getColor('$bgText87')
   font-size: 16px
   font-weight: 600
-  line-height: 28px
+  line-height: 20px
   letter-spacing: 0.14px
 
   if state is medium
@@ -183,7 +183,7 @@ font-tbd-name() // FIXME name
   color: getColor('$bgText87')
   font-size: 13px
   font-weight: 600
-  line-height: 1.23
+  line-height: 1.23em
   letter-spacing: 0.4px
   text-transform: uppercase
 
@@ -197,7 +197,7 @@ font-caption1(state = disabled) // primary, disabled, italic
   font-family: Montserrat
   color: getColor('$bgText60')
   font-size: 12px
-  line-height: 1.23
+  line-height: 1.23em
   letter-spacing: 0.37px
 
   if state is italic
@@ -218,7 +218,7 @@ font-overline()
   color: getColor('$bgText87')
   font-size: 13px
   font-weight: bold
-  line-height: 1.23
+  line-height: 1.23em
   letter-spacing: 2px
 
 cssVariableFallbacks(property, args)
@@ -496,12 +496,15 @@ input()
   padding: 8px 16px
   font: inherit
   color: inherit
-  background-color: transparent
+  background-color: getColor('$bgColor')
   outline: none
   -webkit-tap-highlight-color: transparent
   width: 100%
   box-sizing: border-box
   transition: border 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+
+  &:disabled
+    background: getColor('$bgColorAlt1')
 
   &:hover
     border: 1px solid getColor('$bgText26')

@@ -8,7 +8,7 @@ import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default function $rolePicker ({ roleIdsStreams }) {
+export default function $rolePicker ({ roleIdsStreams, omitEveryone }) {
   const { model, lang } = useContext(context)
 
   const {
@@ -16,8 +16,10 @@ export default function $rolePicker ({ roleIdsStreams }) {
   } = useMemo(() => {
     const allRolesStreams = model.role.getAll()
     const roleOptionsStream = allRolesStreams.pipe(rx.map((allRoles) => {
-      return _.map(allRoles.nodes, (role) => ({
-        value: role.id, text: role.name
+      return _.filter(_.map(allRoles.nodes, (role) => {
+        if (role.slug !== 'everyone' || !omitEveryone) {
+          return { value: role.id, text: role.name }
+        }
       }))
     }))
 

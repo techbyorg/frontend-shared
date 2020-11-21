@@ -13,7 +13,7 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $signInForm (props) {
   const { inviteTokenStrStream, modeStreams } = props
-  const { model, lang } = useContext(context)
+  const { model, lang, router } = useContext(context)
 
   const {
     nameValueStream, nameErrorStream, passwordValueStream, passwordErrorStream,
@@ -55,10 +55,9 @@ export default function $signInForm (props) {
         inviteTokenStr: inviteTokenStr
       })
       setTimeout(() => // give time for invalidate to work
-        model.user.getMe().pipe(rx.take(1)).subscribe(() =>
-          null
-          // router.get('orgHome', { orgSlug: org?.slug }) // FIXME
-        )
+        model.user.getMe().pipe(rx.take(1)).subscribe(() => {
+          router.go('orgHome')
+        })
       , 0)
       isLoadingStream.next(false)
     } catch (err) {
@@ -84,8 +83,6 @@ export default function $signInForm (props) {
   const reset = (e) => { action(model.auth.resetPassword, e) }
   const signIn = (e) => { action(model.auth.login, e) }
   const isMember = model.user.isMember(me)
-
-  console.log('mode', mode, inviteTokenStr)
 
   return z('form.z-sign-in-form', {
     onsubmit: (e) => {

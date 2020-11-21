@@ -18,12 +18,12 @@ export default function $settingsSidebar ({ currentTabStream }) {
       menuItem: 'roles',
       text: lang.get('general.roles'),
       path: router.get('orgSettingsWithTab', { tab: 'roles' })
-    },
-    {
-      menuItem: 'partners',
-      text: lang.get('general.partners'),
-      path: router.get('orgSettingsWithTab', { tab: 'partners' })
     }
+    // {
+    //   menuItem: 'partners',
+    //   text: lang.get('general.partners'),
+    //   path: router.get('orgSettingsWithTab', { tab: 'partners' })
+    // }
   ]
 
   return z('.z-settings-sidebar', [

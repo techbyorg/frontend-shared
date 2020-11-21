@@ -19,14 +19,20 @@ export default function $signIn ({ inviteTokenStrStream, ...props }) {
       )
     )
 
+    const inviteTokenStrAndOrgUserInviteStream = Rx.combineLatest(
+      inviteTokenStrStream, orgUserInviteStream
+    )
+
     const modeStreams = new Rx.ReplaySubject(1)
-    modeStreams.next(orgUserInviteStream.pipe(rx.map((orgUserInvite) => {
-      return orgUserInvite
-        ? 'join'
-        : inviteTokenStrStream
-          ? 'failedInvite'
-          : 'signIn'
-    })))
+    modeStreams.next(inviteTokenStrAndOrgUserInviteStream.pipe(
+      rx.map(([inviteTokenStr, orgUserInvite]) => {
+        return orgUserInvite
+          ? 'join'
+          : inviteTokenStr
+            ? 'failedInvite'
+            : 'signIn'
+      })
+    ))
 
     return {
       modeStreams: modeStreams
@@ -37,8 +43,6 @@ export default function $signIn ({ inviteTokenStrStream, ...props }) {
     org: model.org.getMe(),
     mode: modeStreams.pipe(rx.switchAll())
   }))
-
-  console.log('mode', mode)
 
   return z('.z-sign-in', [
     z('.title', [

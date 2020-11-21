@@ -17,8 +17,9 @@ export default function $sidebarMenu (props) {
 
   return z('.z-sidebar-menu', [
     z('.title', title),
-    z('.menu', _.map(menuItems, ({ path, text, menuItem }) => {
-      const isSelected = menuItem === currentMenuItem
+    z('.menu', _.map(menuItems, ({ path, text, menuItem }, i) => {
+      const isSelected = menuItem === currentMenuItem ||
+        (!currentMenuItem && !i)
       return router.linkIfHref(z('.menu-item', {
         href: path,
         onclick: !path && (() => currentMenuItemStream.next(menuItem)),
