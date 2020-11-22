@@ -1,4 +1,5 @@
 import { z, classKebab, useContext } from 'zorium'
+import PropTypes from 'prop-types'
 
 import context from '../../context'
 
@@ -38,4 +39,11 @@ export default function $avatar ({ user, src, rotation, size = DEFAULT_SIZE }) {
         }
       })
   ])
+}
+
+$avatar.propTypes = {
+  user: PropTypes.object,
+  src: PropTypes.string,
+  rotation: PropTypes.number,
+  size: PropTypes.string
 }

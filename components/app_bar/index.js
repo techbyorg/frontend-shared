@@ -1,4 +1,5 @@
 import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
+import PropTypes from 'prop-types'
 
 import context from '../../context'
 
@@ -67,4 +68,15 @@ export default function $appBar (props) {
       )
     ])
   ])
+}
+
+$appBar.propTypes = {
+  $topLeftButton: PropTypes.node,
+  $topRightButton: PropTypes.node,
+  title: PropTypes.string,
+  isRaised: PropTypes.bool,
+  isPrimary: PropTypes.bool,
+  isSecondary: PropTypes.bool,
+  hasLogo: PropTypes.bool,
+  isContained: PropTypes.bool
 }

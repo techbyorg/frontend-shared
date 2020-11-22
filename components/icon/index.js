@@ -1,4 +1,5 @@
 import { z, classKebab, useContext } from 'zorium'
+import PropTypes from 'prop-types'
 
 import context from '../../context'
 
@@ -68,4 +69,23 @@ export default function $icon (props) {
       })
     ])
   ])
+}
+
+$icon.propTypes = {
+  icon: PropTypes.string,
+  isAlignedTop: PropTypes.bool,
+  isAlignedLeft: PropTypes.bool,
+  isAlignedRight: PropTypes.bool,
+  isAlignedBottom: PropTypes.bool,
+  isCircled: PropTypes.bool,
+  color: PropTypes.string,
+  size: PropTypes.string,
+  onclick: PropTypes.func,
+  onmousedown: PropTypes.func,
+  hasRipple: PropTypes.bool,
+  viewBox: PropTypes.number,
+  heightRatio: PropTypes.number,
+  isTouchTarget: PropTypes.bool,
+  touchWidth: PropTypes.string,
+  touchHeight: PropTypes.string
 }

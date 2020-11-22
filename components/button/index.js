@@ -1,5 +1,6 @@
 import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
 import * as Rx from 'rxjs'
+import PropTypes from 'prop-types'
 
 import $ripple from '../ripple'
 import $icon from '../icon'
@@ -7,8 +8,8 @@ import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
-// TODO: adding isLoading prop
 export default function $button (props) {
+  // TODO: adding isLoading prop
   const {
     isPrimary, isSecondary, isDisplay, isInverted, isDisabled, text,
     isBgColor, isOutline, icon, shouldHandleLoading, onclick = () => null,
@@ -75,4 +76,22 @@ export default function $button (props) {
         })
     ])
   ])
+}
+
+$button.propTypes = {
+  isPrimary: PropTypes.bool.isRequired,
+  isDisplay: PropTypes.bool,
+  isSecondary: PropTypes.bool,
+  isInverted: PropTypes.bool,
+  isDisabled: PropTypes.bool,
+  text: PropTypes.string,
+  isBgColor: PropTypes.bool,
+  isOutline: PropTypes.bool,
+  icon: PropTypes.string,
+  shouldHandleLoading: PropTypes.bool,
+  onclick: PropTypes.func,
+  isFullWidth: PropTypes.bool,
+  type: PropTypes.oneOf(['button', 'enum']),
+  heightPx: PropTypes.number,
+  hasRipple: PropTypes.bool
 }
