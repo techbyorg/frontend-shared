@@ -45,6 +45,11 @@ export default function $roles () {
     z('.sidebar', [
       z($sidebarMenu, {
         title: lang.get('general.roles'),
+        onAdd: () => {
+          return model.role.upsert({
+            name: 'New role'
+          })
+        },
         currentMenuItemStream,
         menuItems
       })

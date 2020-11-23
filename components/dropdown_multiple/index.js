@@ -49,6 +49,8 @@ export default function $dropdownMultiple (props) {
     values.indexOf(option.value) !== -1 && option.text
   )).join(', ') || placeholder || ''
 
+  console.log('ct', currentText, placeholder)
+
   return z('.z-dropdown-multiple', {
     // vdom doesn't key defaultValue correctly if elements are switched
     // key: _.kebabCase hintText

@@ -8,7 +8,6 @@
   text-align: center
   display: flex
   -webkit-tap-highlight-color: transparent
-  margin: auto
   outline: none
 
   > svg
@@ -24,6 +23,9 @@
 
   &.has-ripple-header
     ripple(getColor('$header500Icon'))
+
+  &.is-centered
+      margin: auto
 
   &.is-circled
     background: getColor('$bgColor')

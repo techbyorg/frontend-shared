@@ -1,8 +1,8 @@
 import { z, useContext, useMemo, useStream } from 'zorium'
 
-import $avatar from 'frontend-shared/components/avatar'
-import $icon from 'frontend-shared/components/icon'
-import { settingsIconPath } from 'frontend-shared/components/icon/paths'
+import $avatar from '../avatar'
+import $icon from '../icon'
+import { settingsIconPath } from '../icon/paths'
 
 import context from '../../context'
 

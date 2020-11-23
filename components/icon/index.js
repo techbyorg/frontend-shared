@@ -8,7 +8,7 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 export default function $icon (props) {
   const {
     icon, isAlignedTop, isAlignedLeft, isAlignedRight,
-    isAlignedBottom, isCircled, color, onclick, onmousedown,
+    isAlignedBottom, isCircled, color, onclick, onmousedown, isCentered,
     hasRipple, viewBox = 24, heightRatio = 1
   } = props
   let {
@@ -33,6 +33,7 @@ export default function $icon (props) {
       isAlignedLeft,
       isAlignedRight,
       isAlignedBottom,
+      isCentered,
       isTouchTarget,
       isClickable,
       isCircled,

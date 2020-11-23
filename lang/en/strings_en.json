@@ -40,6 +40,8 @@
   "requestRating.title": "Do you like this app?",
   "requestRating.text": "Help us by leaving a review :)",
   "requestRating.rate": "Yes - 5 stars!",
+  "partnerPicker.placeholder": "Select partner(s)",
+  "rolePicker.placeholder": "Select role(s)",
   "pushNotificationsSheet.message": "Turn on notifications so you don't miss any events or messages",
   "pushNotificationsSheet.submitButtonText": "Turn on",
   "signIn.alreadyLoggedIn": "You're already logged in. Click to sign out",

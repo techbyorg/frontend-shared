@@ -52,7 +52,11 @@ export default function $table (props) {
         ])
       )),
     z('.tbody', [
+      // loading
       !data && z($spinner),
+      // empty row
+      _.isEmpty(data) && z('.tr', _.map(columnsWithRefAndSize, (column) => z('.td'))),
+      // normal rows
       _.map(data, (row, i) => {
         if (isMobile && mobileRowRenderer) {
           return router.linkIfHref(z('.tr-mobile', {
@@ -61,7 +65,7 @@ export default function $table (props) {
         } else {
           return router.linkIfHref(z('.tr', {
             href: rowHrefFn && rowHrefFn(i)
-          }, _.map(columnsWithRefAndSize, function (column) {
+          }, _.map(columnsWithRefAndSize, (column) => {
             const { key, width, size, isFlex, content } = column
             return z('.td', { style: getStyle({ width, isFlex }) },
               content ? content({ row, size }) : row[key])
