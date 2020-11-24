@@ -28,6 +28,8 @@
   "general.user": "User",
   "general.users": "Users",
   "general.yes": "Yes",
+  "editPartner.description": "Edit partner information",
+  "editPartner.partnerName": "Partner name",
   "editRole.description": "Set roles for users. Roles give different permissions",
   "editRole.roleName": "Role name",
   "editRole.generalPermissions": "General permissions",

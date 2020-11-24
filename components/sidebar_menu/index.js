@@ -2,14 +2,17 @@ import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 
-import $icon from 'frontend-shared/components/icon'
-import { addIconPath } from 'frontend-shared/components/icon/paths'
+import $icon from '../icon'
+import { addIconPath } from '../icon/paths'
+import { streamsOrStream, setStreamsOrStream } from '../../services/obs'
 import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $sidebarMenu (props) {
-  const { title, onAdd, menuItems, currentMenuItemStream } = props
+  const {
+    title, onAdd, menuItems, currentMenuItemStream, currentMenuItemStreams
+  } = props
   const { router } = useContext(context)
 
   const { isAddLoadingStream } = useMemo(() => {
@@ -19,7 +22,9 @@ export default function $sidebarMenu (props) {
   })
 
   const { currentMenuItem } = useStream(() => ({
-    currentMenuItem: currentMenuItemStream
+    currentMenuItem: streamsOrStream(
+      currentMenuItemStreams, currentMenuItemStream
+    )
   }))
 
   return z('.z-sidebar-menu', [
@@ -39,7 +44,9 @@ export default function $sidebarMenu (props) {
         (!currentMenuItem && !i)
       return router.linkIfHref(z('.menu-item', {
         href: path,
-        onclick: !path && (() => currentMenuItemStream.next(menuItem)),
+        onclick: !path && (() => setStreamsOrStream(
+          currentMenuItemStreams, currentMenuItemStream, menuItem
+        )),
         className: classKebab({ isSelected })
       }, text))
     }))
