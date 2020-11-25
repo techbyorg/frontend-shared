@@ -30,14 +30,6 @@ export default function $appBarUserMenu () {
   })
 
   return z('.z-app-bar-user-menu', [
-    // hasEditUsersPermission && z('.icon', z($icon, {
-    //   icon: friendsIconPath,
-    //   color: colors.$bgText60,
-    //   isTouchTarget: true,
-    //   onclick: () => {
-    //     router.go('orgSettings')
-    //   }
-    // })),
     hasEditUsersPermission && z('.icon', z($icon, {
       icon: settingsIconPath,
       color: colors.$bgText60,
@@ -49,3 +41,5 @@ export default function $appBarUserMenu () {
     z($avatar, { user: me })
   ])
 }
+
+$appBarUserMenu.propTypes = {}

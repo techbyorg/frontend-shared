@@ -1,19 +1,17 @@
 import { z } from 'zorium'
 
 import { getArgTypes } from '../../services/story'
-import $avatar from './index'
+import $bottomBar from './index'
 
 export default {
-  title: '$avatar',
-  component: $avatar,
-  argTypes: getArgTypes($avatar)
+  title: '$bottomBar',
+  component: $bottomBar,
+  argTypes: getArgTypes($bottomBar)
 }
 
 const Template = (props) => {
-  return z($avatar, props)
+  return z($bottomBar, props)
 }
 
 export const Default = Template.bind({})
-Default.args = {
-  user: {}
-}
+Default.args = {}

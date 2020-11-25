@@ -6,7 +6,6 @@ import checkPropTypes from 'check-prop-types'
 export const getArgTypes = ($component) => {
   return _.mapValues($component.propTypes, (propType, propName) => {
     const fakeProps = { [propName]: 'this is a string' }
-    console.log(fakeProps, propType, checkPropTypes)
     const err = checkPropTypes({ [propName]: propType }, fakeProps, 'prop')
     let type = 'string'
     if (err) {

@@ -1,7 +1,7 @@
-import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
+import { z, classKebab, useContext, useStream } from 'zorium'
 import * as _ from 'lodash-es'
-import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
+import PropTypes from 'prop-types'
 
 import $icon from '../icon'
 import context from '../../context'
@@ -9,24 +9,12 @@ import context from '../../context'
 if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $bottomBar ({ requestsStream, isAbsolute }) {
-  const { model, router, lang, colors } = useContext(context)
-
-  // don't need to slow down server-side rendering for this
-  const { hasUnreadMessagesStream } = useMemo(() => {
-    return {
-      hasUnreadMessagesStream: globalThis?.window
-        ? model.conversation.getAll()
-          .pipe(
-            rx.map(conversations => _.some(conversations, { isRead: false }))
-          )
-        : Rx.of(null)
-    }
-  }, [])
+  const { router, lang, colors } = useContext(context)
 
   const { currentPath } = useStream(() => ({
     // me: model.user.getMe(),
     // hasUnreadMessages: hasUnreadMessagesStream,
-    currentPath: requestsStream.pipe(rx.map(({ req }) => req.path)
+    currentPath: requestsStream?.pipe(rx.map(({ req }) => req.path)
     )
   }))
 
@@ -40,8 +28,8 @@ export default function $bottomBar ({ requestsStream, isAbsolute }) {
     {
       icon: '', // TODO
       route: router.get('social'),
-      text: lang.get('general.community'),
-      hasNotification: hasUnreadMessagesStream
+      text: lang.get('general.community')//,
+      // hasNotification: hasUnreadMessagesStream
     },
     {
       icon: '', // TODO
@@ -86,4 +74,9 @@ export default function $bottomBar ({ requestsStream, isAbsolute }) {
       z('.text', text)
     ])
   }))
+}
+
+$bottomBar.propTypes = {
+  requestsStream: PropTypes.object,
+  isAbsolute: PropTypes.bool
 }

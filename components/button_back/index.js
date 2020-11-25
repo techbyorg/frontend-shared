@@ -1,4 +1,5 @@
 import { z, useContext } from 'zorium'
+import PropTypes from 'prop-types'
 
 import $icon from '../icon'
 import { backIconPath } from '../icon/paths'
@@ -27,4 +28,11 @@ export default function $buttonBack (props) {
       }
     })
   ])
+}
+
+$buttonBack.propTypes = {
+  color: PropTypes.string,
+  onclick: PropTypes.func,
+  fallbackPath: PropTypes.string,
+  isAlignedLeft: PropTypes.bool
 }
