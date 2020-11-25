@@ -8,9 +8,31 @@ export default class Org {
       query: `
         query OrgByMe {
           org {
-            id, slug, name, domain, orgUser { id, userId, orgId, roleIds, roles { nodes { name, permissions } } }
+            id
+            slug
+            name
+            domain
+            orgUser {
+              id
+              userId
+              orgId
+              partners {
+                nodes {
+                  name
+                  data
+                }
+              }
+              roleIds
+              roles {
+                nodes {
+                  name
+                  permissions
+                }
+              }
+            }
           }
-        }`,
+        }
+`,
       // variables: {},
       pull: 'org'
     })
@@ -21,9 +43,29 @@ export default class Org {
       query: `
         query OrgById($id: ID!) {
           org(id: $id) {
-            id, slug, orgUser { id, userId, orgId, roleIds, roles { nodes { name, permissions } } }
+            id
+            slug
+            orgUser {
+              id
+              userId
+              orgId
+              partners {
+                nodes {
+                  name
+                  data
+                }
+              }
+              roleIds
+              roles {
+                nodes {
+                  name
+                  permissions
+                }
+              }
+            }
           }
-        }`,
+        }
+`,
       variables: { id },
       pull: 'org'
     })
@@ -34,9 +76,29 @@ export default class Org {
       query: `
         query OrgBySlug($slug: String!) {
           org(slug: $slug) {
-            id, slug, orgUser { id, userId, orgId, roleIds, roles { nodes { name, permissions } } }
+            id
+            slug
+            orgUser {
+              id
+              userId
+              orgId
+              partners {
+                nodes {
+                  name
+                  data
+                }
+              }
+              roleIds
+              roles {
+                nodes {
+                  name
+                  permissions
+                }
+              }
+            }
           }
-        }`,
+        }
+`,
       variables: { slug },
       pull: 'org'
     })
