@@ -23,10 +23,6 @@
         border-top: none
         border-bottom: 5px solid getColor('$primaryMain')
 
-    > .options
-       display: block
-
-
   > .wrapper
     display: none
     position: fixed
@@ -51,25 +47,6 @@
       border-right: 5px solid transparent
       border-top: 5px solid getColor('$primaryMain')
 
-  > .options
-    shadow-1()
-    position: absolute
-    z-index: 2
-    background: getColor('$bgColor')
-    width: 100%
-    box-sizing: border-box
-    cursor: pointer
-    display: none
-
-    > .option
-      padding: 16px
-      display: flex
-      align-items: center
-      color: getColor('$bgText')
-
-      > .checkbox
-        margin-left: auto
-
   > .error
     font-caption1()
     color: getColor('$red500')
@@ -90,3 +67,21 @@
     > .underline
       background: none
       border-bottom: 1px dashed getColor('$bgText60')
+
+.z-dropdown-multiple_options
+  shadow-1()
+  background: getColor('$bgColor')
+  width: 100%
+  box-sizing: border-box
+  cursor: pointer
+  overflow: auto
+  -webkit-overflow-scrolling: touch
+
+  > .option
+    padding: 16px
+    display: flex
+    align-items: center
+    color: getColor('$bgText')
+
+    > .checkbox
+      margin-left: auto

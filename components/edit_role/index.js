@@ -35,7 +35,7 @@ export default function $editRole ({ roleStreams }) {
           key: Math.random(), // HACK: $toggle needs to be remounted any time this is updated
           isSelectedStreamArray: _.map(permission.permissions, (perm) => {
             console.log('cur', role.permissions, permission.sourceType, perm)
-            const isSelected = _.find(role.permissions, {
+            const isSelected = _.find(role.permissions.nodes, {
               sourceType: permission.sourceType,
               permission: perm
             })?.value

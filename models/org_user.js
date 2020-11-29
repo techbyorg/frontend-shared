@@ -53,8 +53,8 @@ export default class OrgUser {
     roles = roles || orgUser?.roles?.nodes
     return _.every(permissions, (permission) =>
       _.find(roles, (role) => {
-        const customPermissions = sourceId && _.filter(role.permissions, { sourceType, sourceId })
-        const globalPermissions = _.filter(role.permissions, { sourceType: 'global-public' })
+        const customPermissions = sourceId && _.filter(role.permissions.nodes, { sourceType, sourceId })
+        const globalPermissions = _.filter(role.permissions.nodes, { sourceType: 'global-public' })
         permissions = [].concat(
           customPermissions, globalPermissions, DEFAULT_PERMISSIONS
         )

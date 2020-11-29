@@ -28,9 +28,8 @@ export default function $dropdown (props) {
   }, [])
 
   const { value, isOpen } = useStream(() => {
-    const _valueStream = streamsOrStream(valueStreams, valueStream)
     return {
-      value: _valueStream,
+      value: streamsOrStream(valueStreams, valueStream),
       error: errorStream,
       isOpen: isOpenStream
     }

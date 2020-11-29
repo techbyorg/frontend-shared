@@ -12,6 +12,9 @@ import Org from './org'
 import OrgUser from './org_user'
 import OrgUserInvite from './org_user_invite'
 import Overlay from './overlay'
+import Partner from './partner'
+import Role from './role'
+import Permission from './permission'
 import StatusBar from './status_bar'
 import Time from './time'
 import Tooltip from './tooltip'
@@ -125,6 +128,9 @@ export default class Model {
     this.orgUser = new OrgUser({ auth: this.auth })
     this.orgUserInvite = new OrgUserInvite({ auth: this.auth })
     this.loginLink = new LoginLink({ auth: this.auth })
+    this.partner = new Partner({ auth: this.auth })
+    this.role = new Role({ auth: this.auth })
+    this.permission = new Permission({ auth: this.auth })
     this.statusBar = new StatusBar()
     this.time = new Time({ auth: this.auth })
     this.user = new User({

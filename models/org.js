@@ -26,13 +26,19 @@ export default class Org {
               roles {
                 nodes {
                   name
-                  permissions
+                  permissions {
+                    nodes {
+                      sourceType
+                      sourceId
+                      permission
+                      value
+                    }
+                  }
                 }
               }
             }
           }
-        }
-`,
+        }`,
       // variables: {},
       pull: 'org'
     })
@@ -59,13 +65,19 @@ export default class Org {
               roles {
                 nodes {
                   name
-                  permissions
+                  permissions {
+                    nodes {
+                      sourceType
+                      sourceId
+                      permission
+                      value
+                    }
+                  }
                 }
               }
             }
           }
-        }
-`,
+        }`,
       variables: { id },
       pull: 'org'
     })
@@ -92,7 +104,14 @@ export default class Org {
               roles {
                 nodes {
                   name
-                  permissions
+                  permissions {
+                    nodes {
+                      sourceType
+                      sourceId
+                      permission
+                      value
+                    }
+                  }
                 }
               }
             }

@@ -1,8 +1,9 @@
-import { z, classKebab, useMemo, useStream } from 'zorium'
+import { z, classKebab, useMemo, useRef, useStream } from 'zorium'
 import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
+import $positionedOverlay from '../positioned_overlay'
 import $checkbox from '../checkbox'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
@@ -10,8 +11,11 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 export default function $dropdownMultiple (props) {
   const {
     valuesStreams, errorStream, $current, optionsStream, placeholder,
-    isFullWidth, isDisabled = false
+    $$parentRef, isFullWidth, isDisabled = false, anchor = 'top-left',
+    maxHeightPx = 200
   } = props
+
+  const $$ref = useRef()
 
   const { isOpenStream, optionsWithIsCheckedStream } = useMemo(() => {
     const optionsAndValuesStreams = Rx.combineLatest(
@@ -49,9 +53,8 @@ export default function $dropdownMultiple (props) {
     values.indexOf(option.value) !== -1 && option.text
   )).join(', ') || placeholder || ''
 
-  console.log('ct', currentText, placeholder)
-
   return z('.z-dropdown-multiple', {
+    ref: $$ref,
     // vdom doesn't key defaultValue correctly if elements are switched
     // key: _.kebabCase hintText
     className: classKebab({
@@ -69,8 +72,18 @@ export default function $dropdownMultiple (props) {
         z('.arrow')
       ]
     ]),
-    z('.options',
-      _.map(optionsWithIsChecked, ({ option, isCheckedStreams }) =>
+    isOpen && z($positionedOverlay, {
+      onClose () {
+        return isOpenStream.next(false)
+      },
+      $$targetRef: $$ref,
+      fillTargetWidth: true,
+      anchor,
+      zIndex: 9999999,
+      $$parentRef,
+      $content: z('.z-dropdown-multiple_options', {
+        style: { maxHeight: maxHeightPx }
+      }, _.map(optionsWithIsChecked, ({ option, isCheckedStreams }) =>
         z('label.option', [
           z('.text', option?.text),
           z('.checkbox', z($checkbox, {
@@ -86,8 +99,8 @@ export default function $dropdownMultiple (props) {
             valueStreams: isCheckedStreams
           }))
         ])
-      )
-    ),
+      ))
+    }),
     error && z('.error', error)
   ])
 }
