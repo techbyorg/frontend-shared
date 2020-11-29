@@ -1,7 +1,7 @@
 import * as _ from 'lodash-es'
 
 // viewPrivateBlock, viewPrivateDashboard
-const DEFAULT_PERMISSIONS = []
+const EMPTY_UUID = '00000000-0000-0000-0000-000000000000'
 
 export default class OrgUser {
   constructor ({ auth }) {
@@ -16,7 +16,7 @@ export default class OrgUser {
             id
             orgId
             roleIds
-            roles { nodes { id, name, permissions } }
+            roles { nodes { id, name, priority, permissions } }
             partners { nodes { name } }
           }
         }
@@ -36,7 +36,7 @@ export default class OrgUser {
               orgId
               user { id, email, name }
               roleIds
-              roles { nodes { id, name } }
+              roles { nodes { id, name, priority } }
               partnerIds
               partners { nodes { name } }
             }
@@ -50,16 +50,17 @@ export default class OrgUser {
 
   // sourceType/sourceId ex: sourceType: dashboard, sourceId: <dashboard id>
   hasPermission = ({ orgUser, me, permissions, sourceType, sourceId, roles }) => {
-    roles = roles || orgUser?.roles?.nodes
+    roles = _.orderBy(roles || orgUser?.roles?.nodes, 'priority')
+    const userPermissions = _.filter(_.flatten(_.map(roles, (role) => {
+      const sourceIdPermissions = sourceId && _.filter(role.permissions.nodes, { sourceType, sourceId })
+      const sourceTypePermissions = _.filter(role.permissions.nodes, { sourceType, sourceId: EMPTY_UUID })
+      const globalPermissions = _.filter(role.permissions.nodes, { sourceType: 'global' })
+      return [].concat(
+        sourceIdPermissions, sourceTypePermissions, globalPermissions
+      )
+    })))
     return _.every(permissions, (permission) =>
-      _.find(roles, (role) => {
-        const customPermissions = sourceId && _.filter(role.permissions.nodes, { sourceType, sourceId })
-        const globalPermissions = _.filter(role.permissions.nodes, { sourceType: 'global-public' })
-        permissions = [].concat(
-          customPermissions, globalPermissions, DEFAULT_PERMISSIONS
-        )
-        return _.find(permissions, { permission })?.value
-      })
+      _.find(userPermissions, { permission })?.value
     )
   }
 

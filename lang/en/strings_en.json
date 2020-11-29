@@ -68,12 +68,10 @@
   "404Page.text": "Page not found!",
   "tosPage.title": "TOS",
 
-  "sourceTypes.global-publics": "Global (public)",
-  "sourceTypes.global-publicDescription": "This is the default setting for all public types if more narrowed-in settings are left unset",
-  "sourceTypes.global-privates": "Global (private)",
-  "sourceTypes.global-privateDescription": "This is the default setting for all private types if more narrowed-in settings are left unset",
-  "sourceTypes.dashboards": "Dashboards",
-  "sourceTypes.dashboardDescription": "Dashboards default to public, but you can make certain dashboards private. Enabling \"view\" will allow a role to view private dashboards",
+  "sourceTypes.globals": "Global",
+  "sourceTypes.globalDescription": "This is the default setting for all types if more narrowed-in settings are left unset",
+  "sourceTypes.impact-dashboards": "Dashboards",
+  "sourceTypes.impact-dashboardDescription": "Dashboards default to public, but you can make certain dashboards private. Enabling \"view\" will allow a role to view private dashboards",
   "sourceTypes.partners": "Partners",
   "sourceTypes.org-user-invites": "Invites",
 

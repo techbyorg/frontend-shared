@@ -26,6 +26,7 @@ export default class Org {
               roles {
                 nodes {
                   name
+                  priority
                   permissions {
                     nodes {
                       sourceType
@@ -65,6 +66,7 @@ export default class Org {
               roles {
                 nodes {
                   name
+                  priority
                   permissions {
                     nodes {
                       sourceType
@@ -104,6 +106,7 @@ export default class Org {
               roles {
                 nodes {
                   name
+                  priority
                   permissions {
                     nodes {
                       sourceType

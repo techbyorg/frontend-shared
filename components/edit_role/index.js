@@ -12,9 +12,8 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 
 const PERMISSIONS = [
   // view partners
-  { sourceType: 'global-public', permissions: ['view', 'edit'] },
-  { sourceType: 'global-private', permissions: ['view', 'edit'] },
-  { sourceType: 'dashboard', permissions: ['view', 'edit'] },
+  { sourceType: 'global', permissions: ['view', 'edit'] },
+  { sourceType: 'impact-dashboard', permissions: ['view', 'edit'] },
   { sourceType: 'partner', permissions: ['view', 'edit'] },
   { sourceType: 'org-user-invite', permissions: ['view', 'edit'] }
 ]
