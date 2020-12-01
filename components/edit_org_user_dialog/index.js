@@ -39,8 +39,6 @@ export default function $newBlockDialog ({ orgUserStream, onClose }) {
     roleIds: roleIdsStreams.pipe(rx.switchAll())
   }))
 
-  console.log('orgUser', orgUser)
-
   const updateOrgUser = async () => {
     await model.orgUser.upsert({
       id: orgUser.id,

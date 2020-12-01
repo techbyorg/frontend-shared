@@ -29,8 +29,6 @@ export default function $tags (props) {
     tagChunks = _.chunk(tags, Math.round(size?.width / TAG_WIDTH))
   }
 
-  console.log('tags', tags)
-
   // TODO: get width, show +X if it goes past width
   return z('.z-tags', {
     ref: $$ref,

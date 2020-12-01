@@ -44,8 +44,6 @@ export default function $settings () {
     { menuItem: 'all', text: lang.get('general.all') }
   ]
 
-  console.log('orgusers', orgUsers, orgUserInvites)
-
   return z('.z-org-users',
     z('.sidebar', [
       z($sidebarMenu, {

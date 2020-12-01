@@ -190,6 +190,7 @@ let colors = _.defaults({
   $common: '#3e4447',
   $white: $white,
   $red500: '#F44336',
+  $green500: '#3dcd66',
   $amber500: '#FFC107',
   $graphTooltipBg: '#454545',
 

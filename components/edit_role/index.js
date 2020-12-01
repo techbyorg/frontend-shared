@@ -28,12 +28,11 @@ export default function $editRole ({ roleStreams }) {
     nameStreams.next(roleStream.pipe(rx.map((role) => role?.name)))
 
     const permissionsWithTogglesStream = roleStream.pipe(rx.map((role) =>
-      _.map(PERMISSIONS, (permission) => {
+      role && _.map(PERMISSIONS, (permission) => {
         return {
           permission,
           key: Math.random(), // HACK: $toggle needs to be remounted any time this is updated
           isSelectedStreamArray: _.map(permission.permissions, (perm) => {
-            console.log('cur', role.permissions, permission.sourceType, perm)
             const isSelected = _.find(role.permissions.nodes, {
               sourceType: permission.sourceType,
               permission: perm
@@ -57,6 +56,12 @@ export default function $editRole ({ roleStreams }) {
     role: roleStream
   }))
 
+  const del = () => {
+    if (confirm(lang.get('general.areYouSure'))) {
+      return model.role.deleteById(role.id)
+    }
+  }
+
   const save = () => {
     const permissions = _.flatten(
       _.map(permissionsWithToggles, ({ permission, isSelectedStreamArray }) =>
@@ -69,7 +74,7 @@ export default function $editRole ({ roleStreams }) {
         })
       )
     )
-    model.role.upsert({ id: role.id, slug: role.slug, name, permissions })
+    return model.role.upsert({ id: role.id, slug: role.slug, name, permissions })
   }
 
   return z('.z-edit-role', [
@@ -88,8 +93,8 @@ export default function $editRole ({ roleStreams }) {
       _.map(permissionsWithToggles, ({ permission, key, isSelectedStreamArray }) => {
         // HACK: key forces new $toggle components to remount and create new isSelectedStream
         return z('.permission', { key }, [
-          z('.title', lang.get(`sourceTypes.${permission.sourceType}s`)),
-          z('.description', lang.get(`sourceTypes.${permission.sourceType}Description`)),
+          z('.title', lang.get(`sourceTypes.${permission.sourceType}.title`)),
+          z('.description', lang.get(`sourceTypes.${permission.sourceType}.description`)),
           _.map(permission.permissions, (permissionType, i) => {
             return z('.permission-type', [
               z('.type', lang.get(`permissionType.${permissionType}`)),
@@ -101,11 +106,20 @@ export default function $editRole ({ roleStreams }) {
         ])
       })
     ]),
-    z($button, {
-      onclick: save,
-      isPrimary: true,
-      text: lang.get('general.save'),
-      isFullWidth: false
-    })
+    z('.actions', [
+      role?.slug && !['everyone', 'admin'].includes(role.slug) && z($button, {
+        onclick: del,
+        text: lang.get('general.delete'),
+        isFullWidth: false,
+        shouldHandleLoading: true
+      }),
+      z($button, {
+        onclick: save,
+        isPrimary: true,
+        text: lang.get('general.save'),
+        isFullWidth: false,
+        shouldHandleLoading: true
+      })
+    ])
   ])
 }

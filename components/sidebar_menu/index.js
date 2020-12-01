@@ -11,7 +11,8 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $sidebarMenu (props) {
   const {
-    title, onAdd, menuItems, currentMenuItemStream, currentMenuItemStreams
+    title, subtitle, onAdd, menuItems, currentMenuItemStream,
+    currentMenuItemStreams
   } = props
   const { router } = useContext(context)
 
@@ -28,6 +29,7 @@ export default function $sidebarMenu (props) {
   }))
 
   return z('.z-sidebar-menu', [
+    z('.subtitle', subtitle),
     z('.title', [
       z('.text', title),
       onAdd && z('.icon', z($icon, {

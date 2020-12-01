@@ -26,7 +26,6 @@ export default function $rolePicker (props) {
       // needs to have 3 options like discord yes/no/undefined (use parent)
       roleIdsStreams.next(allRolesAndSourceIdStream.pipe(
         rx.map(([allRoles, sourceId]) => {
-          console.log('check', allRoles, sourceId)
           const enabledRoles = _.filter(allRoles.nodes, (role) => {
             return _.find(role.permissions.nodes, {
               sourceType: props.sourceType,
@@ -35,7 +34,6 @@ export default function $rolePicker (props) {
               value: true
             })
           })
-          console.log('got', enabledRoles)
           return _.map(enabledRoles, 'id')
         })
       ))

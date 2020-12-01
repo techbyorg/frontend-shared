@@ -128,6 +128,15 @@ font-h5()
   line-height: 1.4em
   letter-spacing: 0.13px
 
+// FIXME: consolidate w h5?
+font-h6()
+  font-family: Montserrat
+  color: getColor('$bgText87')
+  font-size: 20px
+  font-weight: 600
+  line-height: 1.4em
+  letter-spacing: 0.13px
+
 font-button()
   font-family: Montserrat
   color: getColor('$bgText87')
@@ -213,13 +222,16 @@ font-caption2(state = disabled) // primary, disabled, italic
   font-caption1()
   font-weight: 600
 
-font-overline()
+font-overline(state = high)
   font-family: Montserrat
   color: getColor('$bgText87')
   font-size: 13px
   font-weight: bold
   line-height: 1.23em
   letter-spacing: 2px
+
+  if state is medium
+    color: getColor('$bgText60')
 
 cssVariableFallbacks(property, args)
   string = join(' ', args)
@@ -352,17 +364,17 @@ defaultPadding()
     padding: 32px
 
 menu-item()
-  font-subtitle2()
+  font-body2()
   padding: 10px 12px
   display: block
-  border-radius: 6px
   cursor: pointer
 
   &:hover
     background: getColor('$bgText6')
 
   &.is-selected
-    background: getColor('$primary100')
+    font-subtitle2()
+    border-left: 2px solid getColor('$bgText')
 
 divider()
   height: 1px

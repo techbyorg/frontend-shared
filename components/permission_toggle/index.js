@@ -1,14 +1,16 @@
 import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
 import * as Rx from 'rxjs'
 
+import $icon from 'frontend-shared/components/icon'
+import { checkIconPath, closeIconPath, slashIconPath } from 'frontend-shared/components/icon/paths'
 import { streamsOrStream, setStreamsOrStream } from '../../services/obs'
 import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $permissionToggle (props) {
-  const { valueStreams, withText } = props
-  const { lang } = useContext(context)
+  const { valueStreams } = props
+  const { colors, lang } = useContext(context)
 
   const { valueStream } = useMemo(() => ({
     valueStream: props.valueStream || new Rx.BehaviorSubject(null)
@@ -18,32 +20,39 @@ export default function $permissionToggle (props) {
     value: streamsOrStream(valueStreams, valueStream)
   }))
 
+  const isNo = value === false
+  const isInherit = value === null || value === undefined
+  const isYes = value === true
+
   return z('.z-permission-toggle', {
-    className: classKebab({ value, withText })
+    className: classKebab({ value })
   }, [
     z('.no', {
-      className: classKebab({
-        isSelected: value === false
-      }),
-      onclick: () => {
-        setStreamsOrStream(valueStreams, valueStream, false)
-      }
-    }, lang.get('general.no')),
+      title: lang.get('permissionToggle.noTooltip'),
+      className: classKebab({ isSelected: isNo }),
+      onclick: () => setStreamsOrStream(valueStreams, valueStream, false)
+    }, z($icon, {
+      icon: closeIconPath,
+      size: '18px',
+      color: isNo ? colors.$bgColor : colors.$bgText60
+    })),
     z('.inherit', {
-      className: classKebab({
-        isSelected: value === null || value === undefined
-      }),
-      onclick: () => {
-        setStreamsOrStream(valueStreams, valueStream, null)
-      }
-    }, lang.get('general.next')),
+      title: lang.get('permissionToggle.inheritTooltip'),
+      className: classKebab({ isSelected: isInherit }),
+      onclick: () => setStreamsOrStream(valueStreams, valueStream, null)
+    }, z($icon, {
+      icon: slashIconPath,
+      size: '18px',
+      color: isInherit ? colors.$bgColor : colors.$bgText60
+    })),
     z('.yes', {
-      className: classKebab({
-        isSelected: value === true
-      }),
-      onclick: () => {
-        setStreamsOrStream(valueStreams, valueStream, true)
-      }
-    }, lang.get('general.yes'))
+      title: lang.get('permissionToggle.yesTooltip'),
+      className: classKebab({ isSelected: isYes }),
+      onclick: () => setStreamsOrStream(valueStreams, valueStream, true)
+    }, z($icon, {
+      icon: checkIconPath,
+      size: '18px',
+      color: isYes ? colors.$bgColor : colors.$bgText60
+    }))
   ])
 }

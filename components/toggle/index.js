@@ -1,14 +1,16 @@
-import { z, classKebab, useContext, useMemo, useStream } from 'zorium'
+import { z, classKebab, useMemo, useStream } from 'zorium'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
-import context from '../../context'
+import $icon from '../icon'
+import { checkIconPath } from '../icon/paths'
+// import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $toggle (props) {
-  const { isSelectedStream, onToggle, withText } = props
-  const { lang } = useContext(context)
+  const { isSelectedStream, onToggle } = props
+  // const { lang } = useContext(context)
 
   const { isSelectedStreams } = useMemo(function () {
     let isSelectedStreams = props.isSelectedStreams
@@ -36,14 +38,12 @@ export default function $toggle (props) {
   }
 
   return z('.z-toggle', {
-    className: classKebab({ isSelected, withText }),
+    className: classKebab({ isSelected }),
     onclick: () => { return toggle({ onToggle }) }
   }, [
-    z('.track',
-      withText && isSelected
-        ? lang.get('general.yes')
-        : withText && lang.get('general.no')
-    ),
-    z('.knob')
+    z('.track'),
+    z('.knob', [
+      z('.icon', z($icon, { icon: checkIconPath, size: '18px' }))
+    ])
   ])
 }

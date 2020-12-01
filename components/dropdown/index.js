@@ -35,8 +35,6 @@ export default function $dropdown (props) {
     }
   })
 
-  console.log('val', value)
-
   const selectedOption = useMemo(() => _.find(options, { value: `${value}` }), [value, options])
 
   const toggle = () => isOpenStream.next(!isOpen)

@@ -40,8 +40,6 @@ export default function $appBar (props) {
       ? 'https://static1.squarespace.com/static/57c0d8d1e58c622e8b6d5328/t/58e6f7d3cd0f6890d14a989b/1596229917902/?format=600w'
       : org?.slug === 'raisedbyus' && 'https://images.squarespace-cdn.com/content/5a88648ca9db09295b5d7a8c/1518888367733-ME6DC2YQFWXG595E6OGG/RAISEDBY.US_.jpg?format=1500w&content-type=image%2Fjpeg'
 
-  console.log(org, logo, '..............')
-
   return z('header.z-app-bar', {
     key: 'app-bar',
     className: classKebab({ isRaised, isContained, hasLogo })

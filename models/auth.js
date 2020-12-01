@@ -59,7 +59,6 @@ export default class Auth {
           }
         }`
     })
-    console.log('data', data)
     return data?.userLoginAnon.accessToken
   }
 
@@ -70,11 +69,9 @@ export default class Auth {
         me = await this.getMe({ accessToken }).pipe(rx.take(1)).toPromise()
       }
       if (!me) {
-        console.log('user', me)
         throw new Error('no user for accesstoken')
       }
     } catch (err) {
-      console.log('caught err, logging in anon', err)
       return this.loginAnon()
     }
   }
@@ -117,10 +114,7 @@ export default class Auth {
   }
   // @exoid.call 'auth.resetPassword', {email}
 
-  afterLogin = (r) => {
-    const { accessToken } = r
-    console.log('r', r)
-    console.log('afterLogin', accessToken)
+  afterLogin = ({ accessToken }) => {
     this.setAccessToken(accessToken)
     this.exoid.invalidateAll()
     let pushToken = this.pushToken.getValue()

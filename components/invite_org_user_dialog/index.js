@@ -47,8 +47,6 @@ export default function $inviteOrgUserDialog ({ orgUserInvite, onClose }) {
     inviteLink: inviteLinkStream
   }))
 
-  console.log('orgUserInvite', email, orgUserInvite)
-
   const inviteOrgUser = async (getLink) => {
     const { tokenStr } = await model.orgUserInvite.upsert({
       id: orgUserInvite?.id,
@@ -135,7 +133,6 @@ export default function $inviteOrgUserDialog ({ orgUserInvite, onClose }) {
                 icon: copyIconPath,
                 isCircled: true,
                 onclick: () => {
-                  console.log('click', document.querySelector('#invite-link input'))
                   document.querySelector('#invite-link input').select()
                   document.execCommand('copy')
                 }

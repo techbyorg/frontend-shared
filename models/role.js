@@ -34,4 +34,16 @@ export default class Role {
       pull: 'role'
     }, { invalidateAll: true })
   }
+
+  deleteById = (id) => {
+    return this.auth.call({
+      query: `
+        mutation RoleDeleteById($id: ID) {
+          roleDeleteById(id: $id)
+        }
+`,
+      variables: { id },
+      pull: 'roleDeleteById'
+    }, { invalidateAll: true })
+  }
 }

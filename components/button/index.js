@@ -28,8 +28,6 @@ export default function $button (props) {
     isLoading: isLoadingStream
   }))
 
-  console.log('button render', text)
-
   return z('.z-button', {
     className: classKebab({
       isFullWidth,

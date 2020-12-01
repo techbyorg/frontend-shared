@@ -17,7 +17,6 @@ export default class Permission {
   }
 
   batchUpsert = (permissions) => {
-    console.log('batch', permissions)
     return this.auth.call({
       query: `
         mutation PermissionBatchUpsert(

@@ -2,16 +2,20 @@
 
 .z-sidebar-menu
   flex1()
-  min-width: 200px
+  width: 224px
   padding: 24px 8px 24px 16px
   box-sizing: border-box
   overflow: auto
   -webkit-overflow-scrolling: touch
 
+  > .subtitle
+    font-caption1()
+    dont-collapse-when-empty()
+    margin-bottom: 4px
+
   > .title
-    font-overline()
+    font-overline(medium)
     text-transform: uppercase
-    margin-bottom: 16px
     display: flex
     align-items: center
 
@@ -19,5 +23,7 @@
       margin-left: auto
 
   > .menu
+    margin-top: 16px
+
     > .menu-item
       menu-item()

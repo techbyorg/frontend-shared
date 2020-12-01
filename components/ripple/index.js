@@ -41,7 +41,6 @@ function ripple (param) {
     : 'wave is-visible'
 
   return new Promise((resolve, reject) => setTimeout(() => {
-    console.log('complete', onComplete)
     onComplete && onComplete()
     resolve()
     setTimeout(() => { $$wave.className = 'wave' }, 100)

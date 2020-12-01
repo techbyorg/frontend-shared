@@ -1,3 +1,5 @@
+import { FRAGMENT_ORG_WITH_ORG_USER } from 'all-shared/index.js'
+
 export default class Org {
   constructor ({ auth }) {
     this.auth = auth
@@ -8,38 +10,9 @@ export default class Org {
       query: `
         query OrgByMe {
           org {
-            id
-            slug
-            name
-            domain
-            orgUser {
-              id
-              userId
-              orgId
-              partners {
-                nodes {
-                  name
-                  data
-                }
-              }
-              roleIds
-              roles {
-                nodes {
-                  name
-                  priority
-                  permissions {
-                    nodes {
-                      sourceType
-                      sourceId
-                      permission
-                      value
-                    }
-                  }
-                }
-              }
-            }
+            ...orgWithOrgUser
           }
-        }`,
+        } ${FRAGMENT_ORG_WITH_ORG_USER}`,
       // variables: {},
       pull: 'org'
     })
@@ -50,36 +23,9 @@ export default class Org {
       query: `
         query OrgById($id: ID!) {
           org(id: $id) {
-            id
-            slug
-            orgUser {
-              id
-              userId
-              orgId
-              partners {
-                nodes {
-                  name
-                  data
-                }
-              }
-              roleIds
-              roles {
-                nodes {
-                  name
-                  priority
-                  permissions {
-                    nodes {
-                      sourceType
-                      sourceId
-                      permission
-                      value
-                    }
-                  }
-                }
-              }
-            }
+            ...orgWithOrgUser
           }
-        }`,
+        } ${FRAGMENT_ORG_WITH_ORG_USER}`,
       variables: { id },
       pull: 'org'
     })
@@ -90,37 +36,9 @@ export default class Org {
       query: `
         query OrgBySlug($slug: String!) {
           org(slug: $slug) {
-            id
-            slug
-            orgUser {
-              id
-              userId
-              orgId
-              partners {
-                nodes {
-                  name
-                  data
-                }
-              }
-              roleIds
-              roles {
-                nodes {
-                  name
-                  priority
-                  permissions {
-                    nodes {
-                      sourceType
-                      sourceId
-                      permission
-                      value
-                    }
-                  }
-                }
-              }
-            }
+            ...orgWithOrgUser
           }
-        }
-`,
+        } ${FRAGMENT_ORG_WITH_ORG_USER}`,
       variables: { slug },
       pull: 'org'
     })

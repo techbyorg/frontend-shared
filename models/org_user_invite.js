@@ -27,7 +27,6 @@ export default class OrgUserInvite {
   }
 
   getByTokenStr = (tokenStr) => {
-    console.log('get by', tokenStr)
     return this.auth.stream({
       query: `
         query OrgUserInviteGetByTokenStr($tokenStr: String) {

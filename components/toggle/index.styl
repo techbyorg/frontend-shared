@@ -1,8 +1,8 @@
 @require '../../vars'
 
-$knobRadius = 20px
-$trackWidth = 34px
-$wideTrackWidth = 48px
+$knobRadius = 24px
+$trackWidth = 40px
+$borderWidth = 1px
 
 .z-toggle
   position: relative
@@ -10,46 +10,37 @@ $wideTrackWidth = 48px
 
   > .track
     width: $trackWidth
-    height: 14px
-    background: getColor('$bgText12')
-    border-radius: 17px
+    height: $knobRadius
+    border: $borderWidth solid getColor('$bgText54')
+    border-radius: 20px // $trackWidth / 2
+    box-sizing: border-box
 
   > .knob
     shadow-1()
     position: absolute
     left: 0
-    top: -3px
+    top: 0
     width: $knobRadius
     height: $knobRadius
-    background: getColor('$bgText54')
+    border: 1px solid getColor('$bgText54')
     border-radius: 50%
+    box-sizing: border-box
     transform: translate(0, 0)
     transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)
 
-  &.with-text
-    > .track
-      width: $wideTrackWidth
-      font-overline()
-      color: getColor('$black')
-      box-sizing: border-box
-      text-align: right
-      padding-right: 6px
-
-    &.is-selected
-      > .track
-        padding-left: 3px
-        text-align: left
-        color: getColor('$secondaryMainText')
-
-      > .knob
-        transform: translate($wideTrackWidth - $knobRadius, 0)
-
+    > .icon
+      display: none
+      height: 100%
+      margin-left: 2px
 
   &.is-selected
     > .track
-      background: getColor('$secondary200')
+      background: getColor('$bgText')
 
     > .knob
-      background: getColor('$secondaryMain')
-      transform: translate($trackWidth - $knobRadius, 0)
+      background: getColor('$bgColor')
+      transform: translate($trackWidth - $knobRadius + $borderWidth + $borderWidth, 0)
       transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1)
+
+      > .icon
+        display: block

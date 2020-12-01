@@ -1,0 +1,39 @@
+@require '../../vars'
+
+.z-source-permissions
+  flex1()
+  display: flex
+
+  > .content
+    container()
+    flex1()
+
+    > .title
+      font-h6()
+      margin-top: 20px // hacky way to align with sidebar title
+      margin-bottom: 2px
+
+    > .description
+      font-body2()
+
+    > .divider
+      divider()
+
+    > .permissions-title
+      font-subtitle2(medium)
+      margin-top: 20px
+      margin-bottom: 32px
+
+    > .permissions
+      > .permission
+        display: flex
+        margin-bottom: 32px
+
+        > .info
+          flex1()
+
+          > .name
+            font-subtitle1()
+
+          > .description
+            font-body2()

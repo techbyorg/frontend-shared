@@ -13,8 +13,6 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 export default function $segmentsDropdown ({ segmentStream, dashboardSlug }) {
   const { model, router, lang } = useContext(context)
 
-  console.log('dropdownnnnnn')
-
   const {
     segmentsStream, segmentStreams
   } = useMemo(() => {

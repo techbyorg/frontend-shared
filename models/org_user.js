@@ -8,46 +8,6 @@ export default class OrgUser {
     this.auth = auth
   }
 
-  getMeByOrgId = (orgId) => {
-    return this.auth.stream({
-      query: `
-        query OrgUserMeByOrgId($orgId: ID!) {
-          orgUser(orgId: $orgId) {
-            id
-            orgId
-            roleIds
-            roles { nodes { id, name, priority, permissions } }
-            partners { nodes { name } }
-          }
-        }
-`,
-      variables: { orgId },
-      pull: 'orgUser'
-    })
-  }
-
-  getAll = () => {
-    return this.auth.stream({
-      query: `
-        query OrgUserGetAll {
-          orgUsers {
-            nodes {
-              id
-              orgId
-              user { id, email, name }
-              roleIds
-              roles { nodes { id, name, priority } }
-              partnerIds
-              partners { nodes { name } }
-            }
-          }
-        }
-`,
-      // variables: {},
-      pull: 'orgUsers'
-    })
-  }
-
   // sourceType/sourceId ex: sourceType: dashboard, sourceId: <dashboard id>
   hasPermission = ({ orgUser, me, permissions, sourceType, sourceId, roles }) => {
     roles = _.orderBy(roles || orgUser?.roles?.nodes, 'priority')
