@@ -35,6 +35,19 @@ export default class Role {
     }, { invalidateAll: true })
   }
 
+  setPriorities = (ids) => {
+    return this.auth.call({
+      query: `
+        mutation RoleSetPriorities(
+          $ids: [ID]
+        ) {
+          roleSetPriorities(ids: $ids)
+        }`,
+      variables: { ids },
+      pull: 'role'
+    }, { invalidateAll: true })
+  }
+
   deleteById = (id) => {
     return this.auth.call({
       query: `

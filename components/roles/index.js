@@ -36,7 +36,7 @@ export default function $roles () {
   const { menuItems } = useStream(() => ({
     menuItems: rolesStream.pipe(rx.map((roles) =>
       _.map(roles?.nodes, (role) => ({
-        menuItem: role.slug, text: role.name
+        id: role.id, menuItem: role.slug, text: role.name
       }))
     ))
   }))
@@ -45,6 +45,8 @@ export default function $roles () {
     z('.sidebar', [
       z($sidebarMenu, {
         title: lang.get('general.roles'),
+        isDraggable: true,
+        onReorder: (ids) => model.role.setPriorities(ids),
         onAdd: () => {
           return model.role.upsert({
             name: 'New role'
