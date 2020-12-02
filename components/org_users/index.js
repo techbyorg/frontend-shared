@@ -119,10 +119,20 @@ export default function $settings () {
             name: '',
             width: 72,
             content ({ row }) {
-              return z($icon, {
-                icon: editIconPath,
-                onclick: () => editingOrgUserStream.next(row)
-              })
+              return z('.z-org-users_icons', [
+                z($icon, {
+                  icon: editIconPath,
+                  onclick: () => editingOrgUserStream.next(row)
+                }),
+                z($icon, {
+                  icon: deleteIconPath,
+                  onclick: () => {
+                    if (confirm(lang.get('orgUsers.delete'))) {
+                      model.orgUser.deleteById(row.id)
+                    }
+                  }
+                })
+              ])
             }
           }
         ]

@@ -46,7 +46,7 @@ export default function $signIn ({ inviteTokenStrStream, ...props }) {
 
   return z('.z-sign-in', [
     z('.title', [
-      lang.get('signIn.title', { replacements: { orgName: org?.name } })
+      org && lang.get('signIn.title', { replacements: { orgName: org.name } })
     ]),
     z('.content', [
       mode === 'failedInvite'

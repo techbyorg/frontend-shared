@@ -18,7 +18,7 @@ export default function $dialog (props) {
   const { onClose, $title, $actions, isWide, $content = '' } = props
   const { colors } = useContext(context)
 
-  const $$ref = useRef()
+  const $$ref = props.$$ref || useRef()
 
   const { $$overlays } = useMemo(() => ({
     $$overlays: globalThis?.document?.getElementById('overlays-portal')

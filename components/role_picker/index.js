@@ -11,7 +11,7 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 
 // props: sourceType and sourceIdStream (can be set to preselect roleIds)
 export default function $rolePicker (props) {
-  const { roleIdsStreams, omitEveryone } = props
+  const { roleIdsStreams, omitEveryone, $$parentRef } = props
   const { model, lang } = useContext(context)
 
   const {
@@ -53,6 +53,7 @@ export default function $rolePicker (props) {
 
   return z('.z-role-picker', [
     z($dropdownMultiple, {
+      $$parentRef,
       placeholder: lang.get('rolePicker.placeholder'),
       isFullWidth: true,
       valuesStreams: roleIdsStreams,

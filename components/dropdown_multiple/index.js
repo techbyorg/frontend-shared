@@ -53,6 +53,8 @@ export default function $dropdownMultiple (props) {
     values.indexOf(option.value) !== -1 && option.text
   )).join(', ') || placeholder || ''
 
+  console.log('pref', $$parentRef)
+
   return z('.z-dropdown-multiple', {
     ref: $$ref,
     // vdom doesn't key defaultValue correctly if elements are switched

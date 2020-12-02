@@ -1,4 +1,4 @@
-import { z, useContext, useMemo, useStream } from 'zorium'
+import { z, useContext, useMemo, useRef, useStream } from 'zorium'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
@@ -19,6 +19,8 @@ if (typeof window !== 'undefined' && window !== null) {
 
 export default function $inviteOrgUserDialog ({ orgUserInvite, onClose }) {
   const { config, lang, model } = useContext(context)
+
+  const $$ref = useRef()
 
   const {
     partnerIdsStreams, roleIdsStreams, inviteLinkStream, emailStream, nameStream
@@ -68,6 +70,7 @@ export default function $inviteOrgUserDialog ({ orgUserInvite, onClose }) {
 
   return z('.z-invite-org-user-dialog', [
     z($dialog, {
+      $$ref,
       onClose,
       isWide: true,
       $title: lang.get('inviteOrgUserDialog.title'),
@@ -76,11 +79,11 @@ export default function $inviteOrgUserDialog ({ orgUserInvite, onClose }) {
           z('.description',
             lang.get('inviteOrgUserDialog.partnersDescription')
           ),
-          z('.section', z($partnerPicker, { partnerIdsStreams })),
+          z('.section', z($partnerPicker, { partnerIdsStreams, $$parentRef: $$ref })),
           z('.description',
             lang.get('inviteOrgUserDialog.rolesDescription')
           ),
-          z('.section', z($rolePicker, { roleIdsStreams, omitEveryone: true })),
+          z('.section', z($rolePicker, { roleIdsStreams, omitEveryone: true, $$parentRef: $$ref })),
           !inviteLink && z('.invite-section.email', [
             z('.title',
               lang.get('inviteOrgUserDialog.inviteEmailTitle')

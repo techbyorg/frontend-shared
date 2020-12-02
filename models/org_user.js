@@ -65,4 +65,16 @@ export default class OrgUser {
       pull: 'orgUser'
     }, { invalidateAll: true })
   }
+
+  deleteById = (id) => {
+    return this.auth.call({
+      query: `
+        mutation OrgUserDeleteById($id: ID) {
+          orgUserDeleteById(id: $id)
+        }
+`,
+      variables: { id },
+      pull: 'orgUserDeleteById'
+    }, { invalidateAll: true })
+  }
 }

@@ -8,7 +8,7 @@ import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default function $partnerPicker ({ partnerIdsStreams }) {
+export default function $partnerPicker ({ partnerIdsStreams, $$parentRef }) {
   const { model, lang } = useContext(context)
 
   const {
@@ -28,6 +28,7 @@ export default function $partnerPicker ({ partnerIdsStreams }) {
 
   return z('.z-partner-picker', [
     z($dropdownMultiple, {
+      $$parentRef,
       placeholder: lang.get('partnerPicker.placeholder'),
       isFullWidth: true,
       valuesStreams: partnerIdsStreams,

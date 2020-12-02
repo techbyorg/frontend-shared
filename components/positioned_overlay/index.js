@@ -8,6 +8,10 @@ import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
+// for some reason positionedOverlays within other positionedOverlays
+// (eg dropdowns inside of dialogs) sometimes act weird
+// haven't diagnosed issue yet, but seems to be 'fixed' by specifying parentRef
+// of the other positioned overlays (eg dropdown specifying dialog as parentRef)
 export default function $positionedOverlay (props) {
   const {
     $$targetRef, hasBackdrop, onClose, offset, fillTargetWidth,
@@ -113,7 +117,7 @@ export default function $positionedOverlay (props) {
   if (size?.width && fillTargetWidth) {
     style.minWidth = `${size.width}px`
   }
-
+  console.log('create portal')
   return createPortal(
     z(`.z-positioned-overlay.anchor-${anchor}`, { ref: $$ref }, [
       hasBackdrop && z('.backdrop', { onclick: onClose }),
