@@ -8,6 +8,28 @@ export default class OrgUser {
     this.auth = auth
   }
 
+  getAll = () => {
+    return this.auth.stream({
+      query: `
+        query OrgUserGetAll {
+          orgUsers {
+            nodes {
+              id
+              orgId
+              user { id, email, name }
+              roleIds
+              roles { nodes { id, name, priority } }
+              partnerIds
+              partners { nodes { name } }
+            }
+          }
+        }
+`,
+      // variables: {},
+      pull: 'orgUsers'
+    })
+  }
+
   // sourceType/sourceId ex: sourceType: dashboard, sourceId: <dashboard id>
   hasPermission = ({ orgUser, me, permissions, sourceType, sourceId, roles }) => {
     roles = _.orderBy(roles || orgUser?.roles?.nodes, 'priority')
@@ -20,7 +42,9 @@ export default class OrgUser {
       )
     })))
     return _.every(permissions, (permission) =>
-      _.find(userPermissions, { permission })?.value
+      _.find(userPermissions, (perm) => {
+        return perm.permission === permission && (perm.value === true || perm.value === false)
+      })?.value
     )
   }
 

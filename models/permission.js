@@ -22,9 +22,7 @@ export default class Permission {
         mutation PermissionBatchUpsert(
           $permissions: JSON
         ) {
-          permissionBatchUpsert(permissions: $permissions) {
-            roleId
-          }
+          permissionBatchUpsert(permissions: $permissions)
         }
       `,
       variables: { permissions },

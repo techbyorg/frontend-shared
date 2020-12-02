@@ -5,6 +5,7 @@ export default class Org {
     this.auth = auth
   }
 
+  // uses orgSlug automatically
   getMe = () => {
     return this.auth.stream({
       query: `
@@ -27,19 +28,6 @@ export default class Org {
           }
         } ${FRAGMENT_ORG_WITH_ORG_USER}`,
       variables: { id },
-      pull: 'org'
-    })
-  }
-
-  getBySlug = (slug) => {
-    return this.auth.stream({
-      query: `
-        query OrgBySlug($slug: String!) {
-          org(slug: $slug) {
-            ...orgWithOrgUser
-          }
-        } ${FRAGMENT_ORG_WITH_ORG_USER}`,
-      variables: { slug },
       pull: 'org'
     })
   }
