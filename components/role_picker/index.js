@@ -17,10 +17,10 @@ export default function $rolePicker (props) {
   const {
     roleOptionsStream
   } = useMemo(() => {
-    const allRolesStreams = model.role.getAll()
+    const allRolesStream = model.role.getAll()
     if (props.sourceIdStream) {
       const allRolesAndSourceIdStream = Rx.combineLatest(
-        allRolesStreams, props.sourceIdStream
+        allRolesStream, props.sourceIdStream
       )
       // TODO: should use something other than dropdownMultiple.
       // needs to have 3 options like discord yes/no/undefined (use parent)
@@ -38,7 +38,7 @@ export default function $rolePicker (props) {
         })
       ))
     }
-    const roleOptionsStream = allRolesStreams.pipe(rx.map((allRoles) => {
+    const roleOptionsStream = allRolesStream.pipe(rx.map((allRoles) => {
       return _.filter(_.map(allRoles.nodes, (role) => {
         if (role.slug !== 'everyone' || !omitEveryone) {
           return { value: role.id, text: role.name }

@@ -1,11 +1,11 @@
 import { z, useContext, useMemo, useStream } from 'zorium'
-import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 import * as _ from 'lodash-es'
 
 import $button from '../button'
 import $input from '../input'
 import $segmentPicker from '../segment_picker'
+import { streams } from '../../services/obs'
 import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
@@ -14,14 +14,14 @@ export default function $editPartner ({ partnerStreams }) {
   const { lang, model } = useContext(context)
 
   const { partnerStream, nameStreams, segmentIdsStreams } = useMemo(() => {
-    const partnerStream = partnerStreams.pipe(rx.switchAll())
+    const partnerStream = partnerStreams.stream
 
-    const nameStreams = new Rx.ReplaySubject(1)
-    nameStreams.next(partnerStream.pipe(rx.map((partner) => partner?.name)))
+    const nameStreams = streams(
+      partnerStream.pipe(rx.map((partner) => partner?.name))
+    )
 
-    const segmentIdsStreams = new Rx.ReplaySubject(1)
-    segmentIdsStreams.next(partnerStream.pipe(rx.map((partner) =>
-      partner.data?.impact?.segmentIds || []
+    const segmentIdsStreams = streams(partnerStream.pipe(rx.map((partner) =>
+      partner?.data?.impact?.segmentIds || []
     )))
 
     return {
@@ -32,9 +32,9 @@ export default function $editPartner ({ partnerStreams }) {
   }, [])
 
   const { name, partner, segmentIds } = useStream(() => ({
-    name: nameStreams.pipe(rx.switchAll()),
+    name: nameStreams.stream,
     partner: partnerStream,
-    segmentIds: segmentIdsStreams.pipe(rx.switchAll())
+    segmentIds: segmentIdsStreams.stream
   }))
 
   const save = () => {

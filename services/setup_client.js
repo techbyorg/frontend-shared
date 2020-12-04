@@ -56,7 +56,7 @@ export default function setup ({ $app, Lang, Model, colors, config }) {
     transports: ['websocket']
   })
   const fullLanguage = window.navigator.languages?.[0] || window.navigator.language
-  let language = initialCookies?.['language'] || fullLanguage?.substr(0, 2)
+  let language = initialCookies?.language || fullLanguage?.substr(0, 2)
   if (!Array.from(config.LANGUAGES).includes(language)) {
     language = 'en'
   }
@@ -109,7 +109,7 @@ export default function setup ({ $app, Lang, Model, colors, config }) {
   }
 
   // TODO: show status bar for translating
-  // @isTranslateCardVisibleStreams = new Rx.ReplaySubject 1
+  // @isTranslateCardVisibleStreams =
   lang.getLanguage().pipe(rx.take(1)).subscribe(function (lang) {
     console.log('lang', lang)
     const needTranslations = ['fr', 'es']

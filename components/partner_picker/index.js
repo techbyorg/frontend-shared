@@ -14,8 +14,8 @@ export default function $partnerPicker ({ partnerIdsStreams, $$parentRef }) {
   const {
     partnerOptionsStream
   } = useMemo(() => {
-    const allPartnersStreams = model.partner.getAll()
-    const partnerOptionsStream = allPartnersStreams.pipe(rx.map((allPartners) => {
+    const allPartnersStream = model.partner.getAll()
+    const partnerOptionsStream = allPartnersStream.pipe(rx.map((allPartners) => {
       return _.map(allPartners.nodes, (partner) => ({
         value: partner.id, text: partner.name
       }))

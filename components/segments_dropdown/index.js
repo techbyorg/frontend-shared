@@ -1,10 +1,10 @@
 // TODO: settings page might be better in frontend-shared
 import { z, useContext, useMemo, useStream } from 'zorium'
 import _ from 'lodash-es'
-import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import $dropdown from 'frontend-shared/components/dropdown'
+import { streams } from 'frontend-shared/services/obs'
 
 import context from '../../context'
 
@@ -16,8 +16,7 @@ export default function $segmentsDropdown ({ segmentStream, dashboardSlug }) {
   const {
     segmentsStream, segmentStreams
   } = useMemo(() => {
-    const segmentStreams = new Rx.ReplaySubject(1)
-    segmentStreams.next(segmentStream.pipe(
+    const segmentStreams = streams(segmentStream.pipe(
       rx.map((segment) => segment?.slug))
     )
 

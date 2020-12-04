@@ -3,6 +3,7 @@ import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import $signInForm from '../sign_in_form'
+import { streams } from '../../services/obs'
 import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
@@ -23,8 +24,7 @@ export default function $signIn ({ inviteTokenStrStream, ...props }) {
       inviteTokenStrStream, orgUserInviteStream
     )
 
-    const modeStreams = new Rx.ReplaySubject(1)
-    modeStreams.next(inviteTokenStrAndOrgUserInviteStream.pipe(
+    const modeStreams = streams(inviteTokenStrAndOrgUserInviteStream.pipe(
       rx.map(([inviteTokenStr, orgUserInvite]) => {
         return orgUserInvite
           ? 'join'
@@ -41,7 +41,7 @@ export default function $signIn ({ inviteTokenStrStream, ...props }) {
 
   const { org, mode } = useStream(() => ({
     org: model.org.getMe(),
-    mode: modeStreams.pipe(rx.switchAll())
+    mode: modeStreams.stream
   }))
 
   return z('.z-sign-in', [

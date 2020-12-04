@@ -14,8 +14,8 @@ export default function $segmentPicker ({ segmentIdsStreams }) {
   const {
     segmentOptionsStream
   } = useMemo(() => {
-    const allSegmentsStreams = model.segment.getAll()
-    const segmentOptionsStream = allSegmentsStreams.pipe(rx.map((allSegments) => {
+    const allSegmentsStream = model.segment.getAll()
+    const segmentOptionsStream = allSegmentsStream.pipe(rx.map((allSegments) => {
       return _.map(allSegments.nodes, (segment) => ({
         value: segment.id, text: segment.slug
       }))

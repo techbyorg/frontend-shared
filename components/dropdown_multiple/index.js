@@ -3,6 +3,7 @@ import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
+import { streams } from '../../services/obs'
 import $positionedOverlay from '../positioned_overlay'
 import $checkbox from '../checkbox'
 
@@ -18,17 +19,18 @@ export default function $dropdownMultiple (props) {
   const $$ref = useRef()
 
   const { isOpenStream, optionsWithIsCheckedStream } = useMemo(() => {
-    const optionsAndValuesStreams = Rx.combineLatest(
+    const optionsAndValuesStream = Rx.combineLatest(
       optionsStream,
       // don't want to generate new isCheckedStreams as value changes
-      valuesStreams.pipe(rx.switchAll(), rx.take(1))
+      valuesStreams.stream.pipe(rx.take(1))
     )
-    const optionsWithIsCheckedStream = optionsAndValuesStreams.pipe(
+    const optionsWithIsCheckedStream = optionsAndValuesStream.pipe(
       rx.map(([options, values]) => {
         values = values || []
         return _.map(options, (option) => {
-          const isCheckedStreams = new Rx.ReplaySubject(1)
-          isCheckedStreams.next(Rx.of(values.indexOf(option.value) !== -1))
+          const isCheckedStreams = streams(
+            Rx.of(values.indexOf(option.value) !== -1)
+          )
           return { option, isCheckedStreams }
         })
       })
@@ -42,7 +44,7 @@ export default function $dropdownMultiple (props) {
 
   const { optionsWithIsChecked, values, isOpen, error } = useStream(() => ({
     optionsWithIsChecked: optionsWithIsCheckedStream,
-    values: valuesStreams.pipe(rx.switchAll(), rx.map((values) => values || [])),
+    values: valuesStreams.stream.pipe(rx.map((values) => values || [])),
     isOpen: isOpenStream,
     error: errorStream
   }))
@@ -96,7 +98,7 @@ export default function $dropdownMultiple (props) {
               } else {
                 newValues = _.filter(values, (value) => value !== option.value)
               }
-              valuesStreams.next(Rx.of(newValues))
+              valuesStreams.next(newValues)
             },
             valueStreams: isCheckedStreams
           }))

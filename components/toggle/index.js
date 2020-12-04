@@ -1,9 +1,9 @@
 import { z, classKebab, useMemo, useStream } from 'zorium'
 import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
 
 import $icon from '../icon'
 import { checkIconPath } from '../icon/paths'
+import { streams } from '../../services/obs'
 // import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
@@ -15,9 +15,7 @@ export default function $toggle (props) {
   const { isSelectedStreams } = useMemo(function () {
     let isSelectedStreams = props.isSelectedStreams
     if (!isSelectedStreams) {
-      isSelectedStreams = new Rx.ReplaySubject(1)
-      if (isSelectedStreams == null) { isSelectedStreams = Rx.of('') }
-      isSelectedStreams.next(isSelectedStream)
+      isSelectedStreams = streams(isSelectedStream)
     }
     return {
       isSelectedStreams
@@ -25,14 +23,14 @@ export default function $toggle (props) {
   }, [])
 
   const { isSelected } = useStream(() => ({
-    isSelected: isSelectedStreams.pipe(rx.switchAll())
+    isSelected: isSelectedStreams.stream
   }))
 
   function toggle ({ onToggle } = {}) {
     if (isSelectedStream) {
       isSelectedStream.next(!isSelected)
     } else {
-      isSelectedStreams.next(Rx.of(!isSelected))
+      isSelectedStreams.next(!isSelected)
     }
     return onToggle?.(!isSelected)
   }

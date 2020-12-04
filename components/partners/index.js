@@ -3,6 +3,8 @@ import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 import * as _ from 'lodash-es'
 
+import { streams } from 'frontend-shared/services/obs'
+
 import $editPartner from '../edit_partner'
 import $sidebarMenu from '../sidebar_menu'
 import context from '../../context'
@@ -16,16 +18,14 @@ export default function $partners () {
     currentMenuItemStreams, partnersStream, partnerStreams
   } = useMemo(() => {
     const partnersStream = model.partner.getAll()
-    const currentMenuItemStreams = new Rx.ReplaySubject(1)
-    currentMenuItemStreams.next(partnersStream.pipe(
+    const currentMenuItemStreams = streams(partnersStream.pipe(
       rx.map((partners) => partners?.nodes[0]?.slug)
     ))
-    const partnerStreams = new Rx.ReplaySubject(1)
     const currentMenuItemAndPartners = Rx.combineLatest(
-      currentMenuItemStreams.pipe(rx.switchAll()),
+      currentMenuItemStreams.stream,
       partnersStream
     )
-    partnerStreams.next(currentMenuItemAndPartners.pipe(
+    const partnerStreams = streams(currentMenuItemAndPartners.pipe(
       rx.map(([currentMenuItem, partners]) =>
         _.find(partners?.nodes, { slug: currentMenuItem })
       )

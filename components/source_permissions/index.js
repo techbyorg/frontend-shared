@@ -6,6 +6,7 @@ import * as _ from 'lodash-es'
 import $button from 'frontend-shared/components/button'
 import $permissionToggle from 'frontend-shared/components/permission_toggle'
 import $sidebarMenu from 'frontend-shared/components/sidebar_menu'
+import { streams } from 'frontend-shared/services/obs'
 
 import context from '../../context'
 
@@ -31,22 +32,21 @@ export default function $sourcePermissions ({ sourceStream, sourceType }) {
 
     const rolesStream = model.role.getAll()
 
-    const selectedRoleIdStreams = new Rx.ReplaySubject(1)
-    selectedRoleIdStreams.next(rolesStream.pipe(
+    const selectedRoleIdStreams = streams(rolesStream.pipe(
       rx.map((roles) =>
         roles?.nodes?.[0]?.id
       )
     ))
 
     const selectedRoleStream = Rx.combineLatest(
-      selectedRoleIdStreams.pipe(rx.switchAll()),
+      selectedRoleIdStreams.stream,
       rolesStream
     ).pipe(rx.map(([selectedRoleId, roles]) =>
       _.find(roles?.nodes, { id: selectedRoleId })
     ))
 
     const allBlockPermissionsAndSelectedRoleId = Rx.combineLatest(
-      allBlockPermissionsStream, selectedRoleIdStreams.pipe(rx.switchAll())
+      allBlockPermissionsStream, selectedRoleIdStreams.stream
     )
 
     const sourcePermissionsStream = allBlockPermissionsAndSelectedRoleId.pipe(
@@ -89,7 +89,7 @@ export default function $sourcePermissions ({ sourceStream, sourceType }) {
     sourceRoles: sourceRolesStream,
     sourcePermissions: sourcePermissionsStream,
     source: sourceStream,
-    selectedRoleId: selectedRoleIdStreams.pipe(rx.switchAll()),
+    selectedRoleId: selectedRoleIdStreams.stream,
     selectedRole: selectedRoleStream,
     menuItems: rolesStream.pipe(rx.map((roles) =>
       _.map(roles?.nodes, (role) => ({

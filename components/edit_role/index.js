@@ -6,6 +6,7 @@ import * as _ from 'lodash-es'
 import $button from '../button'
 import $input from '../input'
 import $toggle from '../toggle'
+import { streams } from '../../services/obs'
 import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
@@ -23,10 +24,9 @@ export default function $editRole ({ roleStreams }) {
   const { lang, model } = useContext(context)
 
   const { roleStream, nameStreams, permissionsWithTogglesStream } = useMemo(() => {
-    const roleStream = roleStreams.pipe(rx.switchAll())
+    const roleStream = roleStreams.stream
 
-    const nameStreams = new Rx.ReplaySubject(1)
-    nameStreams.next(roleStream.pipe(rx.map((role) => role?.name)))
+    const nameStreams = streams(roleStream.pipe(rx.map((role) => role?.name)))
 
     const permissionsWithTogglesStream = roleStream.pipe(rx.map((role) =>
       role && _.map(PERMISSIONS, (permission) => {
@@ -52,7 +52,7 @@ export default function $editRole ({ roleStreams }) {
   }, [])
 
   const { name, role, permissionsWithToggles } = useStream(() => ({
-    name: nameStreams.pipe(rx.switchAll()),
+    name: nameStreams.stream,
     permissionsWithToggles: permissionsWithTogglesStream,
     role: roleStream
   }))

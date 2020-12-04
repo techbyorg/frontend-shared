@@ -1,6 +1,5 @@
 import { z, useContext, useMemo, useRef, useStream } from 'zorium'
 import * as Rx from 'rxjs'
-import * as rx from 'rxjs/operators'
 
 import $avatar from 'frontend-shared/components/avatar'
 import $button from 'frontend-shared/components/button'
@@ -8,6 +7,7 @@ import $dialog from 'frontend-shared/components/dialog'
 import $icon from 'frontend-shared/components/icon'
 import { copyIconPath } from 'frontend-shared/components/icon/paths'
 import $input from 'frontend-shared/components/input'
+import { streams } from 'frontend-shared/services/obs'
 
 import $partnerPicker from '../partner_picker'
 import $rolePicker from '../role_picker'
@@ -25,11 +25,8 @@ export default function $inviteOrgUserDialog ({ orgUserInvite, onClose }) {
   const {
     partnerIdsStreams, roleIdsStreams, inviteLinkStream, emailStream, nameStream
   } = useMemo(() => {
-    const partnerIdsStreams = new Rx.ReplaySubject(1)
-    partnerIdsStreams.next(Rx.of(orgUserInvite?.partnerIds))
-
-    const roleIdsStreams = new Rx.ReplaySubject(1)
-    roleIdsStreams.next(Rx.of(orgUserInvite?.roleIds))
+    const partnerIdsStreams = streams(Rx.of(orgUserInvite?.partnerIds))
+    const roleIdsStreams = streams(Rx.of(orgUserInvite?.roleIds))
 
     return {
       partnerIdsStreams,
@@ -44,8 +41,8 @@ export default function $inviteOrgUserDialog ({ orgUserInvite, onClose }) {
     email: emailStream,
     name: nameStream,
     org: model.org.getMe(),
-    partnerIds: partnerIdsStreams.pipe(rx.switchAll()),
-    roleIds: roleIdsStreams.pipe(rx.switchAll()),
+    partnerIds: partnerIdsStreams.stream,
+    roleIds: roleIdsStreams.stream,
     inviteLink: inviteLinkStream
   }))
 

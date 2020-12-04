@@ -146,7 +146,7 @@ function getRouteFn ({ $app, config, colors, Lang, Model, webpackPaths }) {
     let start = Date.now()
     const fullLanguage = req.headers?.['accept-language']
     let language = req.query?.lang ||
-      req.cookies?.['language'] ||
+      req.cookies?.language ||
       fullLanguage?.substr(0, 2)
     if (!Array.from(config.LANGUAGES).includes(language)) {
       language = 'en'
@@ -230,7 +230,7 @@ function getRouteFn ({ $app, config, colors, Lang, Model, webpackPaths }) {
     } catch (err) {
       // If this times out, it should throw the hash of state object keys.
       // Use that to figure out which components are hanging and fix
-      // eg a component could have a ReplaySubject that never gets a value
+      // eg a component could have a Streams that never gets a value
       console.log('untilStable err', err)
       cache = err?.cache
     }

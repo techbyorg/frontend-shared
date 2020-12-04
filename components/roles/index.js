@@ -3,6 +3,8 @@ import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 import * as _ from 'lodash-es'
 
+import { streams } from 'frontend-shared/services/obs'
+
 import $editRole from '../edit_role'
 import $sidebarMenu from '../sidebar_menu'
 import context from '../../context'
@@ -17,8 +19,7 @@ export default function $roles () {
   } = useMemo(() => {
     const currentMenuItemStream = new Rx.BehaviorSubject('everyone')
     const rolesStream = model.role.getAll()
-    const roleStreams = new Rx.ReplaySubject(1)
-    roleStreams.next(
+    const roleStreams = streams(
       Rx.combineLatest(currentMenuItemStream, rolesStream).pipe(
         rx.map(([currentMenuItem, roles]) =>
           _.find(roles?.nodes, { slug: currentMenuItem })

@@ -33,7 +33,7 @@ export default function $signInForm (props) {
 
   const { me, mode, hasError, inviteTokenStr } = useStream(() => ({
     me: model.user.getMe(),
-    mode: modeStreams.pipe(rx.switchAll()),
+    mode: modeStreams.stream,
     isLoading: isLoadingStream,
     hasError: hasErrorStream,
     inviteTokenStr: inviteTokenStrStream
@@ -163,7 +163,7 @@ export default function $signInForm (props) {
         : lang.get('signIn.notHaveAccount'),
       z('.link', {
         onclick: () => {
-          modeStreams.next(Rx.of(mode === 'join' ? 'signIn' : 'join'))
+          modeStreams.next(mode === 'join' ? 'signIn' : 'join')
         }
       }, mode === 'join' ? lang.get('general.signIn') : lang.get('signIn.join'))
     ]),
@@ -172,7 +172,7 @@ export default function $signInForm (props) {
         z($button, {
           isInverted: true,
           text: lang.get('signIn.resetPassword'),
-          onclick: () => modeStreams.next(Rx.of('reset'))
+          onclick: () => modeStreams.next('reset')
         })
       ])
   ])

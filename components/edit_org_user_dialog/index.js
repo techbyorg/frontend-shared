@@ -1,9 +1,9 @@
 import { z, useContext, useMemo, useStream } from 'zorium'
-import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
 import $button from 'frontend-shared/components/button'
 import $dialog from 'frontend-shared/components/dialog'
+import { streams } from 'frontend-shared/services/obs'
 
 import $partnerPicker from '../partner_picker'
 import $rolePicker from '../role_picker'
@@ -17,13 +17,11 @@ export default function $newBlockDialog ({ orgUserStream, onClose }) {
   const { lang, model } = useContext(context)
 
   const { partnerIdsStreams, roleIdsStreams } = useMemo(() => {
-    const partnerIdsStreams = new Rx.ReplaySubject(1)
-    partnerIdsStreams.next(orgUserStream.pipe(
+    const partnerIdsStreams = streams(orgUserStream.pipe(
       rx.map((orgUser) => (orgUser?.partnerIds))
     ))
 
-    const roleIdsStreams = new Rx.ReplaySubject(1)
-    roleIdsStreams.next(orgUserStream.pipe(
+    const roleIdsStreams = streams(orgUserStream.pipe(
       rx.map((orgUser) => (orgUser?.roleIds))
     ))
 
@@ -35,8 +33,8 @@ export default function $newBlockDialog ({ orgUserStream, onClose }) {
 
   const { orgUser, partnerIds, roleIds } = useStream(() => ({
     orgUser: orgUserStream,
-    partnerIds: partnerIdsStreams.pipe(rx.switchAll()),
-    roleIds: roleIdsStreams.pipe(rx.switchAll())
+    partnerIds: partnerIdsStreams.stream,
+    roleIds: roleIdsStreams.stream
   }))
 
   const updateOrgUser = async () => {
