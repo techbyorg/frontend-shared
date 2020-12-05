@@ -17,7 +17,7 @@ import context from '../../context'
 
 if (typeof window !== 'undefined') { require('./index.styl') }
 
-export default function $settings () {
+export default function $orgUsers () {
   const { lang, model } = useContext(context)
 
   const {
