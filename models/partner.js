@@ -47,4 +47,16 @@ export default class Partner {
       pull: 'partner'
     }, { invalidateAll: true })
   }
+
+  deleteById = (id) => {
+    return this.auth.call({
+      query: `
+        mutation PartnerDeleteById($id: ID) {
+          partnerDeleteById(id: $id)
+        }
+`,
+      variables: { id },
+      pull: 'partnerDeleteById'
+    }, { invalidateAll: true })
+  }
 }

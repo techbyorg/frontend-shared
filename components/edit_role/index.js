@@ -57,12 +57,6 @@ export default function $editRole ({ roleStreams }) {
     role: roleStream
   }))
 
-  const del = () => {
-    if (confirm(lang.get('general.areYouSure'))) {
-      return model.role.deleteById(role.id)
-    }
-  }
-
   const save = () => {
     const permissions = _.flatten(
       _.map(permissionsWithToggles, ({ permission, isSelectedStreamArray }) =>
@@ -108,12 +102,6 @@ export default function $editRole ({ roleStreams }) {
       })
     ]),
     z('.actions', [
-      role?.slug && !['everyone', 'admin'].includes(role.slug) && z($button, {
-        onclick: del,
-        text: lang.get('general.delete'),
-        isFullWidth: false,
-        shouldHandleLoading: true
-      }),
       z($button, {
         onclick: save,
         isPrimary: true,

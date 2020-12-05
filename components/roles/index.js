@@ -37,7 +37,10 @@ export default function $roles () {
   const { menuItems } = useStream(() => ({
     menuItems: rolesStream.pipe(rx.map((roles) =>
       _.map(roles?.nodes, (role) => ({
-        id: role.id, menuItem: role.slug, text: role.name
+        id: role.id,
+        menuItem: role.slug,
+        text: role.name,
+        isNoDelete: ['everyone', 'admin'].includes(role.slug)
       }))
     ))
   }))
@@ -48,10 +51,11 @@ export default function $roles () {
         title: lang.get('general.roles'),
         isDraggable: true,
         onReorder: (ids) => model.role.setPriorities(ids),
-        onAdd: () => {
-          return model.role.upsert({
-            name: 'New role'
-          })
+        onAdd: () => model.role.upsert({ name: 'New role' }),
+        onDelete: (id) => {
+          if (confirm(lang.get('general.areYouSure'))) {
+            model.role.deleteById(id)
+          }
         },
         currentMenuItemStream,
         menuItems

@@ -4,7 +4,7 @@ import * as Rx from 'rxjs'
 
 import $draggable from '../draggable'
 import $icon from '../icon'
-import { addIconPath } from '../icon/paths'
+import { addCircleIconPath, deleteIconPath } from '../icon/paths'
 import { streamsOrStream, setStreamsOrStream } from '../../services/obs'
 import context from '../../context'
 
@@ -12,14 +12,15 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 
 export default function $sidebarMenu (props) {
   const {
-    title, subtitle, onAdd, menuItems, currentMenuItemStream,
+    title, subtitle, onAdd, onDelete, menuItems, currentMenuItemStream,
     currentMenuItemStreams, isDraggable, onReorder
   } = props
-  const { router } = useContext(context)
+  const { colors, router } = useContext(context)
 
-  const { isAddLoadingStream } = useMemo(() => {
+  const { isAddLoadingStream, isDeleteLoadingStream } = useMemo(() => {
     return {
-      isAddLoadingStream: new Rx.BehaviorSubject(false)
+      isAddLoadingStream: new Rx.BehaviorSubject(false),
+      isDeleteLoadingStream: new Rx.BehaviorSubject(false)
     }
   })
 
@@ -34,7 +35,8 @@ export default function $sidebarMenu (props) {
     z('.title', [
       z('.text', title),
       onAdd && z('.icon', z($icon, {
-        icon: addIconPath,
+        icon: addCircleIconPath,
+        size: '22px',
         onclick: async () => {
           isAddLoadingStream.next(true)
           await onAdd()
@@ -42,7 +44,7 @@ export default function $sidebarMenu (props) {
         }
       }))
     ]),
-    z('.menu', _.map(menuItems, ({ id, path, text, menuItem }, i) => {
+    z('.menu', _.map(menuItems, ({ id, path, text, menuItem, isNoDelete }, i) => {
       const isSelected = menuItem === currentMenuItem || (!currentMenuItem && !i)
       const $link = router.linkIfHref(z('.z-sidebar-menu_menu-item', {
         href: path,
@@ -50,7 +52,19 @@ export default function $sidebarMenu (props) {
           currentMenuItemStreams, currentMenuItemStream, menuItem
         )),
         className: classKebab({ isSelected })
-      }, text))
+      }, [
+        z('.text', text),
+        !isNoDelete && onDelete && z('.delete', z($icon, {
+          icon: deleteIconPath,
+          size: '20px',
+          color: colors.$bgText60,
+          onclick: async () => {
+            isDeleteLoadingStream.next(true)
+            await onDelete(id)
+            isDeleteLoadingStream.next(false)
+          }
+        }))
+      ]))
       return isDraggable
         ? z($draggable, { id, onReorder }, $link)
         : $link

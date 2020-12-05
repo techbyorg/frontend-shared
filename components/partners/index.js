@@ -41,7 +41,7 @@ export default function $partners () {
   const { menuItems } = useStream(() => ({
     menuItems: partnersStream.pipe(rx.map((partners) =>
       _.map(partners?.nodes, (partner) => ({
-        menuItem: partner.slug, text: partner.name
+        id: partner.id, menuItem: partner.slug, text: partner.name
       }))
     ))
   }))
@@ -54,6 +54,11 @@ export default function $partners () {
           return model.partner.upsert({
             name: 'New partner'
           })
+        },
+        onDelete: (id) => {
+          if (confirm(lang.get('general.areYouSure'))) {
+            model.partner.deleteById(id)
+          }
         },
         currentMenuItemStreams,
         menuItems

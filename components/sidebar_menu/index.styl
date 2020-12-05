@@ -27,3 +27,12 @@
 
 .z-sidebar-menu_menu-item
   menu-item()
+  display: flex
+
+  &:hover
+    > .delete
+      display: block
+
+  > .delete
+    margin-left: auto
+    display: none
