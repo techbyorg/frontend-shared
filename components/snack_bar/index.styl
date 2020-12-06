@@ -1,0 +1,24 @@
+@require '../../vars'
+
+.z-snack-bar
+  position: absolute
+  bottom: 24px
+  left: 8px
+  right: 8px
+  background: getColor('$bgColorAlt2')
+  padding: 10px 16px
+  border-radius: 6px
+  box-sizing: border-box
+  display: flex
+  align-items: center
+  transform: translateY(100%)
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1)
+
+  &.is-mounted
+    transform: translateY(0)
+
+  > .content
+    font-body2()
+
+  > .actions
+    margin-left: auto

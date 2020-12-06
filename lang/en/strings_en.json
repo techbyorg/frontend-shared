@@ -69,6 +69,7 @@
   "signIn.invalidInviteTitle": "Invite link invalid",
   "signIn.invalidInviteDescription": "This link is no longer valid. Reach out to the organization for a new link",
   "signIn.terms": "By registering, you agree to our {tos}",
+  "unsavedSnackBar.title": "Heads up! There are unsaved changes",
   "unsubscribeEmail.isUnsubscribed": "Your email is now unsubscribed.",
   "unsubscribeEmail.tapHome": "Return to homepage",
   "verifyEmail.isVerified": "Thank you! Your email is now verified.",

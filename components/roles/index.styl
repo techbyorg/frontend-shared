@@ -2,6 +2,7 @@
 
 .z-roles
   // container()
+  flex1()
   display: flex
 
   > .sidebar
@@ -9,5 +10,10 @@
 
   > .content
     flex1()
-    overflow: auto
-    -webkit-overflow-scrolling: touch
+    display: flex
+    position: relative
+
+    > .scroller
+      flex1()
+      overflow: auto
+      -webkit-overflow-scrolling: touch

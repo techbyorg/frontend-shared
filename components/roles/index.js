@@ -62,7 +62,9 @@ export default function $roles () {
       })
     ]),
     z('.content', [
-      z($editRole, { roleStreams })
+      z('.scroller', [
+        z($editRole, { roleStreams })
+      ])
     ])
   ])
 }

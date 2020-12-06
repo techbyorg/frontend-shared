@@ -3,7 +3,6 @@ import * as _ from 'lodash-es'
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 
-import { streams } from '../../services/obs'
 import $positionedOverlay from '../positioned_overlay'
 import $checkbox from '../checkbox'
 
@@ -21,17 +20,16 @@ export default function $dropdownMultiple (props) {
   const { isOpenStream, optionsWithIsCheckedStream } = useMemo(() => {
     const optionsAndValuesStream = Rx.combineLatest(
       optionsStream,
-      // don't want to generate new isCheckedStreams as value changes
-      valuesStreams.stream.pipe(rx.take(1))
+      valuesStreams.stream
     )
     const optionsWithIsCheckedStream = optionsAndValuesStream.pipe(
       rx.map(([options, values]) => {
         values = values || []
         return _.map(options, (option) => {
-          const isCheckedStreams = streams(
-            Rx.of(values.indexOf(option.value) !== -1)
+          const isCheckedStream = new Rx.BehaviorSubject(
+            values.indexOf(option.value) !== -1
           )
-          return { option, isCheckedStreams }
+          return { option, isCheckedStream }
         })
       })
     )
@@ -87,7 +85,7 @@ export default function $dropdownMultiple (props) {
       $$parentRef,
       $content: z('.z-dropdown-multiple_options', {
         style: { maxHeight: maxHeightPx }
-      }, _.map(optionsWithIsChecked, ({ option, isCheckedStreams }) =>
+      }, _.map(optionsWithIsChecked, ({ option, isCheckedStream }) =>
         z('label.option', [
           z('.text', option?.text),
           z('.checkbox', z($checkbox, {
@@ -100,7 +98,7 @@ export default function $dropdownMultiple (props) {
               }
               valuesStreams.next(newValues)
             },
-            valueStreams: isCheckedStreams
+            valueStream: isCheckedStream
           }))
         ])
       ))

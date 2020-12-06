@@ -3,9 +3,9 @@ import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
 import * as _ from 'lodash-es'
 
-import $button from '../button'
 import $input from '../input'
 import $toggle from '../toggle'
+import $unsavedSnackBar from '../unsaved_snack_bar'
 import { streams } from '../../services/obs'
 import context from '../../context'
 
@@ -23,7 +23,10 @@ const PERMISSIONS = [
 export default function $editRole ({ roleStreams }) {
   const { lang, model } = useContext(context)
 
-  const { roleStream, nameStreams, permissionsWithTogglesStream } = useMemo(() => {
+  const {
+    roleStream, nameStreams, permissionsWithTogglesStream,
+    hasPermissionsChangedStream
+  } = useMemo(() => {
     const roleStream = roleStreams.stream
 
     const nameStreams = streams(roleStream.pipe(rx.map((role) => role?.name)))
@@ -47,17 +50,24 @@ export default function $editRole ({ roleStreams }) {
     return {
       roleStream,
       nameStreams,
-      permissionsWithTogglesStream
+      permissionsWithTogglesStream,
+      hasPermissionsChangedStream: new Rx.BehaviorSubject(false)
     }
   }, [])
 
-  const { name, role, permissionsWithToggles } = useStream(() => ({
+  const { name, role, permissionsWithToggles, hasPermissionsChanged } = useStream(() => ({
     name: nameStreams.stream,
+    role: roleStream,
     permissionsWithToggles: permissionsWithTogglesStream,
-    role: roleStream
+    hasPermissionsChanged: hasPermissionsChangedStream
   }))
 
-  const save = () => {
+  const reset = () => {
+    roleStreams.reset()
+    hasPermissionsChangedStream.next(false)
+  }
+
+  const save = async () => {
     const permissions = _.flatten(
       _.map(permissionsWithToggles, ({ permission, isSelectedStreamArray }) =>
         _.map(permission.permissions, (permissionType, i) => {
@@ -69,8 +79,11 @@ export default function $editRole ({ roleStreams }) {
         })
       )
     )
-    return model.role.upsert({ id: role.id, slug: role.slug, name, permissions })
+    await model.role.upsert({ id: role.id, slug: role.slug, name, permissions })
+    hasPermissionsChangedStream.next(false)
   }
+
+  const isUnsaved = hasPermissionsChanged || nameStreams.isChanged()
 
   return z('.z-edit-role', [
     z('.title', lang.get('general.roles')),
@@ -94,21 +107,17 @@ export default function $editRole ({ roleStreams }) {
             return z('.permission-type', [
               z('.type', lang.get(`permissionType.${permissionType}`)),
               z('.toggle', z($toggle, {
-                isSelectedStream: isSelectedStreamArray[i]
+                isSelectedStream: isSelectedStreamArray[i],
+                onToggle: () => hasPermissionsChangedStream.next(true)
               }))
             ])
           })
         ])
       })
     ]),
-    z('.actions', [
-      z($button, {
-        onclick: save,
-        isPrimary: true,
-        text: lang.get('general.save'),
-        isFullWidth: false,
-        shouldHandleLoading: true
-      })
-    ])
+    isUnsaved && z($unsavedSnackBar, {
+      onCancel: reset,
+      onSave: save
+    })
   ])
 }

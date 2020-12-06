@@ -16,11 +16,26 @@ export function setStreamsOrStream (streams, stream, value) {
 
 export function streams (stream) {
   const behaviorSubject = new Rx.BehaviorSubject(null)
+  let cachedStreamResult, cachedBehaviorSubjectValue
   const combinedStream = Rx.merge(
-    behaviorSubject,
-    stream.pipe(rx.distinctUntilChanged(_.isEqual))
+    behaviorSubject.pipe(
+      rx.tap((value) => { cachedBehaviorSubjectValue = value })
+    ),
+    stream.pipe(
+      rx.distinctUntilChanged(_.isEqual),
+      rx.tap((result) => {
+        cachedStreamResult = result
+        cachedBehaviorSubjectValue = null
+      })
+    )
   )
   return {
-    stream: combinedStream, next: behaviorSubject.next.bind(behaviorSubject)
+    stream: combinedStream,
+    next: behaviorSubject.next.bind(behaviorSubject),
+    isChanged: () => {
+      return cachedBehaviorSubjectValue !== null &&
+        cachedStreamResult !== cachedBehaviorSubjectValue
+    },
+    reset: () => behaviorSubject.next(cachedStreamResult)
   }
 }

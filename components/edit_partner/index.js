@@ -2,9 +2,9 @@ import { z, useContext, useMemo, useStream } from 'zorium'
 import * as rx from 'rxjs/operators'
 import * as _ from 'lodash-es'
 
-import $button from '../button'
 import $input from '../input'
 import $segmentPicker from '../segment_picker'
+import $unsavedSnackBar from '../unsaved_snack_bar'
 import { streams } from '../../services/obs'
 import context from '../../context'
 
@@ -13,7 +13,9 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 export default function $editPartner ({ partnerStreams }) {
   const { lang, model } = useContext(context)
 
-  const { partnerStream, nameStreams, segmentIdsStreams } = useMemo(() => {
+  const {
+    partnerStream, nameStreams, segmentIdsStreams
+  } = useMemo(() => {
     const partnerStream = partnerStreams.stream
 
     const nameStreams = streams(
@@ -37,8 +39,13 @@ export default function $editPartner ({ partnerStreams }) {
     segmentIds: segmentIdsStreams.stream
   }))
 
+  const reset = () => {
+    nameStreams.reset()
+    segmentIdsStreams.reset()
+  }
+
   const save = () => {
-    model.partner.upsert({
+    return model.partner.upsert({
       id: partner.id,
       slug: partner.slug,
       name,
@@ -49,6 +56,8 @@ export default function $editPartner ({ partnerStreams }) {
       }, partner.data)
     })
   }
+
+  const isUnsaved = nameStreams.isChanged() || segmentIdsStreams.isChanged()
 
   return z('.z-edit-partner', [
     z('.title', lang.get('general.partners')),
@@ -64,11 +73,9 @@ export default function $editPartner ({ partnerStreams }) {
       z('.label', lang.get('editPartner.segmentIds')),
       z($segmentPicker, { segmentIdsStreams })
     ]),
-    z($button, {
-      onclick: save,
-      isPrimary: true,
-      text: lang.get('general.save'),
-      isFullWidth: false
+    isUnsaved && z($unsavedSnackBar, {
+      onCancel: reset,
+      onSave: save
     })
   ])
 }
