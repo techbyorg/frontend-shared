@@ -64,6 +64,7 @@ export default function $editRole ({ roleStreams }) {
 
   const reset = () => {
     roleStreams.reset()
+    nameStreams.reset()
     hasPermissionsChangedStream.next(false)
   }
 

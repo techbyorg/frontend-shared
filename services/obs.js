@@ -1,6 +1,6 @@
 import * as Rx from 'rxjs'
 import * as rx from 'rxjs/operators'
-import * as _ from 'lodash'
+import * as _ from 'lodash-es'
 
 export function streamsOrStream (streams, stream) {
   return streams?.stream || stream

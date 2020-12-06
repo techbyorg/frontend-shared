@@ -21,28 +21,30 @@ if (typeof window !== 'undefined') { require('./index.styl') }
 export default function $inputDateRange (props) {
   const {
     startDateStreams, endDateStreams, startDateStream, endDateStream,
-    presetDateRangeStream
+    presetDateRangeStream, earliestTime
   } = props
   const { colors, lang } = useContext(context)
 
   const $$ref = useRef()
 
-  const {
-    dropdownOptions, isSettingStartStream, isOpenStream
-  } = useMemo(() => {
+  const { isSettingStartStream, isOpenStream } = useMemo(() => {
     return {
-      dropdownOptions: getDropdownOptions({
-        lang,
-        startDateStreams,
-        endDateStreams,
-        startDateStream,
-        endDateStream,
-        presetDateRangeStream
-      }),
       isSettingStartStream: new Rx.BehaviorSubject(true),
       isOpenStream: new Rx.BehaviorSubject(false)
     }
   }, [])
+
+  const dropdownOptions = useMemo(() =>
+    getDropdownOptions({
+      lang,
+      startDateStreams,
+      endDateStreams,
+      startDateStream,
+      endDateStream,
+      presetDateRangeStream,
+      earliestTime
+    })
+  , [earliestTime])
 
   const {
     isOpen, startDate, endDate, isSettingStart
@@ -129,37 +131,42 @@ export default function $inputDateRange (props) {
 function getDropdownOptions (props) {
   const {
     lang, startDateStreams, startDateStream, endDateStreams, endDateStream,
-    presetDateRangeStream
+    presetDateRangeStream, earliestTime
   } = props
 
-  return _.map(DateService.getPresetDateRangeOptions(), (option, key) => {
-    const startDateFormatted = DateService.format(
-      option.startDateFn(),
-      'MMM D, YYYY'
-    )
-    const endDateFormatted = DateService.format(
-      option.endDateFn(),
-      'MMM D, YYYY'
-    )
-    return _.defaults({
-      value: key,
-      text: z('.z-input-date-range_option', [
-        z('.text', lang.get(`inputDateRange.${key}`)),
-        z('.date', `${startDateFormatted} - ${endDateFormatted}`)
-      ]),
-      onSelect: () => {
-        presetDateRangeStream?.next(key)
-        setStreamsOrStream(
-          startDateStreams,
-          startDateStream,
-          DateService.format(option.startDateFn(), 'yyyy-mm-dd')
-        )
-        setStreamsOrStream(
-          endDateStreams,
-          endDateStream,
-          DateService.format(option.endDateFn(), 'yyyy-mm-dd')
-        )
-      }
-    }, option)
-  })
+  console.log('EARLY', earliestTime)
+
+  return _.map(
+    DateService.getPresetDateRangeOptions(new Date(earliestTime)),
+    (option, key) => {
+      const startDateFormatted = DateService.format(
+        option.startDateFn(),
+        'MMM D, YYYY'
+      )
+      const endDateFormatted = DateService.format(
+        option.endDateFn(),
+        'MMM D, YYYY'
+      )
+      return _.defaults({
+        value: key,
+        text: z('.z-input-date-range_option', [
+          z('.text', lang.get(`inputDateRange.${key}`)),
+          z('.date', `${startDateFormatted} - ${endDateFormatted}`)
+        ]),
+        onSelect: () => {
+          presetDateRangeStream?.next(key)
+          setStreamsOrStream(
+            startDateStreams,
+            startDateStream,
+            DateService.format(option.startDateFn(), 'yyyy-mm-dd')
+          )
+          setStreamsOrStream(
+            endDateStreams,
+            endDateStream,
+            DateService.format(option.endDateFn(), 'yyyy-mm-dd')
+          )
+        }
+      }, option)
+    }
+  )
 }

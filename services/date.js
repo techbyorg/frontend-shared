@@ -196,8 +196,8 @@ class DateService {
     }
   }
 
-  getPresetDateRangeOptions () {
-    return {
+  getPresetDateRangeOptions (earliestTime) {
+    const options = {
       today: {
         startDateFn: () => new Date(),
         endDateFn: () => new Date()
@@ -289,6 +289,19 @@ class DateService {
         }
       }
     }
+    if (earliestTime) {
+      options.allTime = {
+        startDateFn: () => {
+          const startDate = earliestTime || new Date()
+          return startDate
+        },
+        endDateFn: () => {
+          const endDate = new Date()
+          return endDate
+        }
+      }
+    }
+    return options
   }
 }
 
