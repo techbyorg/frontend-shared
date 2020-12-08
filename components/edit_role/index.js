@@ -17,7 +17,9 @@ const PERMISSIONS = [
   { sourceType: 'impact-dashboard', permissions: ['view', 'edit'] },
   { sourceType: 'impact-block', permissions: ['view', 'edit'] },
   { sourceType: 'partner', permissions: ['view', 'edit'] },
-  { sourceType: 'org-user-invite', permissions: ['view', 'edit'] }
+  { sourceType: 'role', permissions: ['view', 'edit'] },
+  { sourceType: 'org-user-invite', permissions: ['view', 'edit'] },
+  { sourceType: 'org-user', permissions: ['view', 'edit'] }
 ]
 
 export default function $editRole ({ roleStreams }) {

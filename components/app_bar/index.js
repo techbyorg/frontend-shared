@@ -42,13 +42,13 @@ export default function $appBar (props) {
 
   return z('header.z-app-bar', {
     key: 'app-bar',
-    className: classKebab({ isRaised, isContained, hasLogo })
+    className: classKebab({ isRaised, isContained, hasLogo: hasLogo && logo })
   }, [
     z('.bar', { style: { backgroundColor: bgColor } }, [
       z('.top',
         $topLeftButton &&
           z('.top-left-button', { style: { color } }, $topLeftButton),
-        hasLogo && z('.logo', {
+        hasLogo && logo && z('.logo', {
           style: {
             backgroundImage: logo && `url(${logo})`
           },
@@ -56,11 +56,11 @@ export default function $appBar (props) {
             router.go('orgHome')
           }
         }),
-        !hasLogo && z('h1.title', {
+        org && (!hasLogo || !logo) && z('h1.title', {
           style: { color }
         }, title || [
-          z('.span.logo-tech', lang.get('appBar.title')),
-          z('.span.logo-by', 'byTechBy')
+          z('span.logo-tech', lang.get('appBar.title')),
+          z('span.logo-by', 'byTechBy')
         ]),
         z('.top-right-button', { style: { color } }, $topRightButton)
       )

@@ -29,6 +29,8 @@ export default function $appBarUserMenu () {
     permissions: ['edit']
   })
 
+  console.log('me', me)
+
   return z('.z-app-bar-user-menu', [
     hasEditUsersPermission && z('.icon', z($icon, {
       icon: settingsIconPath,

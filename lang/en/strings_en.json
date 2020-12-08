@@ -87,7 +87,9 @@
   "sourceTypes.impact-dashboard.permissionTitle": "{roleName} Permissions",
   "sourceTypes.impact-dashboard.description": "Dashboards default to public, but you can make certain dashboards private. Enabling \"view\" will allow a role to view private dashboards",
   "sourceTypes.partner.title": "Partners",
+  "sourceTypes.role.title": "Roles",
   "sourceTypes.org-user-invite.title": "Invites",
+  "sourceTypes.org-user.title": "Users",
 
   "permissionType.view": "View",
   "permissionType.edit": "Create, edit & delete",
