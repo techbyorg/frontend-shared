@@ -85,9 +85,8 @@ export default function $dropdown (props) {
                   option.onSelect()
                 } else if (onChange) {
                   onChange(option.value)
-                } else {
-                  setStreamsOrStream(valueStreams, valueStream, option.value)
                 }
+                setStreamsOrStream(valueStreams, valueStream, option.value)
                 return toggle()
               }
             }, z('.text', option.text))

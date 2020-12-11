@@ -3,7 +3,7 @@ import * as rx from 'rxjs/operators'
 import * as _ from 'lodash-es'
 
 import $input from '../input'
-import $segmentPicker from '../segment_picker'
+import $segmentPicker from '../../../src/components/segment_picker' // FIXME
 import $unsavedSnackBar from '../unsaved_snack_bar'
 import { streams } from '../../services/obs'
 import context from '../../context'
