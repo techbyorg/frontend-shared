@@ -28,11 +28,18 @@
 .z-sidebar-menu_menu-item
   menu-item()
   display: flex
+  white-space: nowrap
 
   &:hover
     > .delete
       display: block
 
+  > .text
+    flex1()
+    min-width: 0
+    overflow: hidden
+
   > .delete
     margin-left: auto
     display: none
+    flex-shrink: 0

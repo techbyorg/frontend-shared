@@ -31,4 +31,20 @@ export default class Org {
       pull: 'org'
     })
   }
+
+  getAll = () => {
+    return this.auth.stream({
+      query: `
+        query OrgGetAll {
+          orgs {
+            nodes {
+              id
+              name
+            }
+          }
+        }`,
+      // variables: {},
+      pull: 'orgs'
+    })
+  }
 }
