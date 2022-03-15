@@ -30,7 +30,7 @@
     "iscroll": "git://github.com/claydotio/iscroll.git",
     "isuuid": "^0.1.0",
     "location-router": "github:claydotio/location-router#es",
-    "lodash-es": "^4.17.15",
+    "lodash-es": "^4.17.21",
     "normalize-styl": "^4.1.1",
     "portal-gun": "github:claydotio/portal-gun#es",
     "promiz": "^1.0.4",
